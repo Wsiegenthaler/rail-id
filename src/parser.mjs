@@ -5,7 +5,7 @@ import nomar from 'nomar'
 import grammarDef from './grammar-def.mjs'
 import { luhnClean } from './util/luhn.mjs'
 import { uicVerify } from './util/rail.mjs'
-import { UICCountryByCode } from './uic/countries.mjs'
+import { UICCountryCodeMap } from './uic/countries.mjs'
 
 export const grammar = ohm.grammar(grammarDef)
 
@@ -285,7 +285,7 @@ export const semantics = grammar.createSemantics()
     UICCountryCode(d1, spaces, d2) {
         let code = d1.sourceString + d2.sourceString
         let source = d1.source.coverageWith(d2.source)
-        return Attr('country', UICCountryByCode[code], source)
+        return Attr('country', UICCountryCodeMap[code], source)
     },
 
     ///////////////////////////////

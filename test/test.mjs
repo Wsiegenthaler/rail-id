@@ -1,9 +1,6 @@
 import test from 'ava'
 
-import railID from '../src/index.mjs'
-import { UICCountryList } from '../src/uic/countries.mjs'
-
-import { eq } from './util.mjs'
+import { eq, like } from './util.mjs'
 
 
 test('whitespace 1', t => {
@@ -16,14 +13,14 @@ test('whitespace 1', t => {
     axlesDrive: '4',
     axlesTotal: '6',
     series: 3,
-	meta: { codeType: 'sbb', codeVariant: 'legacy' }
+    meta: { codeType: 'sbb', codeVariant: 'legacy' }
   }
 
-  eq('RABae 4/6 III', expected, t)
-  eq('RABae 4/ 6 III', expected, t)
-  eq('RABae 4 / 6 III', expected, t)
-  eq('	RABae 4/6III ', expected, t)
-  eq('   RABae	4/6	III ', expected, t)
+  eq('RABae 4/6 III', expected)(t)
+  eq('RABae 4/ 6 III', expected)(t)
+  eq('RABae 4 / 6 III', expected)(t)
+  eq('	RABae 4/6III ', expected)(t)
+  eq('   RABae	4/6	III ', expected)(t)
 })
 
 test('lots of flags', t => {
@@ -39,8 +36,8 @@ test('lots of flags', t => {
     axlesDrive: '4',
     axlesTotal: '6',
     series: 2,
-	meta: { codeType: 'sbb', codeVariant: 'legacy' }
+	  meta: { codeType: 'sbb', codeVariant: 'legacy' }
   }
 
-  eq('RABaefHm 4/6 II', expected, t)
+  eq('RABaefHm 4/6 II', expected)(t)
 })

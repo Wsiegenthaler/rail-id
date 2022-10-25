@@ -1,6 +1,7 @@
 import { zipObject } from 'lodash-es'
 
-export const UICCountryList = [
+// List of UIC-defined countries
+export const UICCountries = [
     { code: 10, short: 'FI', long: 'Finland' },
     { code: 20, short: 'RU', long: 'Russia' },
     { code: 21, short: 'BY', long: 'Belarus' },
@@ -69,6 +70,8 @@ export const UICCountryList = [
     { code: 99, short: 'IQ', long: 'Iraq' }
 ]
 
-export const UICCountryByCode = zipObject(UICCountryList.map(c => c.code), UICCountryList)
+// Countries mapped by UIC numerical code
+export const UICCountryCodeMap = zipObject(UICCountries.map(c => c.code), UICCountries)
 
-export const UICCountryByShort = zipObject(UICCountryList.map(c => c.short), UICCountryList)
+// Countries mapped by short name
+export const UICCountryShortMap = zipObject(UICCountries.map(c => c.short), UICCountries)

@@ -19,6 +19,8 @@ import railID from './src/index.mjs'
 //let result = railID('A-OBB 9181 1116 060-5') // more taurus
 //let result = railID('A-OBB 9181 1116 135-5') // more taurus
 //let result = railID('31 81 2892 009-3') // https://github.com/wayrunner/uic-number-detector/blob/master/img/uic_test.jpgj
+// Re 420 275-0 (Re 4/4 II 11275)
+// Am 843 081-1 (sbb cargo loc)
 let result = railID('73815291403-7')
 
 console.log(prettyjson.render(result))

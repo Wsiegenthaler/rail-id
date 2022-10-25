@@ -1,5 +1,12 @@
+import { UICCountries } from './uic/countries.mjs'
+
+// Generate country clause based on uic country definitions
+const countries = UICCountries
+  .map(c => ({ digits: c.code.toString().split(''), ...c }))
+  .map(c => ` "${c.digits[0]}" spaces "${c.digits[1]}" // ${c.long}`)
+  .join('\n  |')
+
 export default `
- 
   SBBGrammar {
   
     SBBCode
@@ -38,7 +45,7 @@ export default `
     // UIC
     // ------------------------------------------------------------
  
-    UICLong = UICTypeCode UICCountryCode UICRegional UICOwnerSuffix?
+    UICLong = UICTypeCode UICCountryCode UICRegional UICKeeperSuffix?
     UICTypeCode
       = "9" space* "0"  -- type90  // Miscellaneous (tractive unit not otherwise classified, e.g. steam locomotive)
       | "9" space* "1"  -- type91  // Electric locomotive
@@ -56,76 +63,10 @@ export default `
     UICRegional1b = UICDigit UICDigit UICDigit
     UICRegional2 = UICDigit UICDigit UICDigit
     UICChecksum = "-" UICDigit
-    UICOwnerSuffix = letter letter? letter? "-" letter letter? letter? letter?
+    UICKeeperSuffix = letter letter? letter? "-" letter letter? letter? letter?
     UICDigit = digit
  
-    UICCountryCode
-      = "1" spaces "0"  // Finland
-      | "2" spaces "0"  // Russia
-      | "2" spaces "1"  // Belarus
-      | "2" spaces "2"  // Ukraine
-      | "2" spaces "3"  // Moldova
-      | "2" spaces "4"  // Lithuania
-      | "2" spaces "5"  // Latvia
-      | "2" spaces "6"  // Estonia
-      | "2" spaces "7"  // Kazakhstan
-      | "2" spaces "8"  // Georgia
-      | "2" spaces "9"  // Uzbekistan
-      | "3" spaces "0"  // NorthKorea
-      | "3" spaces "1"  // Mongolia
-      | "3" spaces "2"  // Vietnam
-      | "3" spaces "3"  // China
-      | "3" spaces "8"  // Kosovo
-      | "4" spaces "0"  // Cuba
-      | "4" spaces "1"  // Albania
-      | "4" spaces "2"  // Japan
-      | "4" spaces "4"  // BosniaHerzegovina_Serb
-      | "4" spaces "9"  // BosniaHerzegovina
-      | "5" spaces "0"  // BosniaHerzegovina_MuslimCroatia
-      | "5" spaces "1"  // Poland
-      | "5" spaces "2"  // Bulgaria
-      | "5" spaces "3"  // Romania
-      | "5" spaces "4"  // CzechRepublic
-      | "5" spaces "5"  // Hungary
-      | "5" spaces "6"  // Slovakia
-      | "5" spaces "7"  // Azerbaijan
-      | "5" spaces "8"  // Armenia
-      | "5" spaces "9"  // Kyrgyzstan
-      | "6" spaces "0"  // Ireland
-      | "6" spaces "1"  // SouthKorea
-      | "6" spaces "2"  // Montenegro
-      | "6" spaces "5"  // NorthMacedonia
-      | "6" spaces "6"  // Tajikistan
-      | "6" spaces "7"  // Turkmenistan
-      | "6" spaces "8"  // Afghanistan
-      | "7" spaces "0"  // UnitedKingdom
-      | "7" spaces "1"  // Spain
-      | "7" spaces "2"  // Serbia
-      | "7" spaces "3"  // Greece
-      | "7" spaces "4"  // Sweden
-      | "7" spaces "5"  // Türkiye
-      | "7" spaces "6"  // Norway
-      | "7" spaces "8"  // Croatia
-      | "7" spaces "9"  // Slovenia
-      | "8" spaces "0"  // Germany
-      | "8" spaces "1"  // Austria
-      | "8" spaces "2"  // Luxembourg
-      | "8" spaces "3"  // Italy
-      | "8" spaces "4"  // Netherlands
-      | "8" spaces "5"  // Switzerland
-      | "8" spaces "6"  // Denmark
-      | "8" spaces "7"  // France
-      | "8" spaces "8"  // Belgium
-      | "9" spaces "0"  // Egypt
-      | "9" spaces "1"  // Tunisia
-      | "9" spaces "2"  // Algeria
-      | "9" spaces "3"  // Morocco
-      | "9" spaces "4"  // Portugal
-      | "9" spaces "5"  // Israel
-      | "9" spaces "6"  // Iran
-      | "9" spaces "7"  // Syria
-      | "9" spaces "8"  // Lebanon
-      | "9" spaces "9"  // Iraq
+    UICCountryCode = ${countries}
  
     // ------------------------------------------------------------
     // Modern Suffix
