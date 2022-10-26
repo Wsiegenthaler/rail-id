@@ -43,7 +43,7 @@ export const RailGauges = [
 ]
 
 // Rail gauges by distance (mm)
-const RailGaugeMap = zipObject(RailGauges.map(g => g.mm.toString()))
+const RailGaugeMap = zipObject(RailGauges.map(g => g.mm.toString()), RailGauges)
 export const GaugeByDist = mm => RailGaugeMap[mm.toString()]
 
 // Standard gauge
