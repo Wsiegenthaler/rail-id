@@ -1,5 +1,4 @@
 import test from 'ava'
-import _ from 'lodash'
 import { range } from 'lodash-es'
 
 import { UICCountryCodeMap, UICCountries } from '../src/uic/countries.mjs'
@@ -9,6 +8,7 @@ import { eq, like, throws } from './util.mjs'
 
 test('whitespace 1', t => {
   let expected = {
+    vehicleType: 'locomotive',
     electric: true,
     country: UICCountryCodeMap[85],
     meta: {
@@ -26,6 +26,7 @@ test('whitespace 1', t => {
 
 test('whitespace 2', t => {
   let expected = {
+    vehicleType: 'locomotive',
     diesel: true,
     country: UICCountryCodeMap[80],
     meta: {
@@ -43,35 +44,15 @@ test('exhaustive checksum test', t => {
   let pass = { meta: { uicChecksum: 'pass' } }
   let fail = { meta: { uicChecksum: 'fail' } }
 
-  // Only the example with checksum digit '4' should pass
-  like('9280 1 218 455-1', fail)(t)
-  like('9280 1 218 455-2', fail)(t)
-  like('9280 1 218 455-3', fail)(t)
-  like('9280 1 218 455-4', pass)(t)
-  like('9280 1 218 455-5', fail)(t)
-  like('9280 1 218 455-6', fail)(t)
-  like('9280 1 218 455-7', fail)(t)
-  like('9280 1 218 455-8', fail)(t)
-  like('9280 1 218 455-9', fail)(t)
+  // 4 should pass, the rest should fail
+  range(0, 10).map(d => like(`9280 1 218 455-${d}`, d == 4 ? pass : fail)(t))
 })
 
-// Generate tests for each known UIC country in our list
-UICCountries.forEach(c => 
-  test(`country - ${c.code} - ${c.long.toLowerCase()}`, t => {
-    let expected = {
-      country: c,
-      electric: true,
-      meta: {
-        codeType: 'uic',
-        uicChecksum: 'absent'
-      }
-    }
-  
-    eq(`91 ${c.code} 4605 205`, expected)(t)
-  }))
+// Generate tests for every known UIC country in our list
+UICCountries.forEach(c => test(`country - ${c.code} - ${c.long.toLowerCase()}`, t => like(`91 ${c.code} 4605 205`, { country: c })(t)))
 
 // Ensure parsing fails for unknown country codes
-_.range(0, 100)
+range(0, 100)
   .filter(d => !(d in UICCountryCodeMap))
   .map(d => d.toString().padStart(2, '0'))
   .forEach(code => 

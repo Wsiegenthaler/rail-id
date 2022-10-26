@@ -3,29 +3,16 @@ import { flattenDeep } from 'lodash-es'
 import nomar from 'nomar'
 
 import grammarDef from './grammar-def.mjs'
+import { Attr, Flag, NodeAttr, Meta } from './attributes.mjs'
 import { luhnClean } from './util/luhn.mjs'
 import { uicVerify } from './util/rail.mjs'
+import { uicTypeAttrs } from './uic/types.mjs'
 import { UICCountryCodeMap } from './uic/countries.mjs'
 
 export const grammar = ohm.grammar(grammarDef)
 
-//TODO move these
 
-// Key/value element representing an aspect of the locomotive/railcar
-// and it's query string source map
-const Attr = (key, value, source) => ({ key, value, source })
-
-// Flag attribute where value is always `true`
-const Flag = (key, source) => Attr(key, true, source)
-
-// An `Attr` where the value is the entire parse node `sourceString`
-const NodeAttr = (key, node) => Attr(key, node.sourceString, node.source)
-
-// Like `Attr` but represents an aspect of the code instead of the locomotive/railcar (no sourcemap)
-const Meta = (key, value) => ({ key, value, meta: true })
-
-
-
+console.log(grammar) //TODO
 
 export const semantics = grammar.createSemantics()
   .addOperation('weston', {
@@ -236,53 +223,11 @@ export const semantics = grammar.createSemantics()
       ]
     },
 
-    UICTypeCode_type90(nine, spaces, n) {  // Miscellaneous (tractive unit not otherwise classified, e.g. steam locomotive)
-      return [ Flag('miscellaneous', n.source) ]
-    },
-    UICTypeCode_type91(nine, spaces, n) {  // Electric locomotive
-      return [ Flag('electric', n.source) ]
-    },
-    UICTypeCode_type92(nine, spaces, n) {  // Diesel locomotive
-      return [ Flag('diesel', n.source) ]
-    },
-    UICTypeCode_type93(nine, spaces, n) {  // Electric multiple unit (high speed) [power car or trailer]
-      return [
-        Flag('electric', n.source),
-        Flag('multipleUnit', n.source),
-        Attr('vmax', 'high speed', n.source) ]
-
-    },
-    UICTypeCode_type94(nine, spaces, n) {  // Electric multiple unit (not high speed) [power car or trailer]
-      return [
-        Flag('electric', n.source),
-        Attr('vmax', 'not high speed', n.source) ]
-
-    },
-    UICTypeCode_type95(nine, spaces, n) {  // Diesel multiple unit [power car or trailer]
-      return [
-        Flag('diesel', n.source),
-        Flag('multipleUnit', n.source) ]
-
-    },
-    UICTypeCode_type96(nine, spaces, n) {  // Specialised trailer
-      return [ Flag('specialRailcar', n.source) ]
-    },
-    UICTypeCode_type97(nine, spaces, n) {  // Electric shunter
-      return [
-        Flag('electric', n.source),
-        Flag('shunter', n.source) ]
-    },
-    UICTypeCode_type98(nine, spaces, n) {  // Diesel shunter
-      return [
-        Flag('diesel', n.source),
-        Flag('shunter', n.source) ]
-
-    },
-    UICTypeCode_type99(nine, spaces, n) {  // Special vehicle (e.g. Departmental tractive unit) 
-      return [ Flag('selfDrivingCompanyRailcar', n.source) ]
+    UICType(type) {
+      return uicTypeAttrs(type)
     },
 
-    UICCountryCode(d1, spaces, d2) {
+    UICCountry(d1, spaces, d2) {
         let code = d1.sourceString + d2.sourceString
         let source = d1.source.coverageWith(d2.source)
         return Attr('country', UICCountryCodeMap[code], source)

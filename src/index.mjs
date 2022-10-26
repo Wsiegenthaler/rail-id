@@ -4,12 +4,16 @@ import { grammar, semantics } from './parser.mjs'
 import { attributeMap, sourceMap } from './util/common.mjs'
 
 
+const Defaults = { sourceMap: true, debug: false }
+
 // Returns parse results as an unprocessed array of key/value pairs (attribute objects)
-export const railIDAttrs = s => {
-  let parseResult = grammar.match(s)
+export const railIDAttrs = (code, options) => {
+  defaults(options, Defaults)
 
   // Log parse trace if debug flag set
   if (options.debug)  console.info(grammar.trace(code))
+
+  let parseResult = grammar.match(code)
   
   if (parseResult.succeeded()) {
     return semantics(parseResult).weston()
@@ -20,9 +24,7 @@ export const railIDAttrs = s => {
 
 // Main entry point
 export default (code, options={}) => {
-
-  // Default options
-  defaults(options, { sourceMap: true })
+  defaults(options, Defaults)
 
   // Parse code for attributes
   let attrs = railIDAttrs(code)

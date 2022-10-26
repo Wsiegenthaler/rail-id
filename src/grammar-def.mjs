@@ -1,6 +1,16 @@
+import { range, some } from 'lodash-es'
+
+import { UICTypeRules } from './uic/types.mjs'
 import { UICCountries } from './uic/countries.mjs'
 
-// Generate country clause based on uic country definitions
+// Generate UIC type code clause based on type rule definitions
+const types = range(0, 100)
+  .map(n => n.toString().padStart(2, '0'))
+  .filter(digits => some(UICTypeRules, r => r.pattern.test(digits) && r.exact))
+  .map(digits => ` "${digits[0]}" spaces "${digits[1]}"  -- type${digits}`)
+  .join('\n  |')
+
+// Generate country clause based on UIC country definitions
 const countries = UICCountries
   .map(c => ({ digits: c.code.toString().split(''), ...c }))
   .map(c => ` "${c.digits[0]}" spaces "${c.digits[1]}" // ${c.long}`)
@@ -45,28 +55,22 @@ export default `
     // UIC
     // ------------------------------------------------------------
  
-    UICLong = UICTypeCode UICCountryCode UICRegional UICKeeperSuffix?
-    UICTypeCode
-      = "9" space* "0"  -- type90  // Miscellaneous (tractive unit not otherwise classified, e.g. steam locomotive)
-      | "9" space* "1"  -- type91  // Electric locomotive
-      | "9" space* "2" 	-- type92  // Diesel locomotive
-      | "9" space* "3" 	-- type93  // Electric multiple unit (high speed) [power car or trailer]
-      | "9" space* "4" 	-- type94  // Electric multiple unit (not high speed) [power car or trailer]
-      | "9" space* "5" 	-- type95  // Diesel multiple unit [power car or trailer]
-      | "9" space* "6" 	-- type96  // Specialised trailer
-      | "9" space* "7" 	-- type97  // Electric shunter
-      | "9" space* "8" 	-- type98  // Diesel shunter
-      | "9" space* "9" 	-- type99  // Special vehicle (e.g. Departmental tractive unit) 
+    UICLong
+      = UICPrefix UICRegional UICKeeper
+      | UICKeeper UICPrefix UICRegional
+      | UICPrefix UICRegional
+    UICPrefix = UICType UICCountry
+    UICType = ${types}
+    UICCountry = ${countries}
     UICRegional = UICRegional1 UICRegional2 UICChecksum?
     UICRegional1 = UICRegional1a UICRegional1b
     UICRegional1a = UICDigit
     UICRegional1b = UICDigit UICDigit UICDigit
     UICRegional2 = UICDigit UICDigit UICDigit
     UICChecksum = "-" UICDigit
-    UICKeeperSuffix = letter letter? letter? "-" letter letter? letter? letter?
+    UICKeeper = letter letter? letter? "-" letter letter? letter? letter?
     UICDigit = digit
  
-    UICCountryCode = ${countries}
  
     // ------------------------------------------------------------
     // Modern Suffix
