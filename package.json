@@ -1,7 +1,7 @@
 {
   "name": "rail-id",
   "version": "0.0.1",
-  "description": "A general purpose parser for locomotive, railcar, wagon, and carriage identification codes",
+  "description": "A general purpose parser for European rolling stock identification codes",
   "scripts": {
     "test": "c8 -r html -r text  ava",
     "test-watch": "ava --watch"
