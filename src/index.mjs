@@ -27,7 +27,7 @@ export default (code, options={}) => {
   defaults(options, Defaults)
 
   // Parse code for attributes
-  let attrs = railIDAttrs(code)
+  let attrs = railIDAttrs(code, options)
 
   // Partition out meta attributes
   let [ mainAttrs, metaAttrs ] = partition(attrs, a => !a.meta)
