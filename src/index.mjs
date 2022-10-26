@@ -7,6 +7,9 @@ import { attributeMap, sourceMap } from './util/common.mjs'
 // Returns parse results as an unprocessed array of key/value pairs (attribute objects)
 export const railIDAttrs = s => {
   let parseResult = grammar.match(s)
+
+  // Log parse trace if debug flag set
+  if (options.debug)  console.info(grammar.trace(code))
   
   if (parseResult.succeeded()) {
     return semantics(parseResult).weston()
