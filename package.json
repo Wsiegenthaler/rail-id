@@ -2,9 +2,14 @@
   "name": "rail-id",
   "version": "0.0.1",
   "description": "A general purpose parser for European rolling stock identification codes",
+  "main": "dist/rail-id.cjs",
+  "module": "dist/rail-id.mjs",
+  "browser": "dist/rail-id.umd.js",
   "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "c8 -r html -r text  ava",
-    "test-watch": "ava --watch"
+    "test-watch": "ava -w"
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
@@ -14,10 +19,16 @@
     "ohm-js": "^16.4.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
     "@ohm-js/cli": "^1.1.0",
+    "@rollup/plugin-babel": "^6.0.2",
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "ava": "^5.0.1",
     "c8": "^7.12.0",
-    "prettyjson": "^1.2.5"
+    "prettyjson": "^1.2.5",
+    "rollup": "^3.2.3"
   },
   "ava": {
     "files": [
@@ -25,5 +36,8 @@
       "!test/util.mjs"
     ],
     "verbose": true
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

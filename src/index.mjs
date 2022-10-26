@@ -7,7 +7,7 @@ import { attributeMap, sourceMap } from './util/common.mjs'
 const Defaults = { sourceMap: true, debug: false }
 
 // Returns parse results as an unprocessed array of key/value pairs (attribute objects)
-export const railIDAttrs = (code, options) => {
+const railIDAttrs = (code, options={}) => {
   defaults(options, Defaults)
 
   // Log parse trace if debug flag set
