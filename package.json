@@ -2,6 +2,7 @@
   "name": "rail-id",
   "version": "0.0.1",
   "description": "A general purpose parser for European rolling stock identification codes",
+  "type": "module",
   "main": "dist/rail-id.cjs",
   "module": "dist/rail-id.mjs",
   "browser": "dist/rail-id.umd.js",

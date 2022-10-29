@@ -2,17 +2,17 @@ import ohm from 'ohm-js'
 import { flattenDeep } from 'lodash-es'
 import nomar from 'nomar'
 
-import grammarDef from './grammar-def.mjs'
+import grammarStr from './uic/grammar.ohm.mjs'
 import { Attr, Flag, NodeAttr, Meta } from './attributes.mjs'
 import { luhnClean } from './util/luhn.mjs'
 import { uicVerify } from './util/rail.mjs'
 import { uicTypeAttrs } from './uic/types.mjs'
 import { UICCountryCodeMap } from './uic/countries.mjs'
 
-export const grammar = ohm.grammar(grammarDef)
 
 
 console.log(grammar) //TODO
+export const grammar = ohm.grammar(grammarStr)
 
 export const semantics = grammar.createSemantics()
   .addOperation('weston', {
