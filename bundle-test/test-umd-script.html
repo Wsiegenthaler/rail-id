@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <script src="../dist/rail-id.umd.js"></script>
+    <script>
+      // UMD module export available via window object
+      let railID = window.railID
+
+      // Test run
+      let id = railID('91 85 4605 205-4')
+      console.log('PARSE RESULT', id)
+
+      if (typeof id === 'object' && id.vehicleType === 'locomotive')
+        alert('bundle test successful')
+      else
+        alert('bundle test failed')
+
+    </script>
+  </head>
+  <body>
+  </body>
+<html>
+
