@@ -99,6 +99,531 @@ UICCode {
   UICSpecialDetail = "9" xs digit xs digit xs digit
 
 
+  // ------ Wagon Letters ---------------------------------------------------------------
+
+  //TODO learn how to tell when to expect basic letter markings vs articulated/multi
+  UICWagonLetters
+    = uicWagonLetters_Basic
+    | uicWagonLetters_Articulated
+
+  //TODO integrate these
+  uicWagonLetters_Index_Common
+    = "qq"  -- qq
+    | "q"   -- q
+    | "ss"  -- ss
+    | "s"   -- s
+
+
+  // ------ Wagon Letters (non-articulated or multi-wagons) -----------------------------
+
+  uicWagonLetters_Basic
+    = "E" uicWagonLetters_Basic_E_Index*  -- E
+    | "F" uicWagonLetters_Basic_F_Index*  -- F
+    | "G" uicWagonLetters_Basic_G_Index*  -- G
+    | "H" uicWagonLetters_Basic_H_Index*  -- H
+    | "I" uicWagonLetters_Basic_I_Index*  -- I
+    | "K" uicWagonLetters_Basic_K_Index*  -- K
+    | "L" uicWagonLetters_Basic_L_Index*  -- L
+    | "O" uicWagonLetters_Basic_O_Index*  -- O
+    | "R" uicWagonLetters_Basic_R_Index*  -- R
+    | "S" uicWagonLetters_Basic_S_Index*  -- S
+    | "T" uicWagonLetters_Basic_T_Index*  -- T
+    | "U" uicWagonLetters_Basic_U_Index*  -- U
+    | "Z" uicWagonLetters_Basic_Z_Index*  -- Z
+
+  uicWagonLetters_Basic_E_Index
+    = "aa"  -- aa
+    | "a"   -- a
+    | "c"   -- c
+    | "kk"  -- kk
+    | "k"   -- k
+    | "ll"  -- ll
+    | "l"   -- l
+    | "mm"  -- mm
+    | "m"   -- m
+    | "n"   -- n
+    | "o"   -- o
+    | "p"   -- p
+
+  uicWagonLetters_Basic_F_Index
+    = "aa"   -- aa
+    | "a"    -- a
+    | "b"    -- b
+    | "cc"   -- cc
+    | "c"    -- c
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "kk"   -- kk
+    | "k"    -- k
+    | "ll"   -- ll
+    | "l"    -- l
+    | "n"    -- n
+    | "oo"   -- oo
+    | "o"    -- o
+    | "ppp"  -- ppp
+    | "pp"   -- pp
+    | "p"    -- p
+
+  uicWagonLetters_Basic_G_Index
+    = "aa"  -- aa
+    | "a"   -- a
+    | "bb"  -- bb
+    | "b"   -- b
+    | "g"   -- g
+    | "h"   -- h
+    | "kk"  -- kk
+    | "k"   -- k
+    | "ll"  -- ll
+    | "l"   -- l
+    | "m"   -- m
+    | "n"   -- n
+    | "o"   -- o
+    | "p"   -- p
+
+  uicWagonLetters_Basic_H_Index
+    = "aa"   -- aa
+    | "a"    -- a
+    | "bb"   -- bb
+    | "b"    -- b
+    | "cc"   -- cc
+    | "c"    -- c
+    | "dd"   -- dd
+    | "d"    -- d
+    | "ee"   -- ee
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "gg"   -- gg
+    | "g"    -- g
+    | "hh"   -- hh
+    | "h"    -- h
+    | "ii"   -- ii
+    | "i"    -- i
+    | "kk"   -- kk
+    | "k"    -- k
+    | "ll"   -- ll
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "n"    -- n
+    | "o"    -- o
+    | "p"    -- p
+
+  uicWagonLetters_Basic_I_Index
+    = "a"    -- a
+    | "bb"   -- bb
+    | "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "gg"   -- gg
+    | "g"    -- g
+    | "h"    -- h
+    | "ii"   -- ii
+    | "i"    -- i
+    | "k"    -- k
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "n"    -- n
+    | "o"    -- o
+    | "p"    -- p
+
+  uicWagonLetters_Basic_K_Index
+    = "b"   -- b
+    | "g"   -- g
+    | "i"   -- i
+    | "j"   -- j
+    | "k"   -- k
+    | "kk"  -- kk
+    | "l"   -- l
+    | "mm"  -- mm
+    | "m"   -- m
+    | "n"   -- n
+    | "o"   -- o
+    | "pp"  -- pp
+    | "p"   -- p
+
+  uicWagonLetters_Basic_L_Index
+    = "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "h"    -- h
+    | "hh"   -- hh
+    | "ii"   -- ii
+    | "i"    -- i
+    | "j"    -- j
+    | "kk"   -- kk
+    | "k"    -- k
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "n"    -- n
+    | "p"    -- p
+
+  uicWagonLetters_Basic_O_Index
+    = "a"  -- a
+    | "fff"  -- fff
+    | "ff"  -- ff
+    | "f"  -- f
+    | "kk"  -- kk
+    | "k"  -- k
+    | "l"  -- l
+    | "mm"  -- mm
+    | "m"  -- m
+    | "n"  -- n
+
+  uicWagonLetters_Basic_R_Index
+    = "b"   -- b
+    | "e"   -- e
+    | "g"   -- g
+    | "hh"  -- hh
+    | "h"   -- h
+    | "i"   -- i
+    | "j"   -- j
+    | "k"   -- k
+    | "l"   -- l
+    | "mm"  -- mm
+    | "m"   -- m
+    | "n"   -- n
+    | "oo"  -- oo
+    | "o"   -- o
+    | "pp"  -- pp
+    | "p"   -- p
+
+  uicWagonLetters_Basic_S_Index
+    = "aaa"  -- aaa
+    | "aa"   -- aa
+    | "a"    -- a
+    | "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "gg"   -- gg
+    | "g"    -- g
+    | "hh"   -- hh
+    | "h"    -- h
+    | "ii"   -- ii
+    | "i"    -- i
+    | "j"    -- j
+    | "kk"   -- kk
+    | "k"    -- k
+    | "l"    -- l
+    | "mmm"  -- mmm
+    | "mm"   -- mm
+    | "m"    -- m
+    | "n"    -- n
+    | "p"    -- p
+
+  uicWagonLetters_Basic_T_Index
+    = "aa"   -- aa
+    | "a"    -- a
+    | "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "dd"   -- dd
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "hh"   -- hh
+    | "h"    -- h
+    | "i"    -- i
+    | "j"    -- j
+    | "kk"   -- kk
+    | "k"    -- k
+    | "ll"   -- ll
+    | "l"    -- l
+    | "m"    -- m
+    | "n"    -- n
+    | "oo"   -- oo
+    | "o"    -- o
+    | "pp"   -- pp
+    | "p"    -- p
+
+  uicWagonLetters_Basic_U_Index
+    = "aa"   -- aa
+    | "a"    -- a
+    | "c"    -- c
+    | "dd"   -- dd
+    | "d"    -- d
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "i"    -- i
+    | "k"    -- k
+    | "kk"   -- kk
+    | "l"    -- l
+    | "ll"   -- ll
+    | "n"    -- n
+    | "oo"   -- oo
+    | "o"    -- o
+    | "pp"   -- pp
+    | "p"    -- p
+
+  uicWagonLetters_Basic_Z_Index
+    = "aa"   -- aa
+    | "a"    -- a
+    | "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "i"    -- i
+    | "j"    -- j
+    | "kk"   -- kk
+    | "k"    -- k
+    | "n"    -- n
+    | "p"    -- p
+
+  // ------ Wagon Letters (articulated or multi-wagons) ---------------------------------
+
+  uicWagonLetters_Articulated
+    = "F" uicWagonLetters_Articulated_F_Index*  -- F
+    | "H" uicWagonLetters_Articulated_H_Index*  -- H
+    | "I" uicWagonLetters_Articulated_I_Index*  -- I
+    | "L" uicWagonLetters_Articulated_L_Index*  -- L
+    | "S" uicWagonLetters_Articulated_S_Index*  -- S
+    | "T" uicWagonLetters_Articulated_T_Index*  -- T
+    | "U" uicWagonLetters_Articulated_U_Index*  -- U
+    | "Z" uicWagonLetters_Articulated_Z_Index*  -- Z
+ 
+  uicWagonLetters_Articulated_F_Index
+    = "a"    -- a
+    | "cc"   -- cc
+    | "c"    -- c
+    | "E"    -- E
+    | "ee"   -- ee
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "ll"   -- ll
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "pp"   -- pp
+    | "p"    -- p
+    | "rr"   -- rr
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_H_Index
+    = "a"    -- a
+    | "cc"   -- cc
+    | "c"    -- c
+    | "d"    -- d
+    | "ee"   -- ee
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "h"    -- h
+    | "ii"   -- ii
+    | "i"    -- i
+    | "ll"   -- ll
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "rr"   -- rr
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_I_Index
+    = "a"    -- a
+    | "c"    -- c
+    | "d"    -- d
+    | "ee"   -- ee
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "gg"   -- gg
+    | "g"    -- g
+    | "h"    -- h
+    | "ii"   -- ii
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "p"    -- p
+    | "rr"   -- rr
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_L_Index
+    = "aa"   -- aa
+    | "a"    -- a
+    | "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "hh"   -- hh
+    | "h"    -- h
+    | "ii"   -- ii
+    | "i"    -- i
+    | "j"    -- j
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "p"    -- p
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_S_Index
+    = "b"    -- b
+    | "c"    -- c
+    | "d"    -- d
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "gg"   -- gg
+    | "g"    -- g
+    | "hh"   -- hh
+    | "h"    -- h
+    | "ii"   -- ii
+    | "i"    -- i
+    | "j"    -- j
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "p"    -- p
+    | "rr"   -- rr
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_T_Index
+    = "a"    -- a
+    | "b"    -- b
+    | "c"    -- c
+    | "dd"   -- dd
+    | "d"    -- d
+    | "ee"   -- ee
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "hh"   -- hh
+    | "h"    -- h
+    | "i"    -- i
+    | "j"    -- j
+    | "ll"   -- ll
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "pp"   -- pp
+    | "p"    -- p
+    | "rr"   -- rr
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_U_Index
+    = "a"    -- a
+    | "ee"   -- ee
+    | "e"    -- e
+    | "c"    -- c
+    | "dd"   -- dd
+    | "d"    -- d
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "i"    -- i
+    | "ll"   -- ll
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "pp"   -- pp
+    | "p"    -- p
+    | "rr"   -- rr
+    | "r"    -- r
+
+  uicWagonLetters_Articulated_Z_Index
+    = "a"    -- a
+    | "c"    -- c
+    | "e"    -- e
+    | "fff"  -- fff
+    | "ff"   -- ff
+    | "f"    -- f
+    | "g"    -- g
+    | "i"    -- i
+    | "j"    -- j
+    | "mm"   -- mm
+    | "m"    -- m
+    | "oo"   -- oo
+    | "o"    -- o
+    | "rr"   -- rr
+    | "r"    -- r
+
+
+  // ------ Passenger Letters -----------------------------------------------------------
+
+  uicPassengerLetters = uicPassengerLetters_Serial+ uicPassengerLetters_Index*
+
+  uicPassengerLetters_Serial
+    = "AB"                  -- AB
+    | "A"                   -- A
+    | "B"                   -- B
+    | "WL"                  -- WL
+    | "WR"                  -- WR
+    | "R"                   -- R
+    | "DD"                  -- DD
+    | "D"                   -- D
+    | "Post"                -- Post
+    | ("AS" | "SR" | "WG")  -- AS_SR_WG
+    | "WSP"                 -- WSP
+    | "Laeq"                -- Laeq
+    | "Leq"                 -- Leq
+    | "Le"                  -- Le
+
+  uicPassengerLetters_Index
+    = ("b" | "h")   -- b_h
+    | "c"           -- c
+    | ("d" | "v")   -- d_v
+    | ("ee" | "z")  -- ee_z
+    | "f"           -- f
+    | ("p" | "t")   -- p_t
+    | "m"           -- m
+    | "s"           -- s
+
+
+  // ------ Special Letters -------------------------------------------------------------
+  //TODO
+  // This marking is indicated in document EN 14033-1 "Railway applications — Track — Technical requirements
+  // for railbound construction and maintenance machines — Part 1: Running of railbound machines".
+
+  uicSpecialLetters = "TODO"
+
+
   // ------ Other -----------------------------------------------------------------------
 
   UICSerial = digit xs digit xs digit
@@ -108,10 +633,10 @@ UICCode {
   UICKeeper = upper upper? "-" upper upper? upper? upper? upper?
 
   // Tokens that may appear in any number of places throught the code
-  UICWagonFreeToken =     "RIV" | UICKeeper
-  UICPassengerFreeToken = "TEN" | UICKeeper
+  UICWagonFreeToken =     "RIV" | UICKeeper | uicWagonLetters
+  UICPassengerFreeToken = "TEN" | UICKeeper | uicPassengerLetters
   UICTractiveFreeToken =  UICKeeper
-  UICSpecialFreeToken =   UICKeeper
+  UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
 
 
   // ------ Utility ---------------------------------------------------------------------
