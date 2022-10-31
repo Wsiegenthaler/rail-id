@@ -8,16 +8,16 @@ const program = new Command()
 
 program
   .name('dump-grammar')
-  .description('Utility which dumps Ohm grammar text where the grammar is defined as the default export of an ES module')
+  .description('utility which dumps raw ohm grammar text as defined by the default export of an ES module')
 
 program
   .command('dump <mjsFile> [outFile]', { isDefault: true })
-  .description('output the grammar to `outFile`, or to stdout if not specified')
+  .description('dumps the raw ohm grammar text for the module specified by `mjsFile`. output is written to stdout or to `outFile`')
   .action(dump)
 
 program
   .command('dump-all <inDir>')
-  .description('recursively outputs all grammars (*.ohm.mjs) found in `dir`')
+  .description('recursively dumps the raw text of all ohm grammar modules (*.ohm.mjs) found in `inDir`')
   .option('-o, --out-dir <outDir>', 'override output directory')
   .action(dumpAll)
 
@@ -33,7 +33,7 @@ async function dump(mjsFile, outFile) {
     try {
       await fs.mkdir(path.dirname(outFile), { recursive: true })
       await fs.writeFile(outFile, grammar)
-      console.log(`[success] ${mjsFile} ===> ${outFile}`)
+      console.log(`[success] ${mjsFile} ===> ${outFile}\n`)
     } catch (err) {
       console.error(err)
     }

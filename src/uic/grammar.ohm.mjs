@@ -102,7 +102,7 @@ UICCode {
   // ------ Wagon Letters ---------------------------------------------------------------
 
   //TODO learn how to tell when to expect basic letter markings vs articulated/multi
-  UICWagonLetters
+  uicWagonLetters
     = uicWagonLetters_Basic
     | uicWagonLetters_Articulated
 

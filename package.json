@@ -11,8 +11,9 @@
     "dev": "rollup -c -w",
     "test": "c8 -r html -r text  ava",
     "test-watch": "ava -w",
-    "dump-grammars": "node src/build/bin/dump-grammar.mjs src --out-dir data/grammars",
-    "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/uic/keepers.mjs"
+    "dump-grammars": "node src/build/bin/dump-grammar.mjs dump-all src --out-dir data/grammars",
+    "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/uic/keepers.mjs",
+    "gen-ohm-code": "npm run dump-grammars; npx ohm generateBundles --withTypes --esm data/grammars/**/*.ohm"
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
