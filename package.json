@@ -12,6 +12,7 @@
     "test": "c8 -r html -r text  ava",
     "test-watch": "ava -w",
     "dump-grammars": "node src/build/bin/dump-grammar.mjs src --out-dir data/grammars",
+    "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/uic/keepers.mjs"
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
