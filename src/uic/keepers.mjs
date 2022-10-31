@@ -9,9 +9,11 @@
 // 2) Export the data as a CSV using any spreadsheet application and remove non-data header
 //    rows from the beginning of the file.
 //
-// 3) Move the exported CSV to './scripts/keeper-data.csv' and run 'generate-keepers.js'.
+// 3) Run 'generate-keepers' script to convert CSV to ES module:
 //
-// 4) Ensure 'src/uic/keepers.mjs' reflects the latest data and that there are no syntax errors.
+//    `node src/build/bin/generate-keepers.mjs <csv> <mjs>`
+//
+// 4) Verify the generated module reflects the latest CSV data and that there are no syntax errors.
 //
      
 import { mapValues } from 'lodash-es'
