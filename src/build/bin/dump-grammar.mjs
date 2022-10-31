@@ -7,7 +7,11 @@ import path from 'path'
 const program = new Command()
 
 program
-  .command('dump <mjsGrammar> [outFile]', { isDefault: true })
+  .name('dump-grammar')
+  .description('Utility which dumps Ohm grammar text where the grammar is defined as the default export of an ES module')
+
+program
+  .command('dump <mjsFile> [outFile]', { isDefault: true })
   .description('output the grammar to `outFile`, or to stdout if not specified')
   .action(dump)
 
@@ -21,15 +25,15 @@ program.parse(process.argv)
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-async function dump(mjsGrammar, outFile) {
-  const mjsGrammarPath = path.join(process.cwd(), mjsGrammar)
-  const module = await import(mjsGrammarPath)
+async function dump(mjsFile, outFile) {
+  const mjsPath = path.join(process.cwd(), mjsFile)
+  const module = await import(mjsPath)
   const grammar = module.default
   if (outFile) {
     try {
       await fs.mkdir(path.dirname(outFile), { recursive: true })
       await fs.writeFile(outFile, grammar)
-      console.log(`[success] ${mjsGrammar} ===> ${outFile}`)
+      console.log(`[success] ${mjsFile} ===> ${outFile}`)
     } catch (err) {
       console.error(err)
     }

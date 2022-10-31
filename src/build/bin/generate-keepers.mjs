@@ -8,6 +8,10 @@ import * as _ from 'lodash-es'
 const program = new Command()
 
 program
+  .name('generate-keepers')
+  .description('Utility to generate an ES module containing UIC VKMs (keeper codes) given a CSV obtained from the UIC website')
+
+program
   .command('generate <inCsvFile> [outMjsFile]', { isDefault: true })
   .description('output the generated keeper definitions to `outMjsFile`, or to stdout if not specified')
   .action((inCsvFile, outMjsFile) => {
