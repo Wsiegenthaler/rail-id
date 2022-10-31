@@ -10,7 +10,8 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "c8 -r html -r text  ava",
-    "test-watch": "ava -w"
+    "test-watch": "ava -w",
+    "dump-grammars": "node src/build/bin/dump-grammar.mjs src --out-dir data/grammars",
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
