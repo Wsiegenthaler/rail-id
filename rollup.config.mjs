@@ -26,6 +26,7 @@ export default [
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
+        targets: "defaults or cover 96%"
       })
     ]
   },
@@ -46,6 +47,10 @@ export default [
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
+        targets: [
+          "maintained node versions",
+          "last 3 versions"
+        ]
       })
     ]
   }
