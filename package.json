@@ -18,6 +18,8 @@
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
   "dependencies": {
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/lodash-es": "^4.17.6",
     "lodash-es": "^4.17.21",
     "ohm-js": "^16.4.0"
   },
@@ -33,7 +35,8 @@
     "commander": "^9.4.1",
     "csv": "^6.2.1",
     "prettyjson": "^1.2.5",
-    "rollup": "^3.2.3"
+    "rollup": "^3.2.3",
+    "rollup-plugin-typescript2": "^0.34.1"
   },
   "ava": {
     "files": [

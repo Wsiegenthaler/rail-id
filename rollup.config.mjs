@@ -1,9 +1,13 @@
 import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
+import typescript from 'rollup-plugin-typescript2'
 
 import pkg from './package.json' assert { type: "json" }
 import resolveOhm from './src/build/rollup/resolve-ohm-grammar.mjs'
+
+const tsConfig = {
+}
 
 export default [
   // browser & node friendly UMD build
@@ -18,7 +22,11 @@ export default [
       resolve(),
       resolveOhm(),
       commonjs(),
-      babel({ babelHelpers: 'bundled' })
+      typescript(tsConfig),
+      babel({
+        presets: ["@babel/preset-env"],
+        babelHelpers: 'bundled',
+      })
     ]
   },
 
@@ -33,8 +41,12 @@ export default [
       { file: pkg.module, format: 'es' }
     ],
     plugins: [
-        resolveOhm(),
-        babel({ babelHelpers: 'bundled' })
-      ]
+      resolveOhm(),
+      typescript(tsConfig),
+      babel({
+        presets: ["@babel/preset-env"],
+        babelHelpers: 'bundled',
+      })
+    ]
   }
 ]
