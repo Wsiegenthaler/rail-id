@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "c8 -r html -r text  ava",
+    "test": "c8 -r html -r text ava",
     "test-watch": "ava -w",
     "dump-grammars": "node src/build/bin/dump-grammar.mjs dump-all src --out-dir data/grammars",
     "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/uic/keepers.mjs",
@@ -19,7 +19,6 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "lodash-es": "^4.17.21",
-    "nomar": "^1.1.0",
     "ohm-js": "^16.4.0"
   },
   "devDependencies": {
