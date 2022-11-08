@@ -1,12 +1,18 @@
-import { zipObject } from "lodash-es"
+import { mapValues, zipObject } from 'lodash-es'
+
+import { Dictionary } from './util/common'
+import { SetField, ValueDef } from './attributes/builders'
+
+
+interface Gauge { name: string, type: string, mm: number }
 
 // Factories
-const Gauge = (name, type, mm) => ({ name, type, mm })
-const NarrowGauge = (name, mm) => Gauge(name, 'narrow', mm)
-const BroadGauge = (name, mm) => Gauge(name, 'broad', mm)
+const Gauge = (name: string, type: string, mm: number): Readonly<Gauge> => ({ name, mm, type })
+const NarrowGauge = (name: string, mm: number): Readonly<Gauge> => ({ name, mm, type: 'narrow' })
+const BroadGauge = (name: string, mm: number): Readonly<Gauge> => ({ name, mm, type: 'broad' })
 
-// Defs
-export const RailGauges = [
+// Definitions
+export const GaugeDefs = [
   Gauge('Fifteen Inch', 'minimum', 381),
   
   NarrowGauge('600 mm', 600),
@@ -42,9 +48,12 @@ export const RailGauges = [
   BroadGauge('Brunel', 2140)
 ]
 
-// Rail gauges by distance (mm)
-const RailGaugeMap = zipObject(RailGauges.map(g => g.mm.toString()), RailGauges)
-export const GaugeByDist = mm => RailGaugeMap[mm.toString()]
+// Dictionary of Gauges by distance (`mm`)
+const GaugeMap: Dictionary<Gauge> = zipObject(GaugeDefs.map(g => g.mm.toString()), GaugeDefs)
+export const GaugeByDist = (...mm: number[]) => {
+  if (mm.length > 1) return mm.map(mm => GaugeMap[mm.toString()])
+  return GaugeMap[mm.toString()]
+}
 
-// Standard gauge
-export const StandardGauge = RailGaugeMap['1435']
+// Standard gauge (exported for convenience)
+export const StandardGauge = GaugeByDist(1435)
