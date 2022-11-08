@@ -3,16 +3,16 @@
 import { Command } from 'commander'
 import fs from 'fs'
 import { parse } from 'csv-parse'
-import * as _ from 'lodash-es'
+import { sortBy } from 'lodash-es'
 
 const program = new Command()
 
 program.name('generate-keepers')
 
 program
-  .command('generate <inCsvFile> [outMjsFile]', { isDefault: true })
-  .description('output the keeper definitions as an ES module. output is written to stdout or `outMjsFile`')
-  .action((inCsvFile, outMjsFile) => {
+  .command('generate <inCsvFile> [outTsFile]', { isDefault: true })
+  .description('output the keeper definitions as an TS module. output is written to stdout or `outTsFile`')
+  .action((inCsvFile, outTsFile) => {
     let rows = []
  
     // Read and parse data from stream
@@ -21,17 +21,27 @@ program
       .on("data", r => rows.push(r.map(clean)))
       .on("end", () => {
         // Generate output content
-        let body = _.sortBy(rows, [3, 1])
-          .filter(r => r[4].toLowerCase() === 'in use')
-          .map(r => `  '${r[1].toUpperCase()}': { country: '${r[3].toUpperCase()}', company: '${r[2]}', website: '${r[5]}', otif: ${r[6].toUpperCase() === 'OTIF' ? 1 : 0} }`)
+        let body = sortBy(rows, [3, 1])
+          .map(r => {
+            const website = (r[5] ?? '')
+            const otif = (r[6] ?? '').toLowerCase() !== 'otif'
+            const status = (r[4] ?? '').toLowerCase().trim()
+              .replace(/ı/g, 'i') // hack to replace errant turkish character present in data file
+
+            let optional = ''
+            if (website.length > 0) optional += `, website: '${website}'`
+            if (otif)               optional += `, otif: true`
+
+            return `  { vkm: '${r[1].toUpperCase()}', country: '${r[3].toUpperCase()}', company: '${r[2]}', status: '${status}'${optional} }`
+          })
           .join(',\n')
         let data = template(body)
 
-        if (outMjsFile) {
+        if (outTsFile) {
           // Save output to file
-          fs.writeFile(outMjsFile, data, err => {
+          fs.writeFile(outTsFile, data, err => {
             if (err) console.error(err)
-            else console.log(`Keeper definitions successfully written to: ${outMjsFile}\n`);
+            else console.log(`Keeper definitions successfully written to: ${outTsFile}\n`);
           })
         } else console.log(data)
       })
@@ -39,10 +49,6 @@ program
   })
 
 program.parse(process.argv)
-
-
-//generate('../../data/keeper-data.csv', '../uic/keepers.mjs')
-// node src/build/bin/generate-keepers.mjs ../../data/keeper-data.csv ../uic/keepers.mjs
 
 
 ////////////////////////////////////////////////////////////////////
@@ -59,18 +65,33 @@ function template(body) {
       // 2) Export the data as a CSV using any spreadsheet application and remove non-data header
       //    rows from the beginning of the file.
       //
-      // 3) Run 'generate-keepers' script to convert CSV to ES module:
+      // 3) Run 'generate-keepers' script to convert CSV to TS module:
       //
       //    \`node src/build/bin/generate-keepers.mjs <csv> <mjs>\`
       //
       // 4) Verify the generated module reflects the latest CSV data and that there are no syntax errors.
       //
      
-      import { mapValues } from 'lodash-es'
-       
-      export default mapValues({
+      import { zipObject } from 'lodash-es'
+
+      export type KeeperStatus = 'in use' | 'blocked' | 'revoked'
+
+      export interface Keeper {
+        vkm: string,
+        status: KeeperStatus,
+        country: string,
+        company: string,
+        website?: string,
+        otif?: boolean
+      }
+
+      export const keepers: Keeper[] = [
       ${body}
-      }, (o, vkm) => ({ vkm, ...o }))
+      ]
+
+      const keeperMap = zipObject(keepers.map(k => k.vkm), keepers)
+
+      export default keeperMap
     `.replaceAll(/^      /gm, '')
 }
 
