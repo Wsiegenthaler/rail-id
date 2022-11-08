@@ -4,10 +4,10 @@ import nomar from 'nomar'
 
 import grammarStr from './uic/grammar.ohm.mjs'
 import { Attr, Flag, NodeAttr, Meta } from './attributes.mjs'
-import { luhnClean } from './util/luhn.mjs'
-import { uicVerify } from './util/rail.mjs'
-import { UICCountryCodeMap } from './uic/countries.mjs'
+import { luhnClean } from './util/luhn'
+import { uicVerify } from './util/luhn-uic'
 import { uicTypeAttrs } from './uic/types'
+import { UICCountryCodeMap } from './uic/countries'
 
 
 
