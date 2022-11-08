@@ -1,7 +1,7 @@
 import { defaults, partition, sortBy, unset } from 'lodash-es'
 
-import { grammar, semantics } from './parser.mjs'
-import { attributeMap, sourceMap } from './util/common.mjs'
+import { grammar, semantics } from './parser'
+import { attributeMap, sourceMap } from './util/common'
 
 
 const Defaults = { sourceMap: true, debug: false }

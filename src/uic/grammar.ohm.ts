@@ -1,7 +1,8 @@
 import { range, some, values } from 'lodash-es'
 
+import { Rule } from '../util/common'
+
 import { UICCountries } from './countries'
-import { UICWagonTypeRules, UICPassengerTypeRules } from './types.mjs'
 
 
 // Generate country clause based on UIC country definitions
@@ -9,22 +10,6 @@ const countries = UICCountries
   .map(c => ({ digits: c.code.toString().split(''), ...c }))
   .map(c => `"${c.digits[0]}" "${c.digits[1]}" // ${c.long}`)
   .join('\n    | ')
-
-// Facility for generating UIC type code clauses based on type rule definitions
-const exactTypeRules = rules => rules.filter(r => !r.pattern.toString().includes('.')) // ignore rules with wildcards
-const typeClause = rules => range(0, 100)
-  .map(n => n.toString().padStart(2, '0'))
-  .filter(dd => some(rules, r => r.pattern.test(dd)))
-  .map(dd => `"${dd[0]}" "${dd[1]}"  -- type${dd}`)
-  .join('\n    | ')
-
-// UIC type code clause for wagons
-const exactWagonTypeRules = exactTypeRules(UICWagonTypeRules)
-const wagonTypeClause = typeClause(exactWagonTypeRules)
-
-// UIC type code clause for passenger cars
-const exactPassengerTypeRules = exactTypeRules(UICPassengerTypeRules)
-const passengerTypeClause = typeClause(exactPassengerTypeRules)
 
 
 export default `
@@ -54,21 +39,28 @@ UICCode {
   // ------ Type Code -------------------------------------------------------------------
 
   UICWagonType
-    = ${wagonTypeClause}
+    = "0" xs digit
+    | "1" xs digit
+    | "2" xs digit
+    | "3" xs digit
+    | "4" xs digit
+    | "8" xs digit
     
   UICPassengerType
-    = ${passengerTypeClause}
+    = "5" xs digit
+    | "6" xs digit
+    | "7" xs digit
     
   UICTractiveType
-    = "9" xs "0"  -- type90
-    | "9" xs "1"  -- type91
-    | "9" xs "2"  -- type92
-    | "9" xs "3"  -- type93
-    | "9" xs "4"  -- type94
-    | "9" xs "5"  -- type95
-    | "9" xs "6"  -- type96
-    | "9" xs "7"  -- type97
-    | "9" xs "8"  -- type98
+    = ("9" xs "1")
+    | ("9" xs "2")
+    | ("9" xs "3")
+    | ("9" xs "4")
+    | ("9" xs "5")
+    | ("9" xs "6")
+    | ("9" xs "7")
+    | ("9" xs "8")
+    | ("9" xs "8")
     
   UICSpecialType = "9" xs "9"
 
@@ -97,6 +89,21 @@ UICCode {
     | "8" xs digit xs digit xs digit xs digit xs digit xs digit
 
   UICSpecialDetail = "9" xs digit xs digit xs digit
+
+
+  // ------ Misc ------------------------------------------------------------------------
+
+  UICSerial = digit xs digit xs digit
+
+  UICChecksum = "-" digit
+
+  UICKeeper = upper upper? "-" upper upper? upper? upper? upper?
+
+  // Tokens that may appear in any number of places throught the code
+  UICWagonFreeToken =     "RIV" | UICKeeper | uicWagonLetters
+  UICPassengerFreeToken = "TEN" | UICKeeper | uicPassengerLetters
+  UICTractiveFreeToken =  UICKeeper
+  UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
 
 
   // ------ Wagon Letters ---------------------------------------------------------------
@@ -272,16 +279,16 @@ UICCode {
     | "p"    -- p
 
   uicWagonLetters_Basic_O_Index
-    = "a"  -- a
+    = "a"    -- a
     | "fff"  -- fff
-    | "ff"  -- ff
-    | "f"  -- f
-    | "kk"  -- kk
-    | "k"  -- k
-    | "l"  -- l
-    | "mm"  -- mm
-    | "m"  -- m
-    | "n"  -- n
+    | "ff"   -- ff
+    | "f"    -- f
+    | "kk"   -- kk
+    | "k"    -- k
+    | "l"    -- l
+    | "mm"   -- mm
+    | "m"    -- m
+    | "n"    -- n
 
   uicWagonLetters_Basic_R_Index
     = "b"   -- b
@@ -622,21 +629,6 @@ UICCode {
   // for railbound construction and maintenance machines — Part 1: Running of railbound machines".
 
   uicSpecialLetters = "TODO"
-
-
-  // ------ Other -----------------------------------------------------------------------
-
-  UICSerial = digit xs digit xs digit
-
-  UICChecksum = "-" digit
-
-  UICKeeper = upper upper? "-" upper upper? upper? upper? upper?
-
-  // Tokens that may appear in any number of places throught the code
-  UICWagonFreeToken =     "RIV" | UICKeeper | uicWagonLetters
-  UICPassengerFreeToken = "TEN" | UICKeeper | uicPassengerLetters
-  UICTractiveFreeToken =  UICKeeper
-  UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
 
 
   // ------ Utility ---------------------------------------------------------------------

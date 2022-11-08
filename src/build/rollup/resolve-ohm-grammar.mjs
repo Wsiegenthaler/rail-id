@@ -13,7 +13,8 @@
 //
 
 const matchRaw = s => /\.ohm$/gi.test(s)
-const matchModule = s => /\.ohm\.mjs/gi.test(s)
+const matchNodeModule = s => /\.ohm\.mjs/gi.test(s)
+const matchTypescriptModule = s => /\.ohm\.ts/gi.test(s)
 
 async function importFresh(path) {
   return (await import(`${path}?update=${Date.now()}`)).default
@@ -23,10 +24,10 @@ export default function resolveOhmGrammar() {
   return {
     name: 'resolve-ohm-grammar',
     async load(id) {
-      return matchModule(id) ? importFresh(id) : null
+      return matchNodeModule(id) ? importFresh(id) : null
     },
     async transform(code, id) {
-      if (matchRaw(id) || matchModule(id)) {
+      if (matchRaw(id) || matchNodeModule(id) || matchTypescriptModule(id)) {
         return `export default \`${code}\``
       }
     }

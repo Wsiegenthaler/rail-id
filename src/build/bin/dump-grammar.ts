@@ -8,7 +8,7 @@ const program = new Command()
 
 program
   .name('dump-grammar')
-  .description('utility which dumps raw ohm grammar text as defined by the default export of an ES module')
+  .description('utility which dumps raw ohm grammar text as defined by the default export of a TS module')
 
 program
   .command('dump <grammarFile> [outFile]', { isDefault: true })
@@ -17,7 +17,7 @@ program
 
 program
   .command('dump-all <inDir>')
-  .description('recursively dumps the raw text of all ohm grammar modules (*.ohm.mjs) found in `inDir`')
+  .description('recursively dumps the raw text of all ohm grammar modules (*.ohm.ts) found in `inDir`')
   .option('-o, --out-dir <outDir>', 'override output directory')
   .action(dumpAll)
 
@@ -40,24 +40,24 @@ async function dump(grammarFile, outFile) {
   } else console.log(grammar)
 }
 
-const isModule = s => /\.ohm\.mjs$/g.test(s)
+const isModule = s => /\.ohm\.ts$/g.test(s)
 
 async function dumpAll(inDir, options) {
   (await walk(path.relative(process.cwd(), inDir)))
     .filter(s => isModule(s))
-    .map(s => ({ in: s, out: s.slice(0, s.length-4) }))
+    .map(s => ({ in: s.slice(0, s.length-3), out: s.slice(0, s.length-3) }))
     .map(o => options.outDir ? { ...o, out: path.join(options.outDir, o.out) } : o)
     .forEach(o => dump(o.in, o.out))
 }
 
-async function walk(dir) {
+async function walk(dir): Promise<string[]> {
   let files = await fs.readdir(dir)
   files = await Promise.all(files.map(async file => {
     const filePath = path.join(dir, file)
     const stats = await fs.stat(filePath)
     if (stats.isDirectory()) return await walk(filePath)
     else if(stats.isFile()) return filePath
-  }))
+  })) as string[]
 
-  return files.reduce((all, folderContents) => all.concat(folderContents), []);
+  return files.reduce((all: string[], folderContents) => all.concat(folderContents), []);
 }

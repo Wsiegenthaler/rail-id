@@ -3,7 +3,7 @@ import { range } from 'lodash-es'
 
 import { UICCountryCodeMap, UICCountries } from '../src/uic/countries'
 
-import { eq, like, throws } from './util.mjs'
+import { eq, like, throws } from './util'
 
 
 test('whitespace 1', t => {

@@ -3,7 +3,6 @@ import { Field } from '../builders'
 
 // Vehicle type/subtype
 const VehicleType = new Field('Vehicle Type', 'type')
-const VehicleSubType = new Field('Vehicle Sub-Type', 'subtype')
 
 export const WagonVehicle    = VehicleType.value('Wagon')
 export const HauledPassenger = VehicleType.value('Hauled-passenger Car')

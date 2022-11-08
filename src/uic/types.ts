@@ -1,4 +1,5 @@
 import { ValueDef } from '../attributes/builders'
+import { Rule } from '../util/common'
 
 import * as A from '../attributes/vehicles/uic-type-code'
 import * as C from '../attributes/vehicles/common-fields'
@@ -7,11 +8,6 @@ import { GaugesByDist } from '../attributes/gauge'
 
 import { Node } from 'ohm-js'
 
-
-interface Rule { pattern: RegExp, defs: ValueDef<any>[] }
-
-// Notes
-//TODO
 
 // ---- General rules (first digit only) -----------------------------
 export const UICTypeRulesDx: Rule[] = [

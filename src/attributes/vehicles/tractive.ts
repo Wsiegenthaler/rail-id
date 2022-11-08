@@ -1,7 +1,9 @@
-import { VehicleSubType } from './common-fields'
+import { Field } from '../builders'
 
 
 // Tractive vehicle sub-types
+const VehicleSubType = new Field('Vehicle Sub-Type', 'subtype')
+
 export const MiscellaneousVehicle          = VehicleSubType.value('Miscellaneous vehicle')
 export const ElectricLocomotive            = VehicleSubType.value('Electric locomotive')
 export const DieselLocomotive              = VehicleSubType.value('Diesel locomotive')

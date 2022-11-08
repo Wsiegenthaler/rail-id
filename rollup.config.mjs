@@ -2,6 +2,8 @@ import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from 'rollup-plugin-typescript2'
+import terser from '@rollup/plugin-terser'
+import analyze from 'rollup-plugin-analyzer'
 
 import pkg from './package.json' assert { type: "json" }
 import resolveOhm from './src/build/rollup/resolve-ohm-grammar.mjs'
@@ -18,14 +20,16 @@ export default [
     },
     plugins: [
       resolve(),
-      resolveOhm(),
       commonjs(),
       typescript(),
+      resolveOhm(),
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
         targets: "defaults or cover 96%"
-      })
+      }),
+      terser(),
+      analyze({ limit: 20, summaryOnly: true })
     ]
   },
 
@@ -40,8 +44,8 @@ export default [
       { file: pkg.module, format: 'es' }
     ],
     plugins: [
-      resolveOhm(),
       typescript(),
+      resolveOhm(),
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
