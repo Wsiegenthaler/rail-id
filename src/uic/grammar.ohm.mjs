@@ -1,6 +1,6 @@
 import { range, some, values } from 'lodash-es'
 
-import { UICCountries } from './countries.mjs'
+import { UICCountries } from './countries'
 import { UICWagonTypeRules, UICPassengerTypeRules } from './types.mjs'
 
 

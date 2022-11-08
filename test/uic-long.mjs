@@ -1,7 +1,7 @@
 import test from 'ava'
 import { range } from 'lodash-es'
 
-import { UICCountryCodeMap, UICCountries } from '../src/uic/countries.mjs'
+import { UICCountryCodeMap, UICCountries } from '../src/uic/countries'
 
 import { eq, like, throws } from './util.mjs'
 
