@@ -4,33 +4,35 @@ import {
   assign,
   get,
   groupBy,
+  isEqual,
+  keys,
   merge,
   partition,
   set,
+  some,
   toPairs,
   zipObject
 } from 'lodash-es'
+
+import { Dictionary } from '../util/common'
 
 
 const META_PATH = '_meta'
 const META_FIELDS_PATH = `${META_PATH}.fields`
 
-export enum FieldType {
-    Scalar = 'scalar',
-    Set = 'set'
-}
+type FieldType = 'scalar' | 'set'
 
-export class Field<V> {
-  public name: string
-  public path: string
-  public desc?: string
-  public type: FieldType
+abstract class AbstractField<V> {
+  public readonly name: string
+  public readonly path: string
+  public readonly desc?: string
 
-  constructor(name: string, path: string, desc?: string, type:FieldType=FieldType.Scalar) {
+  abstract readonly type: FieldType
+
+  constructor(name: string, path: string, desc?: string) {
     this.name = name
     this.path = path
     this.desc = desc
-    this.type = type
   }
 
   value(value: V, desc?: string): ValueDef<V> {
@@ -38,10 +40,18 @@ export class Field<V> {
   }
 }
 
+export class Field<V> extends AbstractField<V> {
+  type: FieldType = 'scalar'
+}
+
+export class SetField<V> extends AbstractField<V> {
+  type: FieldType = 'set'
+}
+
 export class ValueDef<V> {
-  field: Field<V>
-  value: V
-  desc?: string
+  readonly field: Field<V>
+  readonly value: V
+  readonly desc?: string
 
   constructor(field: Field<V>, value: V, desc?: string) {
     this.field = field
@@ -49,26 +59,37 @@ export class ValueDef<V> {
     this.desc = desc
   }
 
-  at(source: Interval, ...notes: Array<string>) {
-    return new Attribute<V>(this, source, notes)
+  // Used to represent an instance of this value for a particular part of the code
+  at(source: Interval, ...notes: string[]) {
+    return new Attr<V>(this, source, notes)
+  }
+
+  // Tests a result object for the presence of this field value
+  matches(o: object): boolean {
+    if (this.field.type === 'scalar')
+      return isEqual(get(o, this.field.path, undefined), this.value)
+    else if (this.field.type === 'set')
+      return some(get(o, this.field.path, []), (val: V) => isEqual(val, this.value))
+    else
+      return false
   }
 }
 
-export class Attribute<V> {
-  valueDef: ValueDef<V>
+export class Attr<V> {
+  def: ValueDef<V>
   source: Interval
-  notes: Array<string> = []
+  notes: string[] = []
 
-  constructor(value: ValueDef<V>, source: Interval, notes: Array<string>) {
-    this.valueDef = value
+  constructor(def: ValueDef<V>, source: Interval, notes: string[]) {
+    this.def = def
     this.source = source
     this.notes = notes
   }
 }
 
-const applyScalars = (o: object, attrs: Array<Attribute<any>>): object => {
+const applyScalars = (o: object, attrs: Attr<any>[]): object => {
   // Apply values
-  attrs.forEach(a => set(o, a.valueDef.field.path, a.valueDef.value))
+  attrs.forEach((a: Attr<any>) => set(o, a.def.field.path, a.def.value))
 
   // Apply field metadata
   applyScalarMeta(o, attrs)
@@ -76,11 +97,11 @@ const applyScalars = (o: object, attrs: Array<Attribute<any>>): object => {
   return o
 }
 
-const applySets = (o: object, attrs: Array<Attribute<any>>): object => {
+const applySets = (o: object, attrs: Attr<any>[]): object => {
   // Apply values
-  const setMap = groupBy(attrs, a => a.valueDef.field.path)
+  const setMap = groupBy(attrs, (a: Attr<any>) => a.def.field.path)
   toPairs(setMap)
-    .map(([path, attrs]) => [path, attrs.map(a => a.valueDef.value)])
+    .map(([path, attrs]) => [path, attrs.map((a: Attr<any>) => a.def.value)])
     .forEach(([path, v]) => set(o, path, v))
 
   // Apply field metadata
@@ -89,13 +110,13 @@ const applySets = (o: object, attrs: Array<Attribute<any>>): object => {
   return o
 }
 
-const applyScalarMeta = (o: object, attrs: Array<Attribute<any>>): object => {
+const applyScalarMeta = (o: object, attrs: Attr<any>[]): object => {
     // Build metadata updates
     const updates = zipObject(
-      attrs.map(a => a.valueDef.field.path),
-      attrs.map(a => ({
-        type: a.valueDef.field.type,
-        desc: a.valueDef.field.desc ?? '',
+      attrs.map((a: Attr<any>) => a.def.field.path),
+      attrs.map((a: Attr<any>) => ({
+        type: a.def.field.type,
+        desc: a.def.field.desc ?? '',
         source: a.source,
         notes: a.notes
     })))
@@ -107,25 +128,25 @@ const applyScalarMeta = (o: object, attrs: Array<Attribute<any>>): object => {
     return o
 }
 
-const applySetMeta = (o: object, setMap: Dictionary<Array<Attribute<any>>>): object => {
+const applySetMeta = (o: object, setMap: Dictionary<Attr<any>[]>): object => {
     for (let path in setMap) {
       const attrs = setMap[path]
 
       // Build metadata updates for `set` fields
       const fieldUpdates = zipObject(
-        attrs.map(a => a.valueDef.field.path),
-        attrs.map(a => ({
-          type: a.valueDef.field.type,
+        attrs.map((a: Attr<any>) => a.def.field.path),
+        attrs.map((a: Attr<any>) => ({
+          type: a.def.field.type,
           length: attrs.length,
-          desc: a.valueDef.field.desc,
+          desc: a.def.field.desc,
       })))
 
       // Build metadata updates for values of the set
       const valueUpdates = zipObject(
-        attrs.map((a, i) => `${a.valueDef.field.path}[${i}]`),
-        attrs.map(a => ({
-          name: a.valueDef.value,
-          desc: a.valueDef.desc ?? '',
+        attrs.map((a: Attr<any>, i: number) => `${a.def.field.path}[${i}]`),
+        attrs.map((a: Attr<any>) => ({
+          name: a.def.value,
+          desc: a.def.desc ?? '',
           notes: a.notes,
           source: a.source
       })))
@@ -140,17 +161,12 @@ const applySetMeta = (o: object, setMap: Dictionary<Array<Attribute<any>>>): obj
 }
 
 // Generate result object with attributes and their metadata
-export const buildResult = (attrs: Array<Attribute<any>>): object => {
+export const buildResult = (attrs: Attr<any>[]): object => {
   const o = {}
-  const [ scalars, sets ] = partition(attrs, a => a.valueDef.field.type === FieldType.Scalar)
+  const [ scalars, sets ] = partition(attrs, (a: Attr<any>) => a.def.field.type === 'scalar')
 
   applyScalars(o, scalars) 
   applySets(o, sets)
   
   return o
-}
-
-// `Dictionary` type definition isn't included with lodash-es for some reason, defining it here
-export interface Dictionary<T> {
-  [index: string]: T;
 }
