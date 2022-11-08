@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { luhn, luhnVerify } from '../src/util/luhn.mjs'
+import { luhn, luhnVerify } from '../src/util/luhn'
 
 test('compute/verify - compute and verify checksum of value from wikipedia', t => {
   let v = '7992739871', expected = 3
