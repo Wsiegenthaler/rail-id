@@ -1,11 +1,8 @@
-import castRest from 'lodash-es/_castRest'
 import { Field } from '../builders'
-
-import { VehicleSubType } from './common-fields'
 
 
 // Special Type (tractives)
-const SpecialType = new Field("Special Tractives Type", 'specialType')
+const SpecialType = new Field('Special Tractives Type', 'special.type')
 
 export const InfrastructureVehicle   = SpecialType.value('Infrastructure and superstructure')
 export const TrackVehicle            = SpecialType.value('Track')
@@ -20,7 +17,7 @@ export const RailOrRoadVehicle       = SpecialType.value('Rail/road')
 
 
 // Special Sub-Type (tractives)
-const SpecialSubType = new Field("Special Tractives Sub-Type", 'specialSubtype')
+const SpecialSubType = new Field('Special Tractives Sub-Type', 'special.subtype')
 
 // Infrastructure and superstructure
 export const TrackLayer           = SpecialSubType.value('Track laying and renewal train')
