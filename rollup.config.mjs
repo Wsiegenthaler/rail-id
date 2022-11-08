@@ -6,8 +6,6 @@ import typescript from 'rollup-plugin-typescript2'
 import pkg from './package.json' assert { type: "json" }
 import resolveOhm from './src/build/rollup/resolve-ohm-grammar.mjs'
 
-const tsConfig = {
-}
 
 export default [
   // browser & node friendly UMD build
@@ -22,7 +20,7 @@ export default [
       resolve(),
       resolveOhm(),
       commonjs(),
-      typescript(tsConfig),
+      typescript(),
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
@@ -43,7 +41,7 @@ export default [
     ],
     plugins: [
       resolveOhm(),
-      typescript(tsConfig),
+      typescript(),
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
