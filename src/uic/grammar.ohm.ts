@@ -114,12 +114,14 @@ UICCode {
     | uicWagonLetters_Articulated
 
   //TODO integrate these
-  uicWagonLetters_Index_Common
-    = "qq"  -- qq
-    | "q"   -- q
-    | "ss"  -- ss
-    | "s"   -- s
+  // Index letters with an international value (common to all categories)
+  uicWagonLetters_International_Index
+    = "qq" | "q" | "ss" | "s"
 
+  //TODO integrate these
+  // Index letters with a national value (common to all categories)
+  uicWagonLetters_National_Index
+    = "t" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
 
   // ------ Wagon Letters (non-articulated or multi-wagons) -----------------------------
 
