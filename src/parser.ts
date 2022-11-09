@@ -1,10 +1,10 @@
 import ohm, { TerminalNode } from 'ohm-js'
-import { find } from 'lodash-es'
+import { find, isObject } from 'lodash-es'
 import { IterationNode, Node, NonterminalNode } from 'ohm-js'
 
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
-import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './uic/types'
+import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/types'
 
 import { Attr, Attrs } from './attributes/builders'
 import { CountryByCode } from './attributes/countries'
@@ -12,6 +12,8 @@ import * as C from './attributes/vehicles/common-fields'
 import * as P from './attributes/code-parts'
 
 import grammarStr from './uic/grammar.ohm'
+import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
+import keeperMap from './uic/keepers'
 
 
 export const grammar = ohm.grammar(grammarStr)
@@ -26,7 +28,7 @@ export const semantics = grammar.createSemantics()
 
       // Checksum validation
       let checksumStatus = C.ChecksumAbsent.absent()
-      const checksumPart = find(childAttrs, (a: Attr<any>) => a.def.field.is(P.ChecksumDigitPart))
+      const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
         checksumStatus = (digits.length == 12 && uicVerify(digits)) ?
@@ -99,27 +101,26 @@ export const semantics = grammar.createSemantics()
   
     // --------------------------- Vehicle Detail expressions ------------------------------
 
-    UICWagonDetail(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
+    UICWagonDetail(this: NonterminalNode, d5: NonterminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
       //TODO
       return [
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
     },
-    UICPassengerDetail(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
+    UICPassengerDetail(this: NonterminalNode, d5: NonterminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
       //TODO
       return [
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
     },
-    UICTractiveDetail(this: NonterminalNode, d1: TerminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode, xs4: NonterminalNode, d5: NonterminalNode, xs5: NonterminalNode, d6: NonterminalNode, xs6: NonterminalNode, d7: NonterminalNode): Attrs {
-      //TODO
-      return [
-        P.VehicleDetailPart.value(this.sourceString).at(this.source)
-      ]
+    UICTractiveDetail(this: NonterminalNode, d5: TerminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode, xs4: NonterminalNode, d9: NonterminalNode, xs5: NonterminalNode, d10: NonterminalNode, xs6: NonterminalNode, d11: NonterminalNode): Attrs {
+      // This block is defined by the Member States, eventually by bilateral or multilateral agreement
+      return [ P.VehicleDetailPart.value(this.sourceString).at(this.source) ]
     },
-    UICSpecialDetail(this: NonterminalNode, d1: TerminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
-      //TODO
+    UICSpecialDetail(this: NonterminalNode, d5: TerminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
       return [
+        ...uicSpecialTractiveD6(d6),
+        ...uicSpecialTractiveD78(d7, d8),
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
     },
@@ -138,10 +139,19 @@ export const semantics = grammar.createSemantics()
     UICChecksum(this: NonterminalNode, dash: TerminalNode, digit: NonterminalNode): Attrs {
       return [ P.ChecksumDigitPart.value(digit.sourceString).at(digit.source) ]
     },
-    UICKeeper(this: NonterminalNode, arg0: NonterminalNode, arg1: IterationNode, arg2: TerminalNode, arg3: NonterminalNode, arg4: IterationNode, arg5: IterationNode, arg6: IterationNode, arg7: IterationNode): Attrs {
+    UICKeeper(this: NonterminalNode, p1_l1: NonterminalNode, p1_l2: IterationNode, dash: TerminalNode, p2_l1: NonterminalNode, p2_l2: IterationNode, p2_l3: IterationNode, p2_l4: IterationNode, p2_l5: IterationNode): Attrs {
+      // Lookup keeper def and generate attribute
+      const vkm = [ p2_l1, p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.sourceString).join('')
+      const vkmSource = p2_l1.source.coverageWith(...[ p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.source))
+      const keeperAttr = [ keeperMap[vkm] ].filter(isObject).map(d => C.Keeper.value(d).at(vkmSource) )
+
+      // Log warning if vkm doesn't exist in our definitions
+      const keeperWarning = keeperAttr.length === 0 ? [ C.ParseWarnings.value(`Vehicle Keeper Marking '${this.sourceString}' doesn't appear to be a known value.`).at(this.source) ] : []
+
       return [
-        P.KeeperPart.value(this.sourceString).at(this.source),
-        C.Keeper.value(this.sourceString).at(this.source)
+        ...keeperAttr,
+        ...keeperWarning,
+        P.KeeperPart.value(this.sourceString).at(this.source)
       ]
     },
     

@@ -2,6 +2,7 @@ import { Interval } from 'ohm-js/index'
 
 import {
   assign,
+  find,
   get,
   groupBy,
   isEqual,
@@ -34,12 +35,19 @@ abstract class AbstractField<V> {
     this.desc = desc
   }
 
+  // Create new `ValueDef<V>` for this field
   value(value: V, desc?: string): ValueDef<V> {
     return new ValueDef(this, value, desc)
   }
 
+  // Compare this field with another for equality
   is(other: AbstractField<any>): boolean {
     return other === this
+  }
+
+  // Finds an instance of this field in a list of `Attr<V>`
+  find(attrs: Attr<any>[]): Attr<any> {
+    return find(attrs, a => a.def.field.is(this))
   }
 }
 
@@ -125,6 +133,7 @@ const applyScalarMeta = (o: object, attrs: Attr<any>[]): object => {
     const updates = zipObject(
       attrs.map((a: Attr<any>) => a.def.field.path),
       attrs.map((a: Attr<any>) => ({
+        name: a.def.field.name,
         type: a.def.field.type,
         desc: a.def.field.desc ?? '',
         source: sourceResult(a),
@@ -146,6 +155,7 @@ const applySetMeta = (o: object, setMap: Dictionary<Attr<any>[]>): object => {
       const fieldUpdates = zipObject(
         attrs.map((a: Attr<any>) => a.def.field.path),
         attrs.map((a: Attr<any>) => ({
+          name: a.def.field.name,
           type: a.def.field.type,
           length: attrs.length,
           desc: a.def.field.desc,

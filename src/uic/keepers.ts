@@ -20,7 +20,7 @@ import { zipObject } from 'lodash-es'
 
 export type KeeperStatus = 'in use' | 'blocked' | 'revoked'
 
-export interface Keeper {
+export interface KeeperDef {
   vkm: string,
   status: KeeperStatus,
   country: string,
@@ -29,7 +29,7 @@ export interface Keeper {
   otif?: boolean
 }
 
-export const keepers: Keeper[] = [
+export const keepers: KeeperDef[] = [
   { vkm: 'ALBRA', country: 'AL', company: 'ALBRAIL shpk', status: 'in use', website: 'albrail.al' },
   { vkm: 'HSH', country: 'AL', company: 'Hekurudha Shqiptare SH.A.', status: 'in use' },
   { vkm: 'ARM', country: 'AM', company: 'Armenian Railway CJSC', status: 'in use' },
