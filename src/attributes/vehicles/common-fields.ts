@@ -1,4 +1,4 @@
-import { SetField } from '../builders'
+import { Field, META_PATH, SetField } from '../builders'
 
 
 //TODO these may be redundant
@@ -9,9 +9,21 @@ export const ElectricTraction  = Traction.value('Electric')
 export const DieselTraction    = Traction.value('Diesel')
 export const SteamTraction     = Traction.value('Steam')
 
+// Vehicle serial number
+export const SerialNumber = new Field<string>('Serial Number', 'serial')
+
+// Vehicle Owner (UIC VKM)
+export const Keeper = new Field<string>('Vehicle Keeper Marking', 'keeper')
+
+// UIC Checksum status
+const ChecksumStatus = new Field<string>('UIC Checksum Status', `${META_PATH}.checksum`)
+
+export const ChecksumPassed = ChecksumStatus.value('passed')
+export const ChecksumFailed = ChecksumStatus.value('failed')
+export const ChecksumAbsent = ChecksumStatus.value('absent')
 
 // General info which doesn't fit into other fields
-export const VehicleNotes = new SetField('Vehicle Notes', 'vehicleNotes')
+export const VehicleNotes = new SetField('Vehicle Notes', 'notes')
 
 export const MaintenanceWagonNote     = VehicleNotes.value('Maintenance related wagon')
 export const MiscWagonNote            = VehicleNotes.value('Miscellaneous wagon')

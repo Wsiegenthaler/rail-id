@@ -10,7 +10,7 @@ import { Node } from 'ohm-js'
 
 
 // ---- General rules (first digit only) -----------------------------
-export const UICTypeRulesDx: Rule[] = [
+const UICTypeRulesD1: Rule[] = [
   // Vehicle type
   { pattern: /[012348]/, defs: [ A.WagonVehicle ] },
   { pattern: /[567]/, defs: [ A.HauledPassenger ] },
@@ -25,7 +25,7 @@ export const UICTypeRulesDx: Rule[] = [
 ]
 
 // ---- Wagons -------------------------------------------------------
-export const UICWagonTypeRules: Rule[] = [
+const UICWagonTypeRules: Rule[] = [
 
   // Track gauge type (fixed or variable)
   { pattern: /[012348][1357]/, defs: [ A.FixedGauge ] },
@@ -53,7 +53,7 @@ export const UICWagonTypeRules: Rule[] = [
 ]
 
 // ---- Passenger stock ----------------------------------------------
-export const UICPassengerTypeRules: Rule[] = [
+const UICPassengerTypeRules: Rule[] = [
   // Traffic
   { pattern: /[567]0/, defs: [ A.Domestic ] },
   { pattern: /[567]5/, defs: [ A.DomesticInternational ] },
@@ -112,7 +112,7 @@ export const UICPassengerTypeRules: Rule[] = [
 ]
 
 // ---- Tractive stock -----------------------------------------------
-export const UICTractiveTypeRules: Rule[] = [
+const UICTractiveTypeRules: Rule[] = [
   { pattern: /90/, defs: [ T.MiscellaneousVehicle ] },
   { pattern: /91/, defs: [ T.ElectricLocomotive, C.ElectricTraction ] },
   { pattern: /92/, defs: [ T.DieselLocomotive, C.DieselTraction ] },
@@ -125,21 +125,31 @@ export const UICTractiveTypeRules: Rule[] = [
   { pattern: /99/, defs: [ T.SpecialVehicle ] }
 ]
 
-// ---- All rules ----------------------------------------------------
-export const UICTypeRulesDD = [
-  ...UICWagonTypeRules,
-  ...UICPassengerTypeRules,
-  ...UICTractiveTypeRules
-]
 
-const applyRulesToNode = (rules: Rule[]) => ({ source, sourceString }: Node) => 
-  rules
-    .filter(r => r.pattern.test(sourceString.replaceAll(/[^0-9]/g, '')))
+const applyRules = (d1Rules: Rule[], ddRules: Rule[]) => (d1: Node, d2: Node) => {
+  // First digit
+  const d1Defs = d1Rules
+    .filter(r => r.pattern.test(d1.sourceString))
     .flatMap(r => r.defs)
-    .map(d => d.at(source))
+    .map(d => d.at(d1.source))
 
-// Returns an array of attributes for the given Ohm parse node of the FIRST type code digit
-export const uicTypeCodeDx = applyRulesToNode(UICTypeRulesDx)
+  // Both digits
+  const dd = (d1.sourceString + d2.sourceString).replaceAll(/[^0-9]/g, '')
+  const ddSource = d1.source.coverageWith(d2.source)
+  
+  const ddDefs = ddRules
+    .filter(r => r.pattern.test(dd))
+    .flatMap(r => r.defs)
+    .map(d => d.at(ddSource))
 
-// Returns an array of vehicle attributes for the given Ohm parse node of BOTH type code digits
-export const uicTypeCodeDD = applyRulesToNode(UICTypeRulesDD)
+  return [ ...d1Defs, ...ddDefs ]
+}
+
+// Returns vehicle attributes for the given Ohm parse node of wagon unit type codes
+export const uicWagonTypeCode = applyRules(UICTypeRulesD1, UICWagonTypeRules)
+
+// Returns vehicle attributes for the given Ohm parse node of hauled-passenger unit type codes
+export const uicPassengerTypeCode = applyRules(UICTypeRulesD1, UICPassengerTypeRules)
+
+// Returns vehicle attributes for the given Ohm parse node of tractive unit type codes
+export const uicTractiveTypeCode = applyRules(UICTypeRulesD1, UICTractiveTypeRules)

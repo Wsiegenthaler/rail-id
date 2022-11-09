@@ -1,246 +1,156 @@
-import ohm from 'ohm-js'
-import { flattenDeep } from 'lodash-es'
-import nomar from 'nomar'
+import ohm, { TerminalNode } from 'ohm-js'
+import { find } from 'lodash-es'
+import { IterationNode, Node, NonterminalNode } from 'ohm-js'
 
-import grammarStr from './uic/grammar.ohm.mjs'
-import { Attr, Flag, NodeAttr, Meta } from './attributes.mjs'
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
-import { uicTypeAttrs } from './uic/types'
-import { UICCountryCodeMap } from './uic/countries'
+import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './uic/types'
+
+import { Attr, Attrs } from './attributes/builders'
+import { CountryByCode } from './attributes/countries'
+import * as C from './attributes/vehicles/common-fields'
+import * as P from './attributes/code-parts'
+
+import grammarStr from './uic/grammar.ohm'
 
 
-
-console.log(grammar) //TODO
 export const grammar = ohm.grammar(grammarStr)
 
 export const semantics = grammar.createSemantics()
-  .addOperation('weston', {
-    SBBCode_legacyFull(prefix, suffix) {
-      return [
-        Meta('codeType', 'sbb'),
-        Meta('codeVariant', 'legacy'),
-        ...prefix.weston(), ...suffix.weston() ]
-    },
-    SBBCode_mixed(prefix, suffix) {
-      return [
-        Meta('codeType', 'sbb'),
-        Meta('codeVariant', 'hybrid'),
-        ...prefix.weston(),
-        ...suffix.weston()
-      ]
-    },
+  .addOperation('attrs', {
 
-    legacyPrefix(vehicle, traction) {
-      return [ ...vehicle.weston(), ...traction.weston() ]
-    },
-    LegacySuffix(axles, series) {
-      return [
-        ...axles.children.flatMap(c => c.weston()),
-        ...series.children.map(c => c.weston())
-      ]
-    },
-    LegacyAxles(drive, _, total) {
-      return [ drive.weston(), ...total.children.map(c => c.weston()) ]
-    },
-    legacyAxlesDrive(n) {
-      return Attr('axlesDrive', n.sourceString, n.source)
-    },
-    legacyAxlesTotal(n) {
-      return Attr('axlesTotal', n.sourceString, n.source)
-    },
-    legacySeries(n) {
-      return Attr('series', nomar(n.sourceString), n.source)
-    },
-    vehicleCode(n) {
-      return flattenDeep(n.weston())
-    },
+    UICCode(this: NonterminalNode, inner: NonterminalNode): Attrs {
+      const childAttrs = inner.attrs()
 
-    ///////////////////////////////
-    // Legacy locamotive codes
-    ///////////////////////////////
-
-    locomotiveCode(n) {
-      return n.children.map(c => c.weston())
-    },
-
-    locomotiveToken_A(n) {
-      return [
-        Attr('trackGauge', 'standard', n.source),
-        Attr('vmax', '>80 km/h', n.source) ]
-    },
-    locomotiveToken_B(n) {
-      return [
-        Attr('trackGauge', 'standard', n.source),
-        Attr('vmax', '70-80 km/h', n.source) ]
-
-    },
-    locomotiveToken_C(n) {
-      return [
-        Attr('trackGauge', 'standard', n.source),
-        Attr('vmax', '60-65 km/h', n.source) ]
-
-    },
-    locomotiveToken_D(n) {
-      return [
-        Attr('trackGauge', 'standard', n.source),
-        Attr('vmax', '45-55 km/h', n.source) ]
-
-    },
-    locomotiveToken_E(n) {
-      return [ Flag('shunter', n.source) ]
-    },
-    locomotiveToken_f(n) {
-      // only used for locomotives pre 1920
-      return [ Flag('electric', n.source) ]
-    },
-    locomotiveToken_G(n) {
-      return [ Attr('trackGuage', 'narrow', n.source) ]
-    },
-    locomotiveToken_H(n) {
-      return [ Flag('gearDrive', n.source) ]
-    },
-    locomotiveToken_R(n) {
-      return [ Flag('fastCornering', n.source) ]
-    },
-    locomotiveToken_T(n) {
-      return [ Flag('tractor', n.source) ]
-    },
-
-
-    ///////////////////////////////
-    // Legacy traction codes
-    ///////////////////////////////
-    tractionCode(n) {
-      let codes = n.children.map(c => c.weston())
-      return codes.length > 0 ? codes : [ Flag('steam', n.source) ]
-    },
-    tractionToken(n) {
-      let token = n.child(0)
-      let code = token.weston()
-      let source = token.source
-      let tractionMap = {
-        'a': Flag('battery', source),
-        'e': Flag('electric', source),
-        'f': Flag('radioControlled', source),
-        'H': Flag('gearDrive', source),
-        'm': Flag('fuel', source)
+      // Checksum validation
+      let checksumStatus = C.ChecksumAbsent.absent()
+      const checksumPart = find(childAttrs, (a: Attr<any>) => a.def.field.is(P.ChecksumDigitPart))
+      if (checksumPart) {
+        const digits = luhnClean(this.sourceString)
+        checksumStatus = (digits.length == 12 && uicVerify(digits)) ?
+          C.ChecksumPassed.at(checksumPart.source) :
+          C.ChecksumFailed.at(checksumPart.source)
       }
-      return tractionMap[code]
-    },
-
-    ///////////////////////////////
-    // Legacy railcar codes
-    ///////////////////////////////
-
-    railcarCode(n) {
-      return flattenDeep(n.children.map(c => c.weston()))
-    },
-
-    railcarToken_AB_A(n) {  // Railcar with first-class compartment or saloon compartment
-      return [ Flag('firstClass', n.source) ]
-    },
-    railcarToken_AB_B(n) {  // Railcar with second class compartment
-      return [ Flag('secondClass', n.source) ]
-    },
-
-    railcarToken_Cornering(n) { // Railcars with increased cornering speed and v max at least 110 km/h (only for standard gauge)
-      return [
-        Flag('fastCornering', n.source),
-        Attr('vmax', '>110 km/h', n.source) ]
-    },
-    railcarToken_Restaurant(n) {  // Restaurant, buffet (after A or B)
-      return [ Flag('restaurant', n.source) ]
-    },
-
-    railcarToken_General_C(n) {  // Railcar with third class compartment (before 1956)
-      return [ Flag('thirdClass', n.source) ]
-    },
-    railcarToken_General_D(n) {  // Railcar with luggage compartment (since 1962)
-      return [ Flag('luggage', n.source) ]
-    },
-    railcarToken_General_f(n) {  // Railcar with luggage compartment (until 1961)
-      return [ Flag('luggage', n.source) ]
-    },
-    railcarToken_General_K(n) {  // Closed railcar (all Ke were later redrawn to Fe)
-      return [ Flag('railcarClosed', n.source) ]
-    },
-    railcarToken_General_L(n) {  // Initially used to designate light railcars ( red arrows ), e.g. B. CLe 2/4
-      return [ Flag('lightRailcar', n.source) ]
-    },
-    railcarToken_General_O(n) {  // Gondola (Ohe 1/2 31 of the Pilatusbahn)
-      return [ Flag('gondola', n.source) ]
-    },
-    railcarToken_General_S(n) {  // Special compartment
-      return [ Flag('specialRailcar', n.source) ]
-    },
-    railcarToken_General_S(n) {  // Self-propelled container wagon (CargoSprinter)
-      return [ Flag('cargoSprinter', n.source) ]
-    },
-    railcarToken_General_X(n) {  // Service vehicle
-      return [ Flag('serviceVehicle', n.source) ]
-    },
-    railcarToken_General_XT(n) {  // Self-driving company car
-      return [ Flag('selfDrivingCompanyRailcar', n.source) ]
-    },
-    railcarToken_General_Z(n) {  // Railcar with mail compartment
-      return [ Flag('mail', n.source) ]
-    },
-
-    ///////////////////////////////
-    // Modern suffix codes
-    ///////////////////////////////
-
-    modernSuffix(code1, x1, code2, x2, x3, x4, ext) {
-      // modernSuffixCode1 (space* modernSuffixCode2 (space* "-" space* modernSuffixCodeExt)?)?
-      //return [ ...code1.children.map(c => c.weston()) ]
-      return [ ...code1.weston() ]
-    },
-    modernSuffixCode1(a, b, c) {
-      return [n.sourceString]
-    },
-    modernSuffixCode2(d, e, f) {
-      return [n.sourceString]
-    },
-    modernSuffixCodeExt(n) {
-      return [n.sourceString]
-    },
-
-    ///////////////////////////////
-    // UIC
-    ///////////////////////////////
-
-    UICLong(type, country, regional, owner) {
-      // Verify checksum digit
-      let raw = luhnClean(type.sourceString + country.sourceString + regional.sourceString)
-      let valid = raw.length < 12 ? 'absent' : (uicVerify(raw) ? 'pass' : 'fail')
 
       return [
-        Meta("codeType", "uic"),
-        Meta("uicChecksum", valid),
-        ...type.weston(),
-        country.weston()
+        ...inner.attrs(),
+        P.SourceString.value(this.sourceString).at(this.source),
+        checksumStatus
+      ]
+    },
+    UICCodeInner(this: NonterminalNode, n: NonterminalNode): Attrs {
+      return n.attrs()
+    },
+
+
+    UICWagon(this: NonterminalNode, n: NonterminalNode): Attrs {
+      return n.attrs()
+    },
+    UICPassenger(this: NonterminalNode, n: NonterminalNode): Attrs {
+      return n.attrs()
+    },
+    UICTractive(this: NonterminalNode, n: NonterminalNode): Attrs {
+      return n.attrs()
+    },
+    UICSpecial(this: NonterminalNode, n: NonterminalNode): Attrs {
+      return n.attrs()
+    },
+
+
+    UICWagonType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: NonterminalNode): Attrs {
+      return [
+        ...uicWagonTypeCode(d1, d2),
+        P.TypePart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICPassengerType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: NonterminalNode): Attrs {
+      return [
+        ...uicPassengerTypeCode(d1, d2),
+        P.TypePart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICTractiveType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: TerminalNode): Attrs {
+      return [
+        ...uicTractiveTypeCode(d1, d2),
+        P.TypePart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICSpecialType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: TerminalNode): Attrs {
+      return [
+        ...uicTractiveTypeCode(d1, d2),
+        P.TypePart.value(this.sourceString).at(this.source)
       ]
     },
 
-    UICType(type) {
-      return uicTypeAttrs(type)
+
+    UICCountriesAll(this: NonterminalNode, d1: TerminalNode, d2: TerminalNode): Attrs {
+        const code = parseInt(d1.sourceString + d2.sourceString)
+        const source = d1.source.coverageWith(d2.source)
+        return [
+          CountryByCode(code).at(source),
+          P.CountryPart.value(this.sourceString).at(this.source)
+        ]
+    },
+  
+
+    UICWagonDetail(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
+      //TODO
+      return [
+        P.VehicleDetailPart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICPassengerDetail(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
+      //TODO
+      return [
+        P.VehicleDetailPart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICTractiveDetail(this: NonterminalNode, d1: TerminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode, xs4: NonterminalNode, d5: NonterminalNode, xs5: NonterminalNode, d6: NonterminalNode, xs6: NonterminalNode, d7: NonterminalNode): Attrs {
+      //TODO
+      return [
+        P.VehicleDetailPart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICSpecialDetail(this: NonterminalNode, d1: TerminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
+      //TODO
+      return [
+        P.VehicleDetailPart.value(this.sourceString).at(this.source)
+      ]
     },
 
-    UICCountry(d1, spaces, d2) {
-        let code = d1.sourceString + d2.sourceString
-        let source = d1.source.coverageWith(d2.source)
-        return Attr('country', UICCountryCodeMap[code], source)
+
+    UICSerial(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode): Attrs {
+      const serial = [ d1, d2, d3 ].map(d => d.sourceString).join('')
+      const source = d1.source.coverageWith(d2.source).coverageWith(d3.source)
+      
+      return [
+        C.SerialNumber.value(serial).at(source),
+        P.SerialPart.value(serial).at(source)
+       ]
+    },
+    UICChecksum(this: NonterminalNode, dash: TerminalNode, digit: NonterminalNode): Attrs {
+      return [ P.ChecksumDigitPart.value(digit.sourceString).at(digit.source) ]
+    },
+    UICKeeper(this: NonterminalNode, arg0: NonterminalNode, arg1: IterationNode, arg2: TerminalNode, arg3: NonterminalNode, arg4: IterationNode, arg5: IterationNode, arg6: IterationNode, arg7: IterationNode): Attrs {
+      return [
+        P.KeeperPart.value(this.sourceString).at(this.source),
+        C.Keeper.value(this.sourceString).at(this.source)
+      ]
+    },
+    
+
+    CodePattern3(this: NonterminalNode, free1: IterationNode, type: NonterminalNode, free2: IterationNode, country: NonterminalNode, free3: IterationNode, detail: NonterminalNode, checksum: IterationNode, xs: NonterminalNode, free4: IterationNode): Attrs {
+      return [ free1, type, free2, country, free3, detail, checksum, free4 ].flatMap(n => n.attrs())
+    },
+    CodePattern4(this: NonterminalNode, free1: IterationNode, type: NonterminalNode, free2: IterationNode, country: NonterminalNode, free3: IterationNode, detail1: NonterminalNode, detail2: NonterminalNode, checksum: IterationNode, xs: NonterminalNode, free4: IterationNode): Attrs {
+      return [ free1, type, free2, country, free3, detail1, detail2, checksum, free4 ].flatMap(n => n.attrs())
     },
 
-    ///////////////////////////////
-    // Generic actions
-    ///////////////////////////////
 
-    _iter(...children) {
-      return children.map(c => c.weston())
+    xt(this: NonterminalNode, xs: NonterminalNode, n: Node): Attrs {
+      return n.attrs()
     },
-    _terminal() {
-      return this.sourceString;
-    }
-})
+    _iter(this: NonterminalNode, ...children: TerminalNode[]): Attrs {
+      return children.flatMap(c => c.attrs())
+    }  
+  })

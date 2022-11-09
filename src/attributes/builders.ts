@@ -5,7 +5,6 @@ import {
   get,
   groupBy,
   isEqual,
-  keys,
   merge,
   partition,
   set,
@@ -17,7 +16,7 @@ import {
 import { Dictionary } from '../util/common'
 
 
-const META_PATH = '_meta'
+export const META_PATH = '_meta'
 const META_FIELDS_PATH = `${META_PATH}.fields`
 
 type FieldType = 'scalar' | 'set'
@@ -38,6 +37,10 @@ abstract class AbstractField<V> {
   value(value: V, desc?: string): ValueDef<V> {
     return new ValueDef(this, value, desc)
   }
+
+  is(other: AbstractField<any>): boolean {
+    return other === this
+  }
 }
 
 export class Field<V> extends AbstractField<V> {
@@ -49,9 +52,9 @@ export class SetField<V> extends AbstractField<V> {
 }
 
 export class ValueDef<V> {
-  readonly field: Field<V>
-  readonly value: V
-  readonly desc?: string
+  public readonly field: Field<V>
+  public readonly value: V
+  public readonly desc?: string
 
   constructor(field: Field<V>, value: V, desc?: string) {
     this.field = field
@@ -60,8 +63,13 @@ export class ValueDef<V> {
   }
 
   // Used to represent an instance of this value for a particular part of the code
-  at(source: Interval, ...notes: string[]) {
-    return new Attr<V>(this, source, notes)
+  at(source: Interval, ...footnotes: string[]) {
+    return new Attr<V>(this, footnotes, source)
+  }
+
+  // Used to represent a value which doesn't correspond to a part of the code
+  absent(...footnotes: string[]) {
+    return new Attr<V>(this, footnotes)
   }
 
   // Tests a result object for the presence of this field value
@@ -76,16 +84,18 @@ export class ValueDef<V> {
 }
 
 export class Attr<V> {
-  def: ValueDef<V>
-  source: Interval
-  notes: string[] = []
+  public readonly def: ValueDef<V>
+  public readonly source?: Interval
+  public readonly footnotes: string[] = []
 
-  constructor(def: ValueDef<V>, source: Interval, notes: string[]) {
+  constructor(def: ValueDef<V>, footnotes: string[], source?: Interval)  {
     this.def = def
     this.source = source
-    this.notes = notes
+    this.footnotes = footnotes
   }
 }
+
+export type Attrs = Attr<any>[]
 
 const applyScalars = (o: object, attrs: Attr<any>[]): object => {
   // Apply values
@@ -117,8 +127,8 @@ const applyScalarMeta = (o: object, attrs: Attr<any>[]): object => {
       attrs.map((a: Attr<any>) => ({
         type: a.def.field.type,
         desc: a.def.field.desc ?? '',
-        source: a.source,
-        notes: a.notes
+        source: sourceResult(a),
+        footnotes: a.footnotes
     })))
 
     // Apply metadata
@@ -147,8 +157,8 @@ const applySetMeta = (o: object, setMap: Dictionary<Attr<any>[]>): object => {
         attrs.map((a: Attr<any>) => ({
           name: a.def.value,
           desc: a.def.desc ?? '',
-          notes: a.notes,
-          source: a.source
+          footnotes: a.footnotes,
+          source: sourceResult(a)
       })))
 
       // Apply metadata
@@ -158,6 +168,16 @@ const applySetMeta = (o: object, setMap: Dictionary<Attr<any>[]>): object => {
     }
 
     return o
+}
+
+type Source = { start: number, end: number, len: number }
+
+// Convert Ohm `Interval` to `Source` to be included in the result
+const sourceResult = (a: Attr<any>): Source | undefined => {
+  if (a?.source === undefined) return undefined
+
+  const { startIdx, endIdx } = a.source!
+  return { start: startIdx, end: endIdx, len: endIdx - startIdx }
 }
 
 // Generate result object with attributes and their metadata

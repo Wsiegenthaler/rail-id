@@ -12,7 +12,7 @@ import resolveOhm from './src/build/rollup/resolve-ohm-grammar.mjs'
 export default [
   // browser & node friendly UMD build
   {
-    input: 'src/index.mjs',
+    input: 'src/index.ts',
     output: {
       name: 'railID',
       file: pkg.browser,
@@ -37,7 +37,7 @@ export default [
   // instead of two, but it's quicker to generate multiple builds from a single configuration where possible, using
   // an array for the `output` option, where we can specify `file` and `format` for each target)
   {
-    input: 'src/index.mjs',
+    input: 'src/index.ts',
     external: [],
     output: [
       { file: pkg.main, format: 'cjs' },
