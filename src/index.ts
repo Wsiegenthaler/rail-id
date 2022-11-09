@@ -2,6 +2,7 @@ import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
 import { buildResult, META_PATH } from './attributes/builders'
+import { MatchResult } from 'ohm-js'
 
 
 type Options = {
@@ -12,13 +13,13 @@ type Options = {
 const Defaults: Options = { metadata: true, debug: false }
 
 // Main
-export default (code: string, options: Options = {}) => {
+export default (input: string, options: Options = {}) => {
   defaults(options, Defaults)
 
   // Log parse trace if debug flag set
-  if (options.debug) console.info(grammar.trace(code))
+  if (options.debug) console.info(grammar.trace(input).toString())
 
-  let parseResult = grammar.match(code)
+  let parseResult = grammar.match(input)
   
   if (parseResult.succeeded()) {
     const result = buildResult(semantics(parseResult).attrs())
@@ -28,7 +29,23 @@ export default (code: string, options: Options = {}) => {
 
     return result
   } else {
-    //TODO throw error with position and message
-    throw new Error('parse failed! ' + parseResult.message)
+    const e = new ParseError(parseResult, input)
+    console.error(e)
+    throw e
+  }
+}
+
+// Parser error, assumes input is always single line
+export class ParseError extends Error {
+  public input: string
+  public position: number
+  public expected: string
+
+  constructor(result: MatchResult, input: string) {
+    super()
+    this.input = input
+    this.position = parseInt(result.message.match(/col (\d+):/)[1]) - 1
+    this.expected = result.message.match(/Expected ([^\n]*)/)[1]
+    this.message = `RailID encountered an error at position ${this.position} while parsing "${input}". Encountered "${input[this.position]}" but expected ${this.expected}.`
   }
 }
