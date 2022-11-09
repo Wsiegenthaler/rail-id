@@ -19,6 +19,8 @@ export const grammar = ohm.grammar(grammarStr)
 export const semantics = grammar.createSemantics()
   .addOperation('attrs', {
 
+    // --------------------------- Root expression -----------------------------------------
+
     UICCode(this: NonterminalNode, inner: NonterminalNode): Attrs {
       const childAttrs = inner.attrs()
 
@@ -34,7 +36,7 @@ export const semantics = grammar.createSemantics()
 
       return [
         ...inner.attrs(),
-        P.SourceString.value(this.sourceString).at(this.source),
+        C.RawCode.value(this.sourceString).at(this.source),
         checksumStatus
       ]
     },
@@ -42,6 +44,7 @@ export const semantics = grammar.createSemantics()
       return n.attrs()
     },
 
+    // --------------------------- Top-level Vehicle expressions ---------------------------
 
     UICWagon(this: NonterminalNode, n: NonterminalNode): Attrs {
       return n.attrs()
@@ -56,6 +59,7 @@ export const semantics = grammar.createSemantics()
       return n.attrs()
     },
 
+    // --------------------------- Vehicle Type Code expressions ---------------------------
 
     UICWagonType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: NonterminalNode): Attrs {
       return [
@@ -82,6 +86,7 @@ export const semantics = grammar.createSemantics()
       ]
     },
 
+    // --------------------------- Country expression --------------------------------------
 
     UICCountriesAll(this: NonterminalNode, d1: TerminalNode, d2: TerminalNode): Attrs {
         const code = parseInt(d1.sourceString + d2.sourceString)
@@ -92,6 +97,7 @@ export const semantics = grammar.createSemantics()
         ]
     },
   
+    // --------------------------- Vehicle Detail expressions ------------------------------
 
     UICWagonDetail(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode, xs3: NonterminalNode, d4: NonterminalNode): Attrs {
       //TODO
@@ -118,10 +124,11 @@ export const semantics = grammar.createSemantics()
       ]
     },
 
+    // --------------------------- General expressions -------------------------------------
 
     UICSerial(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode): Attrs {
       const serial = [ d1, d2, d3 ].map(d => d.sourceString).join('')
-      const source = d1.source.coverageWith(d2.source).coverageWith(d3.source)
+      const source = d1.source.coverageWith(d2.source, d3.source)
       
       return [
         C.SerialNumber.value(serial).at(source),
@@ -138,6 +145,7 @@ export const semantics = grammar.createSemantics()
       ]
     },
     
+    // --------------------------- Top-level pattern expressions ---------------------------
 
     CodePattern3(this: NonterminalNode, free1: IterationNode, type: NonterminalNode, free2: IterationNode, country: NonterminalNode, free3: IterationNode, detail: NonterminalNode, checksum: IterationNode, xs: NonterminalNode, free4: IterationNode): Attrs {
       return [ free1, type, free2, country, free3, detail, checksum, free4 ].flatMap(n => n.attrs())
@@ -146,6 +154,7 @@ export const semantics = grammar.createSemantics()
       return [ free1, type, free2, country, free3, detail1, detail2, checksum, free4 ].flatMap(n => n.attrs())
     },
 
+    // --------------------------- Other expressions ---------------------------------------
 
     xt(this: NonterminalNode, xs: NonterminalNode, n: Node): Attrs {
       return n.attrs()

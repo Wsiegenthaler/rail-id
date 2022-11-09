@@ -2,8 +2,6 @@ import { Field, META_PATH } from "./builders";
 
 const rootPath = `${META_PATH}.parts`
 
-export const SourceString = new Field('Source String', `${rootPath}.sourceString`)
-
 export const TypePart = new Field<string>('Type Code', `${rootPath}.type`)
 
 export const CountryPart = new Field<string>('Country Code', `${rootPath}.country`)

@@ -15,6 +15,9 @@ export const SerialNumber = new Field<string>('Serial Number', 'serial')
 // Vehicle Owner (UIC VKM)
 export const Keeper = new Field<string>('Vehicle Keeper Marking', 'keeper')
 
+// Raw Code
+export const RawCode = new Field('Raw Code', `${META_PATH}.raw`)
+
 // UIC Checksum status
 const ChecksumStatus = new Field<string>('UIC Checksum Status', `${META_PATH}.checksum`)
 
