@@ -3,6 +3,7 @@ import { Node } from 'ohm-js'
 import { Rule } from '../util/common'
 
 import * as P from '../attributes/vehicles/hauled-passenger'
+import { applyDigitRules } from './helpers'
 
 
 // ---- Energy Supply Notes --------------------------------------
@@ -24,7 +25,6 @@ const UICHauledPassengerRulesD7: Rule[] = [
 // ---- Hauled-passenger (both digits 7 and 8) ----------------------
 
 const UICHauledPassengerRulesD78: Rule[] = [
-
   // Energy Supply - All Tensions
   { pattern: /30/,          defs: [ P.AllTensions ] },
   { pattern: /[45789]1/,    defs: [ P.AllTensions ] },
@@ -107,28 +107,4 @@ const UICHauledPassengerRulesD78: Rule[] = [
 ]
 
 // Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
-export const uicHauledPassengerD78 = (d7: Node, d8: Node) => {
-  // First digit
-  const d7Defs = UICHauledPassengerRulesD7
-    .filter(r => r.pattern.test(d7.sourceString))
-    .flatMap(r => r.defs)
-    .map(d => d.at(d7.source))
-
-  // Both digits
-  const d78 = (d7.sourceString + d8.sourceString).replaceAll(/[^0-9]/g, '')
-  const d78Source = d7.source.coverageWith(d8.source)
-  
-  const d78Defs = UICHauledPassengerRulesD78
-    .filter(r => r.pattern.test(d78))
-    .flatMap(r => r.defs)
-    .map(d => d.at(d78Source))
-
-  return [ ...d7Defs, ...d78Defs ]
-}
-
-//TODO // Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
-//TODO export const uicSpecialTractiveD6 = (d6: Node) => 
-//TODO   UICHauledPassengerRulesD6
-//TODO     .filter(r => r.pattern.test(d6.sourceString))
-//TODO     .flatMap(r => r.defs)
-//TODO     .map(d => d.at(d6.source))
+export const uicHauledPassengerD78 = applyDigitRules(UICHauledPassengerRulesD7, UICHauledPassengerRulesD78)

@@ -7,6 +7,7 @@ import * as T from '../attributes/vehicles/tractive'
 import { GaugesByDist } from '../attributes/gauge'
 
 import { Node } from 'ohm-js'
+import { applyDigitRules } from './helpers'
 
 
 // ---- General rules (first digit only) -----------------------------
@@ -125,31 +126,11 @@ const UICTractiveTypeRules: Rule[] = [
   { pattern: /99/, defs: [ T.SpecialVehicle ] }
 ]
 
-
-const applyRules = (d1Rules: Rule[], ddRules: Rule[]) => (d1: Node, d2: Node) => {
-  // First digit
-  const d1Defs = d1Rules
-    .filter(r => r.pattern.test(d1.sourceString))
-    .flatMap(r => r.defs)
-    .map(d => d.at(d1.source))
-
-  // Both digits
-  const dd = (d1.sourceString + d2.sourceString).replaceAll(/[^0-9]/g, '')
-  const ddSource = d1.source.coverageWith(d2.source)
-  
-  const ddDefs = ddRules
-    .filter(r => r.pattern.test(dd))
-    .flatMap(r => r.defs)
-    .map(d => d.at(ddSource))
-
-  return [ ...d1Defs, ...ddDefs ]
-}
-
 // Returns vehicle attributes for the given Ohm parse node of wagon unit type codes
-export const uicWagonTypeCode = applyRules(UICTypeRulesD1, UICWagonTypeRules)
+export const uicWagonTypeCode = applyDigitRules(UICTypeRulesD1, UICWagonTypeRules)
 
 // Returns vehicle attributes for the given Ohm parse node of hauled-passenger unit type codes
-export const uicPassengerTypeCode = applyRules(UICTypeRulesD1, UICPassengerTypeRules)
+export const uicPassengerTypeCode = applyDigitRules(UICTypeRulesD1, UICPassengerTypeRules)
 
 // Returns vehicle attributes for the given Ohm parse node of tractive unit type codes
-export const uicTractiveTypeCode = applyRules(UICTypeRulesD1, UICTractiveTypeRules)
+export const uicTractiveTypeCode = applyDigitRules(UICTypeRulesD1, UICTractiveTypeRules)

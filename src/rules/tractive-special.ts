@@ -4,6 +4,7 @@ import { Rule } from '../util/common'
 
 import * as C from '../attributes/vehicles/common-fields'
 import * as S from '../attributes/vehicles/tractive-special'
+import { applyDigitRules, applySingleDigitRules } from './helpers'
 
 
 // ---- Special tractive rules (digit 6 only) --------------------
@@ -136,28 +137,7 @@ const UICTractiveSpecialRulesD78: Rule[] = [
 ]
 
 // Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
-export const uicSpecialTractiveD78 = (d7: Node, d8: Node) => {
-  // First digit
-  const d7Defs = UICTractiveSpecialRulesD7
-    .filter(r => r.pattern.test(d7.sourceString))
-    .flatMap(r => r.defs)
-    .map(d => d.at(d7.source))
+export const uicSpecialTractiveD78 = applyDigitRules(UICTractiveSpecialRulesD7, UICTractiveSpecialRulesD78)
 
-  // Both digits
-  const d78 = (d7.sourceString + d8.sourceString).replaceAll(/[^0-9]/g, '')
-  const d78Source = d7.source.coverageWith(d8.source)
-  
-  const d78Defs = UICTractiveSpecialRulesD78
-    .filter(r => r.pattern.test(d78))
-    .flatMap(r => r.defs)
-    .map(d => d.at(d78Source))
-
-  return [ ...d7Defs, ...d78Defs ]
-}
-
-// Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
-export const uicSpecialTractiveD6 = (d6: Node) => 
-  UICTractiveSpecialRulesD6
-    .filter(r => r.pattern.test(d6.sourceString))
-    .flatMap(r => r.defs)
-    .map(d => d.at(d6.source))
+// Returns vehicle attributes for the given Ohm parse node of digit 6 of special tractive units
+export const uicSpecialTractiveD6 = applySingleDigitRules(UICTractiveSpecialRulesD6)
