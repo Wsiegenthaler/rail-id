@@ -1,9 +1,5 @@
-import { Node } from 'ohm-js'
-
-import { Rule } from '../util/common'
-
-import * as P from '../attributes/vehicles/hauled-passenger'
-import { applyDigitRules } from './helpers'
+import { applyDigitRules, Rule } from '.'
+import * as P from '../attrs/vehicles/hauled-passenger'
 
 
 // ---- General rules (digit 5 only) -----------------------------

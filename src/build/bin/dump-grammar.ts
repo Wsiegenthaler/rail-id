@@ -59,5 +59,5 @@ async function walk(dir): Promise<string[]> {
     else if(stats.isFile()) return filePath
   })) as string[]
 
-  return files.reduce((all: string[], folderContents) => all.concat(folderContents), []);
+  return files.reduce((all: string[], folderContents) => all.concat(folderContents), [])
 }

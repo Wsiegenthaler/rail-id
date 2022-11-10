@@ -1,10 +1,6 @@
-import { Node } from 'ohm-js'
-
-import { Rule } from '../util/common'
-
-import * as C from '../attributes/vehicles/common-fields'
-import * as S from '../attributes/vehicles/tractive-special'
-import { applyDigitRules, applySingleDigitRules } from './helpers'
+import * as C from '../attrs/vehicles/common-fields'
+import * as S from '../attrs/vehicles/tractive-special'
+import { applyDigitRules, applySingleDigitRules, Rule } from '.'
 
 
 // ---- Special tractive rules (digit 6 only) --------------------

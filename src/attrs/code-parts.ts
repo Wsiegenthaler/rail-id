@@ -1,4 +1,4 @@
-import { Field, META_PATH } from "./builders";
+import { Field, META_PATH } from '.'
 
 const rootPath = `${META_PATH}.parts`
 

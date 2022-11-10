@@ -1,5 +1,5 @@
+import { Field, META_PATH, SetField } from '..'
 import { KeeperDef } from '../../defs/keepers'
-import { Field, META_PATH, SetField } from '../builders'
 
 
 //TODO these may be redundant

@@ -1,4 +1,4 @@
-import { UICCountries } from './countries'
+import { UICCountries } from './defs/countries'
 
 
 // Generate country clause based on UIC country definitions

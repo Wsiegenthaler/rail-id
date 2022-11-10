@@ -1,5 +1,9 @@
-import { Node } from "ohm-js"
-import { Rule } from '../util/common'
+import { Node } from 'ohm-js'
+
+import { ValueDef } from '../attrs'
+
+// Regex pattern to be applied to an ohm `Node` `sourceString` and the associated attribute defs
+export interface Rule { pattern: RegExp, defs: ValueDef<any>[] }
 
 // Factory which creates a function that applies rules to a set of digits, producing
 // an array of `ValueDef`s. This includes both single digit rules which are applied to

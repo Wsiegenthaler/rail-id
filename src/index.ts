@@ -1,7 +1,7 @@
 import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
-import { buildResult, META_PATH, ResultObject } from './attributes/builders'
+import { buildResult, META_PATH, ResultObject } from './attrs'
 import { MatchResult } from 'ohm-js'
 
 

@@ -1,8 +1,8 @@
 import { zipObject } from 'lodash-es'
 
 import { Dictionary } from '../util/common'
-import { SetField, ValueDef } from './builders'
-import { GaugeDefs } from '../track-gauge'
+import { SetField, ValueDef } from '.'
+import { GaugeDefs } from '../defs/gauge'
 
 // Gauge Support attribute
 const GaugeSupport = new SetField('Supported Track Gauges', 'supportedTrackGauges', 'Track gauges supported by this vehicle')

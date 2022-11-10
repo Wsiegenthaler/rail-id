@@ -1,15 +1,15 @@
 import ohm, { TerminalNode } from 'ohm-js'
-import { find, isObject } from 'lodash-es'
 import { IterationNode, Node, NonterminalNode } from 'ohm-js'
+import { isObject } from 'lodash-es'
 
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
-import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/types'
+import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/type-code'
 
-import { Attr, Attrs } from './attributes/builders'
-import { CountryByCode } from './attributes/countries'
-import * as C from './attributes/vehicles/common-fields'
-import * as P from './attributes/code-parts'
+import { Attrs } from './attrs'
+import { CountryByCode } from './attrs/countries'
+import * as C from './attrs/vehicles/common-fields'
+import * as P from './attrs/code-parts'
 
 import grammarStr from './uic-grammar.ohm'
 import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'

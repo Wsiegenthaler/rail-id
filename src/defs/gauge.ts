@@ -1,7 +1,6 @@
-import { mapValues, zipObject } from 'lodash-es'
+import { zipObject } from 'lodash-es'
 
-import { Dictionary } from './util/common'
-import { SetField, ValueDef } from './attributes/builders'
+import { Dictionary } from '../util/common'
 
 
 interface Gauge { name: string, type: string, mm: number }

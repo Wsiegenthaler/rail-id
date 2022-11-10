@@ -1,4 +1,4 @@
-import { Field } from '../builders'
+import { Field } from '..'
 
 
 // Energy supplies for hauled-passenger cars

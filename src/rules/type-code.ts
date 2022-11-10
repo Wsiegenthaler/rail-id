@@ -1,13 +1,8 @@
-import { ValueDef } from '../attributes/builders'
-import { Rule } from '../util/common'
-
-import * as A from '../attributes/vehicles/uic-type-code'
-import * as C from '../attributes/vehicles/common-fields'
-import * as T from '../attributes/vehicles/tractive'
-import { GaugesByDist } from '../attributes/gauge'
-
-import { Node } from 'ohm-js'
-import { applyDigitRules } from './helpers'
+import * as A from '../attrs/vehicles/type-code'
+import * as C from '../attrs/vehicles/common-fields'
+import * as T from '../attrs/vehicles/tractive'
+import { GaugesByDist } from '../attrs/gauge'
+import { applyDigitRules, Rule } from '.'
 
 
 // ---- General rules (first digit only) -----------------------------
@@ -42,14 +37,14 @@ const UICWagonTypeRules: Rule[] = [
   { pattern: /[0-3]9/, defs: [ C.PPV_PPW_WagonNote ] },
   { pattern: /[48][9]/, defs: [ C.SpecialNumberedWagonNote ] },
 
-  // "Not to be used" blocks
+  // Warnings for blocks designated "Not to be used"
   {
     pattern: /[01][3-8]/,
-    defs: [ C.VehicleNotes.value('Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service.') ]
+    defs: [ C.ParseWarnings.value('Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service.') ]
   },
   {
     pattern: /[0-3]0/,
-    defs: [ C.VehicleNotes.value('Wagons with starting digits 0-3 followed by 0 are not to be used according to Part 6 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
+    defs: [ C.ParseWarnings.value('Wagons with starting digits 0-3 followed by 0 are not to be used according to Part 6 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
   }
 ]
 
@@ -126,11 +121,11 @@ const UICTractiveTypeRules: Rule[] = [
   { pattern: /99/, defs: [ T.SpecialVehicle ] }
 ]
 
-// Returns vehicle attributes for the given Ohm parse node of wagon unit type codes
+// Returns vehicle attrs for the given Ohm parse node of wagon unit type codes
 export const uicWagonTypeCode = applyDigitRules(UICTypeRulesD1, UICWagonTypeRules)
 
-// Returns vehicle attributes for the given Ohm parse node of hauled-passenger unit type codes
+// Returns vehicle attrs for the given Ohm parse node of hauled-passenger unit type codes
 export const uicPassengerTypeCode = applyDigitRules(UICTypeRulesD1, UICPassengerTypeRules)
 
-// Returns vehicle attributes for the given Ohm parse node of tractive unit type codes
+// Returns vehicle attrs for the given Ohm parse node of tractive unit type codes
 export const uicTractiveTypeCode = applyDigitRules(UICTypeRulesD1, UICTractiveTypeRules)

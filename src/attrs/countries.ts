@@ -1,5 +1,5 @@
-import { Field, ValueDef } from './builders'
-import { UICCountryCodeMap } from '../uic/countries'
+import { Field, ValueDef } from '.'
+import { UICCountryCodeMap } from '../defs/countries'
 import { ParseWarnings } from './vehicles/common-fields'
 
 const CountryField = new Field<object>('Country', 'country')
