@@ -32,7 +32,7 @@ export const semantics = grammar.createSemantics()
       const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
-        checksumStatus = (digits.length == 12 && uicVerify(digits)) ?
+        checksumStatus = uicVerify(digits) ?
           C.ChecksumPassed.at(checksumPart.source) :
           C.ChecksumFailed.at(checksumPart.source)
       }
