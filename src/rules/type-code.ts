@@ -61,9 +61,9 @@ const UICPassengerTypeRules: Rule[] = [
   { pattern: /[56][2489]/, defs: [ A.VariableGauge ] },
 
   // Air conditioning
-  { pattern: /7[03]/, defs: [ A.AirConditioned ] },
-  { pattern: /6[124]/, defs: [ A.AirConditioned ] },
-  { pattern: /5[124]/, defs: [ A.NonAirConditioned ] },
+  { pattern: /7[03]/,  defs: [ A.AirConditioned.value('yes') ] },
+  { pattern: /6[124]/, defs: [ A.AirConditioned.value('yes') ] },
+  { pattern: /5[124]/, defs: [ A.AirConditioned.value('no') ] },
   
   // Historic vehicles
   { pattern: /55/, defs: [ A.HistoricVehicle ] },
@@ -111,14 +111,14 @@ const UICPassengerTypeRules: Rule[] = [
 // ---- Tractive stock -----------------------------------------------
 const UICTractiveTypeRules: Rule[] = [
   { pattern: /90/, defs: [ T.MiscellaneousVehicle ] },
-  { pattern: /91/, defs: [ T.ElectricLocomotive, T.ElectricTraction ] },
-  { pattern: /92/, defs: [ T.DieselLocomotive, T.DieselTraction ] },
-  { pattern: /93/, defs: [ T.HighSpeedElectricMultiUnitSet, T.ElectricTraction ] },
-  { pattern: /94/, defs: [ T.LowSpeedElectricMultiUnitSet, T.ElectricTraction ] },
-  { pattern: /95/, defs: [ T.DieselMultiUnitSet, T.DieselTraction ] },
+  { pattern: /91/, defs: [ T.ElectricLocomotive,            T.Traction.value('electric') ] },
+  { pattern: /92/, defs: [ T.DieselLocomotive,              T.Traction.value('diesel') ] },
+  { pattern: /93/, defs: [ T.HighSpeedElectricMultiUnitSet, T.Traction.value('electric') ] },
+  { pattern: /94/, defs: [ T.LowSpeedElectricMultiUnitSet,  T.Traction.value('electric') ] },
+  { pattern: /95/, defs: [ T.DieselMultiUnitSet,            T.Traction.value('diesel') ] },
   { pattern: /96/, defs: [ T.SpecialisedTrailer ] },
-  { pattern: /97/, defs: [ T.ElectricShunter, T.ElectricTraction ] },
-  { pattern: /98/, defs: [ T.DieselShunter ] },
+  { pattern: /97/, defs: [ T.ElectricShunter,               T.Traction.value('electric') ] },
+  { pattern: /98/, defs: [ T.DieselShunter,                 T.Traction.value('diesel') ] },
   { pattern: /99/, defs: [ T.SpecialVehicle ] }
 ]
 

@@ -1,4 +1,5 @@
 import { Field } from '..'
+import { SpeedRange } from '../common-values'
 
 
 // Energy supplies for hauled-passenger cars
@@ -20,11 +21,3 @@ export const NonStandardTensions = Energy.value('Non-Standard Tensions', 'Tensio
 export const SteamPower          = Energy.value('Steam Heating', 'Steam heating only. If tensions are written, the code is also available for vehicles without steam heating.')
 export const AutonomousPower     = Energy.value('Autonomous Power', 'Autonomous heating, without train bus electricity supply line.')
 export const GeneratorPower      = Energy.value('Generator Power', 'Vehicles with train bus electricity supply line for all voltages, but requiring a generator van to supply air-conditioning.')
-
-// Max-speed (TODO move this to common? Make this a set and rename to 'allowedSpeeds'?)
-const MaxSpeed = new Field('Maximum Speed', 'vmax')
-
-export const KphUnder120     = Energy.value('< 120 km/h')
-export const KphFrom121To140 = Energy.value('121 to 140 km/h')
-export const KphFrom141To160 = Energy.value('141 to 160 km/h')
-export const KphOver160      = Energy.value('> 160 km/h')

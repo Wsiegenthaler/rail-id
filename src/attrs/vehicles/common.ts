@@ -1,5 +1,6 @@
 import { Field, SetField } from '..'
 import { KeeperDef } from '../../defs/keepers'
+import { SpeedRange, YesNo } from '../common-values'
 
 
 // Vehicle serial number
@@ -9,16 +10,25 @@ export const SerialNumber = new Field<string>('Serial Number', 'serial')
 export const Keeper = new Field<KeeperDef>('Vehicle Keeper', 'keeper')
 
 // Max Speed field
-export const MaxSpeed = new Field('Maximum Speed', 'vmax')
+export const AllowedSpeeds = new SetField<SpeedRange>('Allowed Speed', 'speed')
+
+// Axle Count
+type AxleCount = { exactly: number } | { min: number }
+export const AxleCount = new Field<AxleCount>('Axle Count', 'axles')
 
 // Self-propulsion
-const SelfPropulsion = new Field<boolean>('Self Propelled', 'selfPropelled')
+export const SelfPropelled = new Field<YesNo>('Self Propelled', 'selfPropelled')
 
-export const SelfPropelled = SelfPropulsion.value(true)
-export const NonSelfPropelled = SelfPropulsion.value(false)
+// Vehicle Designation
+const VehicleDesignation_TEN = new Field<YesNo>('TEN Vehicle', `designations.ten`)
+export const TENVehicle = VehicleDesignation_TEN.value('yes')
+
+// RIV Vehicle Designation
+const VehicleDesignation_RIV = new Field<YesNo>('RIV Vehicle', `designations.riv`)
+export const RIVVehicle = VehicleDesignation_RIV.value('yes')
 
 // Notes - general info which doesn't fit into other fields
-export const VehicleNotes = new SetField('Vehicle Notes', 'notes')
+export const VehicleNotes = new SetField<string>('Vehicle Notes', 'notes')
 
 export const MaintenanceWagonNote     = VehicleNotes.value('Maintenance related wagon')
 export const MiscWagonNote            = VehicleNotes.value('Miscellaneous wagon')
@@ -27,10 +37,3 @@ export const TEN_COTIF_WagonNote      = VehicleNotes.value('TEN and/or COTIF wag
 export const PPV_PPW_WagonNote        = VehicleNotes.value('PPV/PPW wagon')
 export const SpecialNumberedWagonNote = VehicleNotes.value('Wagon with special numbering for technical characteristics not placed in service inside EU')
 
-// TEN Vehicle Designation
-const VehicleDesignation_TEN = new Field<boolean>('TEN Vehicle', `designations.ten`)
-export const TENVehicle = VehicleDesignation_TEN.value(true)
-
-// RIV Vehicle Designation
-const VehicleDesignation_RIV = new Field<boolean>('RIV Vehicle', `designations.riv`)
-export const RIVVehicle = VehicleDesignation_RIV.value(true)

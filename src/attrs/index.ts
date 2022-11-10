@@ -22,7 +22,6 @@ export const META_FIELDS_PATH = `${META_PATH}.fields`
 
 // Types
 export type ResultObject = { [META_PATH]: object }
-
 type FieldType = 'scalar' | 'set'
 type Source = { start: number, end: number, len: number }
 

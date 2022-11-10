@@ -1,4 +1,5 @@
 import { Field } from '..'
+import { YesNo } from '../common-values'
 
 
 // Vehicle type/subtype
@@ -16,32 +17,30 @@ export const Axles           = Suspension.value('Axles')
 export const Bogies          = Suspension.value('Bogies')
 
 // Track gauge (fixed/variable)
-const GaugeType = new Field('Gauge Type', 'gaugeType')
+type GaugeType = 'Fixed Gauge' | 'Variable Gauge'
+const GaugeType = new Field<GaugeType>('Gauge Type', 'gaugeType')
 
 export const FixedGauge      = GaugeType.value('Fixed Gauge', 'This vehicle supports only one track gauge')
 export const VariableGauge   = GaugeType.value('Variable Gauge', 'This vehicle supports operation on more than one track gauge')
 
 // Type of traffic (domestic/international)
-const TrafficType = new Field('Traffic Type', 'traffic')
+const TrafficType = new Field<string>('Traffic Type', 'traffic')
 
 export const Domestic              = TrafficType.value('Domestic')
 export const International         = TrafficType.value('International')
 export const DomesticInternational = TrafficType.value('Domestic / International', 'Domestic or international by special agreement')
 
 // Air conditioning
-const AirConditioning = new Field('Air Conditioning', 'airConditioning')
-
-export const AirConditioned        = AirConditioning.value(true)
-export const NonAirConditioned     = AirConditioning.value(false)
+export const AirConditioned = new Field<YesNo>('Air Conditioning', 'airConditioning')
 
 // Historic vehicles
-export const HistoricVehicle = new Field<boolean>('Historic Vehicle', 'historic').value(true)
+export const HistoricVehicle = new Field<YesNo>('Historic Vehicle', 'historic').value('yes')
 
 // Car carrying wagons
-export const CarCarrier = new Field<boolean>('Car Carrying Vehicle', 'carCarrier').value(true)
+export const CarCarrier = new Field<YesNo>('Car Carrying Vehicle', 'carCarrier').value('yes')
   
 // Service vehicles
-export const ServiceVehicle = new Field<boolean>('Service Vehicle', 'serviceVehicle').value(true)
+export const ServiceVehicle = new Field<YesNo>('Service Vehicle', 'serviceVehicle').value('yes')
 
 // Pressure-tight vehicles
-export const PressurizedVehicle = new Field<boolean>('Pressure-tight Vehicle', 'pressurized').value(true)
+export const PressurizedVehicle = new Field<YesNo>('Pressure-tight Vehicle', 'pressurized').value('yes')

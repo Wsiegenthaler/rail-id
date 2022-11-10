@@ -1,5 +1,5 @@
 import { Field } from '..'
-import { MaxSpeed } from './common'
+import { SpeedRange, YesNoMaybe } from '../common-values'
 
 
 // Special Type (tractives)
@@ -107,16 +107,7 @@ export const Other                = SpecialSubType.value('Other')
 
 
 // Train Compatibility
-const TrainCompatibility = new Field<boolean>('Train Compatibility', 'trainCompatible', 'The ability to include this vehicle as part of a train')
-export const TrainCompatible = TrainCompatibility.value(true)
-export const NotTrainCompatible = TrainCompatibility.value(false)
-export const PossiblyTrainCompatible = TrainCompatibility.value(true, 'Special conditions concerning inclusion in a train must be complied with.')
-
-// Special - Max-speed
-export const KphUnder100     = MaxSpeed.value('< 100 km/h and/or restricted')
-export const KphOver100      = MaxSpeed.value('>= 100 km/h')
+export const TrainCompatibility = new Field<YesNoMaybe>('Train Compatibility', 'trainCompatible', 'The ability to include this vehicle as part of a train')
 
 // Self-propelled travelling speed
-const SelfPropelledMaxSpeed = new Field<string>('Self-Propelled Travelling Speed', 'selfPropelledVmax', 'The self-propelled travelling speed of this vehicle')
-export const SelfPropelled_KphUnder100 = SelfPropelledMaxSpeed.value('< 100 km/h')
-export const SelfPropelled_KphOver100  = SelfPropelledMaxSpeed.value('>= 100 km/h')
+export const SelfPropelledMaxSpeed = new Field<SpeedRange>('Self-Propelled Travelling Speed', 'selfPropelledVmax', 'The self-propelled travelling speed of this vehicle')

@@ -2,19 +2,15 @@ import { Field, SetField, META_PATH } from '.'
 
 
 // Raw Code (the raw input passed to the parser)
-export const RawCode = new Field('Raw Code', `${META_PATH}.raw`)
+export const RawCode = new Field<string>('Raw Code', `${META_PATH}.raw`)
 
 // Code Type
-const CodeType = new Field<string>('Code Type', `${META_PATH}.codeType`)
-
-export const UICCode = CodeType.value('uic')
+type CodeType = 'uic'
+export const CodeType = new Field<CodeType>('Code Type', `${META_PATH}.codeType`)
 
 // UIC Checksum status
-const ChecksumStatus = new Field<string>('UIC Checksum Status', `${META_PATH}.checksum`)
-
-export const ChecksumPassed = ChecksumStatus.value('passed')
-export const ChecksumFailed = ChecksumStatus.value('failed')
-export const ChecksumAbsent = ChecksumStatus.value('absent')
+type ChecksumStatus = 'passed' | 'failed' | 'absent'
+export const ChecksumStatus = new Field<ChecksumStatus>('UIC Checksum Status', `${META_PATH}.checksum`)
 
 // Warnings (a place to report oddities encountered during parsing)
-export const ParseWarnings = new SetField('Parse Warnings', `${META_PATH}.warnings`)
+export const ParseWarnings = new SetField<string>('Parse Warnings', `${META_PATH}.warnings`)

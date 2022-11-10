@@ -6,21 +6,21 @@ import { applyDigitRules, applySingleDigitRules, Rule } from '.'
 // ---- Special tractive rules (digit 6 only) --------------------
 const UICTractiveSpecialRulesD6: Rule[] = [
   // Train compatibility
-  { pattern: /[123458]/, defs: [ S.TrainCompatible ] },
-  { pattern: /[679]/, defs: [ S.NotTrainCompatible ] },
-  { pattern: /0/, defs: [ S.PossiblyTrainCompatible ] },
+  { pattern: /[123458]/, defs: [ S.TrainCompatibility.value('yes') ] },
+  { pattern: /[679]/, defs: [ S.TrainCompatibility.value('no') ] },
+  { pattern: /0/, defs: [ S.TrainCompatibility.value('maybe', 'Special conditions concerning inclusion in a train must be complied with.') ] },
 
   // Self-propulsion
-  { pattern: /[124689]/, defs: [ C.SelfPropelled ] },
-  { pattern: /[3570]/, defs: [ C.NonSelfPropelled ] },
+  { pattern: /[124689]/, defs: [ C.SelfPropelled.value('yes') ] },
+  { pattern: /[3570]/, defs: [ C.SelfPropelled.value('no') ] },
 
   // Max speed
-  { pattern: /[45]/, defs: [ S.KphUnder100 ] },
-  { pattern: /[123]/, defs: [ S.KphOver100 ] },
+  { pattern: /[45]/, defs: [ C.AllowedSpeeds.value({ max: 100, unit: 'km/h' }) ] },
+  { pattern: /[123]/, defs: [ C.AllowedSpeeds.value({ min: 100, unit: 'km/h' }) ] },
 
   // Self-propelled travelling speed
-  { pattern: /1/, defs: [ S.SelfPropelled_KphOver100 ] },
-  { pattern: /[24689]/, defs: [ S.SelfPropelled_KphUnder100 ] },
+  { pattern: /1/, defs: [ S.SelfPropelledMaxSpeed.value({ min: 100, unit: 'km/h' }) ] },
+  { pattern: /[24689]/, defs: [ S.SelfPropelledMaxSpeed.value({ max: 100, unit: 'km/h' }) ] },
 
   // Notes
   { pattern: /[890]/, defs: [ C.VehicleNotes.value('Special conditions concerning inclusion in a train must be complied with.') ] }

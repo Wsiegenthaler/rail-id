@@ -1,12 +1,18 @@
 import { applyDigitRules, Rule } from '.'
+import * as C from '../attrs/vehicles/common'
 import * as P from '../attrs/vehicles/hauled-passenger'
 
+
+const KphUnder120     = C.AllowedSpeeds.value({ max: 120, unit: 'km/h' })
+const KphFrom121To140 = C.AllowedSpeeds.value({ min: 121, max: 140, unit: 'km/h' })
+const KphFrom141To160 = C.AllowedSpeeds.value({ min: 141, max: 160, unit: 'km/h' })
+const KphOver160      = C.AllowedSpeeds.value({ min: 160, unit: 'km/h' })
 
 // ---- General rules (digit 5 only) -----------------------------
 
 const UICHauledPassengerRulesD5: Rule[] = [
   // TODO
-  { pattern: /[012]/,  defs: [ P.KphUnder120 ] },
+  //{ pattern: /[012]/,  defs: [ KphUnder120 ] },
 ]
 
 
@@ -26,10 +32,10 @@ const { One, Two, Star } = P.EnergySupplyNotes
 
 const UICHauledPassengerRulesD7: Rule[] = [
   // Max Speed
-  { pattern: /[012]/,  defs: [ P.KphUnder120 ] },
-  { pattern: /[3456]/, defs: [ P.KphFrom121To140 ] },
-  { pattern: /[78]/,   defs: [ P.KphFrom141To160 ] },
-  { pattern: /9/,      defs: [ P.KphOver160 ] }
+  { pattern: /[012]/,  defs: [ KphUnder120 ] },
+  { pattern: /[3456]/, defs: [ KphFrom121To140 ] },
+  { pattern: /[78]/,   defs: [ KphFrom141To160 ] },
+  { pattern: /9/,      defs: [ KphOver160 ] }
 ]
 
 

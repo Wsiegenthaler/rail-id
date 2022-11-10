@@ -30,18 +30,18 @@ export const semantics = grammar.createSemantics()
       const childAttrs = inner.attrs()
 
       // Checksum validation
-      let checksumStatus = C.ChecksumAbsent.absent()
+      let checksumStatus = C.ChecksumStatus.value('absent').absent()
       const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
         checksumStatus = uicVerify(digits) ?
-          C.ChecksumPassed.at(checksumPart.source) :
-          C.ChecksumFailed.at(checksumPart.source)
+          C.ChecksumStatus.value('passed').at(checksumPart.source) :
+          C.ChecksumStatus.value('failed').at(checksumPart.source)
       }
 
       return [
         C.RawCode.value(this.sourceString).at(this.source),
-        C.UICCode.absent(),
+        C.CodeType.value('uic').absent(),
         checksumStatus,
         ...inner.attrs(),
       ]

@@ -1,8 +1,8 @@
 import { Field, ValueDef } from '.'
-import { UICCountryCodeMap } from '../defs/countries'
+import { Country, UICCountryCodeMap } from '../defs/countries'
 import { ParseWarnings } from './common'
 
-const CountryField = new Field<object>('Country', 'country')
+const CountryField = new Field<Country>('Country', 'country')
 
 export const CountryByCode = (code: number): ValueDef<any> => {
   const def = UICCountryCodeMap[code]

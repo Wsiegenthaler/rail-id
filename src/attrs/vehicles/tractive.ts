@@ -2,7 +2,7 @@ import { Field, SetField } from '..'
 
 
 // Tractive vehicle sub-types
-const VehicleSubType = new Field('Vehicle Sub-Type', 'subtype')
+const VehicleSubType = new Field<string>('Vehicle Sub-Type', 'subtype')
 
 export const MiscellaneousVehicle          = VehicleSubType.value('Miscellaneous vehicle')
 export const ElectricLocomotive            = VehicleSubType.value('Electric locomotive')
@@ -17,8 +17,5 @@ export const SpecialVehicle                = VehicleSubType.value('Special vehic
 
 //TODO these may be redundant
 // Types of traction (electric, diesel, etc)
-const Traction = new SetField('Traction', 'traction')
-
-export const ElectricTraction  = Traction.value('Electric')
-export const DieselTraction    = Traction.value('Diesel')
-export const SteamTraction     = Traction.value('Steam')
+type TractionType = 'electric' | 'diesel' | 'steam'
+export const Traction = new SetField<TractionType>('Traction', 'traction')
