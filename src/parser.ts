@@ -1,6 +1,8 @@
 import { TerminalNode, IterationNode, Node, NonterminalNode } from 'ohm-js'
 import { isObject } from 'lodash-es'
 
+import grammar from './grammars/uic-grammar.ohm-bundle'
+
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
 
@@ -12,13 +14,12 @@ import * as V from './attrs/vehicles/common'
 import * as P from './attrs/code-parts'
 import { CountryByCode } from './attrs/countries'
 
-import grammarStr from './uic-grammar.ohm'
 import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
 import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/type-code'
 import { uicHauledPassengerD56, uicHauledPassengerD78 } from './rules/hauled-passenger'
 
 
-export const grammar = ohm.grammar(grammarStr)
+export { grammar }
 
 export const semantics = grammar.createSemantics()
   .addOperation('attrs', {
@@ -93,7 +94,7 @@ export const semantics = grammar.createSemantics()
 
     // --------------------------- Country expression --------------------------------------
 
-    UICCountriesAll(this: NonterminalNode, d1: TerminalNode, d2: TerminalNode): Attrs {
+    UICCountriesAny(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: TerminalNode): Attrs {
         const code = parseInt(d1.sourceString + d2.sourceString)
         const source = d1.source.coverageWith(d2.source)
         return [

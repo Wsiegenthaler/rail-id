@@ -1,21 +1,10 @@
-import { UICCountries } from './defs/countries'
-
-
-// Generate country clause based on UIC country definitions
-const countries = UICCountries
-  .map(c => ({ digits: c.code.toString().split(''), ...c }))
-  .map(c => `"${c.digits[0]}" "${c.digits[1]}" // ${c.long}`)
-  .join('\n    | ')
-
-
-export default `
 UICCode {
 
   // ------------------------------------------------------------
   // UIC
   // ------------------------------------------------------------
  
-  UICCode = UICCodeInner<UICCountriesAll>
+  UICCode = UICCodeInner<UICCountriesAny>
 
   UICCodeInner<country>
     = UICWagon<country>
@@ -63,8 +52,7 @@ UICCode {
 
   // ------ Country ---------------------------------------------------------------------
 
-  UICCountriesAll
-    = ${countries}
+  UICCountriesAny = digit xs digit
 
 
   // ------ Detail ---------------------------------------------------------------------
@@ -647,4 +635,4 @@ UICCode {
   CodePattern4<type, country, detail1, detail2, free>
     = xt<free>* xt<type> xt<free>* xt<country> xt<free>* xt<detail1> xt<detail2> UICChecksum? xs xt<free>*
 
-}`
+}

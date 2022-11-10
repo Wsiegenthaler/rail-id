@@ -7,15 +7,12 @@
   "module": "dist/rail-id.mjs",
   "browser": "dist/rail-id.umd.js",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
+    "build": "npm run gen-ohm-types; rollup -c",
+    "dev": "rollup -c -w --watch.onStart='npm run gen-ohm-types'",
     "test": "c8 -r html -r text ava",
     "test-watch": "ava -w",
-    "dump-grammars": "npm run dump-grammars-mjs; npm run dump-grammars-ts",
-    "dump-grammars-mjs": "npx ts-node src/build/bin/dump-grammar.mjs dump-all src --out-dir data/grammars",
-    "dump-grammars-ts": "npx ts-node src/build/bin/dump-grammar dump-all src --out-dir data/grammars",
     "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/defs/keepers.ts",
-    "gen-ohm-types": "npm run dump-grammars; npx ohm generateBundles --withTypes --esm data/grammars/**/*.ohm"
+    "gen-ohm-types": "npx ohm generateBundles --withTypes --esm src/grammars/**/*.ohm"
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",

@@ -3,3 +3,5 @@ coverage
 node_modules
 dist
 data/grammars
+src/grammars/uic-grammar.ohm-bundle.d.ts
+src/grammars/uic-grammar.ohm-bundle.js

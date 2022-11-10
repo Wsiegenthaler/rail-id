@@ -6,7 +6,6 @@ import terser from '@rollup/plugin-terser'
 import analyze from 'rollup-plugin-analyzer'
 
 import pkg from './package.json' assert { type: "json" }
-import resolveOhm from './src/build/rollup/resolve-ohm-grammar.mjs'
 
 
 export default [
@@ -22,7 +21,6 @@ export default [
       resolve(),
       commonjs(),
       typescript(),
-      resolveOhm(),
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
@@ -45,7 +43,6 @@ export default [
     ],
     plugins: [
       typescript(),
-      resolveOhm(),
       babel({
         presets: ["@babel/preset-env"],
         babelHelpers: 'bundled',
