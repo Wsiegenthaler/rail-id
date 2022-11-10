@@ -63,21 +63,28 @@ export class ValueDef<V> {
   public readonly field: Field<V>
   public readonly value: V
   public readonly desc?: string
+  public readonly footnotes: string[]
 
-  constructor(field: Field<V>, value: V, desc?: string) {
+  constructor(field: Field<V>, value: V, desc?: string, footnotes?: string[]) {
     this.field = field
     this.value = value
     this.desc = desc
+    this.footnotes = footnotes ?? []
+  }
+
+  // Creates new instance of this def with the speficied footnotes
+  notes(...footnotes: string[]): ValueDef<V> {
+    return new ValueDef<V>(this.field, this.value, this.desc, [ ...footnotes, ...this.footnotes ])
   }
 
   // Used to represent an instance of this value for a particular part of the code
   at(source: Interval, ...footnotes: string[]) {
-    return new Attr<V>(this, footnotes, source)
+    return new Attr<V>(this, [ ...this.footnotes, ...footnotes ], source)
   }
 
   // Used to represent a value which doesn't correspond to a part of the code
   absent(...footnotes: string[]) {
-    return new Attr<V>(this, footnotes)
+    return new Attr<V>(this, [ ...this.footnotes, ...footnotes ])
   }
 
   // Tests a result object for the presence of this field value
