@@ -1,5 +1,6 @@
+import * as C from '../attrs/common'
+import * as V from '../attrs/vehicles/common'
 import * as A from '../attrs/vehicles/type-code'
-import * as C from '../attrs/vehicles/common-fields'
 import * as T from '../attrs/vehicles/tractive'
 import { GaugesByDist } from '../attrs/gauge'
 import { applyDigitRules, Rule } from '.'
@@ -30,12 +31,12 @@ const UICWagonTypeRules: Rule[] = [
   { pattern: /[23]9/, defs: [ A.FixedGauge ] },
 
   // General description
-  { pattern: /[48]0/, defs: [ C.MaintenanceWagonNote ] },
-  { pattern: /[01][12]/, defs: [ C.TEN_COTIF_WagonNote ] },
-  { pattern: /[23][1-8]/, defs: [ C.TEN_COTIF_WagonNote ] },
-  { pattern: /[48][1-8]/, defs: [ C.MiscWagonNote ] },
-  { pattern: /[0-3]9/, defs: [ C.PPV_PPW_WagonNote ] },
-  { pattern: /[48][9]/, defs: [ C.SpecialNumberedWagonNote ] },
+  { pattern: /[48]0/, defs: [ V.MaintenanceWagonNote ] },
+  { pattern: /[01][12]/, defs: [ V.TEN_COTIF_WagonNote ] },
+  { pattern: /[23][1-8]/, defs: [ V.TEN_COTIF_WagonNote ] },
+  { pattern: /[48][1-8]/, defs: [ V.MiscWagonNote ] },
+  { pattern: /[0-3]9/, defs: [ V.PPV_PPW_WagonNote ] },
+  { pattern: /[48][9]/, defs: [ V.SpecialNumberedWagonNote ] },
 
   // Warnings for blocks designated "Not to be used"
   {
@@ -71,12 +72,12 @@ const UICPassengerTypeRules: Rule[] = [
   { pattern: /65/, defs: [ A.CarCarrier ] },
   
   // Miscellaneous vehicles
-  { pattern: /[48][1-8]/, defs: [ C.MiscPassengerVehicleNote ] },
+  { pattern: /[48][1-8]/, defs: [ V.MiscPassengerVehicleNote ] },
 
   // General description
-  { pattern: /[567]6/, defs: [ C.TEN_COTIF_WagonNote ] },
-  { pattern: /[567][789]/, defs: [ C.PPV_PPW_WagonNote ] },
-  { pattern: /[567][1234]/, defs: [ C.TEN_COTIF_WagonNote, C.PPV_PPW_WagonNote ] },
+  { pattern: /[567]6/, defs: [ V.TEN_COTIF_WagonNote ] },
+  { pattern: /[567][789]/, defs: [ V.PPV_PPW_WagonNote ] },
+  { pattern: /[567][1234]/, defs: [ V.TEN_COTIF_WagonNote, V.PPV_PPW_WagonNote ] },
  
   // Service vehicles
   { pattern: /6[03]/, defs: [ A.ServiceVehicle ] },
@@ -95,28 +96,28 @@ const UICPassengerTypeRules: Rule[] = [
   // "Not to be used" blocks
   {
     pattern: /53/,
-    defs: [ C.VehicleNotes.value('Passenger vehicles starting with digits \'53\' are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
+    defs: [ V.VehicleNotes.value('Passenger vehicles starting with digits \'53\' are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
   },
   {
     pattern: /7[1246789]/,
-    defs: [ C.VehicleNotes.value('Passenger vehicles starting with digit 7 followed by 1, 2, 4, 6, 7, 8, or 9 are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
+    defs: [ V.VehicleNotes.value('Passenger vehicles starting with digit 7 followed by 1, 2, 4, 6, 7, 8, or 9 are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
   },
   {
     pattern: /[56]6/,
-    defs: [ C.VehicleNotes.value('Passenger vehicles starting with digits \'56\' or \'66\' are not to be used, but are excepted for coaches with fixed gauge (\'56\') and adjustable gauge (\'66\') already in service and not to be used for new vehicles.') ]
+    defs: [ V.VehicleNotes.value('Passenger vehicles starting with digits \'56\' or \'66\' are not to be used, but are excepted for coaches with fixed gauge (\'56\') and adjustable gauge (\'66\') already in service and not to be used for new vehicles.') ]
   }
 ]
 
 // ---- Tractive stock -----------------------------------------------
 const UICTractiveTypeRules: Rule[] = [
   { pattern: /90/, defs: [ T.MiscellaneousVehicle ] },
-  { pattern: /91/, defs: [ T.ElectricLocomotive, C.ElectricTraction ] },
-  { pattern: /92/, defs: [ T.DieselLocomotive, C.DieselTraction ] },
-  { pattern: /93/, defs: [ T.HighSpeedElectricMultiUnitSet, C.ElectricTraction ] },
-  { pattern: /94/, defs: [ T.LowSpeedElectricMultiUnitSet, C.ElectricTraction ] },
-  { pattern: /95/, defs: [ T.DieselMultiUnitSet, C.DieselTraction ] },
+  { pattern: /91/, defs: [ T.ElectricLocomotive, T.ElectricTraction ] },
+  { pattern: /92/, defs: [ T.DieselLocomotive, T.DieselTraction ] },
+  { pattern: /93/, defs: [ T.HighSpeedElectricMultiUnitSet, T.ElectricTraction ] },
+  { pattern: /94/, defs: [ T.LowSpeedElectricMultiUnitSet, T.ElectricTraction ] },
+  { pattern: /95/, defs: [ T.DieselMultiUnitSet, T.DieselTraction ] },
   { pattern: /96/, defs: [ T.SpecialisedTrailer ] },
-  { pattern: /97/, defs: [ T.ElectricShunter, C.ElectricTraction ] },
+  { pattern: /97/, defs: [ T.ElectricShunter, T.ElectricTraction ] },
   { pattern: /98/, defs: [ T.DieselShunter ] },
   { pattern: /99/, defs: [ T.SpecialVehicle ] }
 ]

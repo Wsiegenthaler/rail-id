@@ -1,19 +1,20 @@
-import ohm, { TerminalNode } from 'ohm-js'
-import { IterationNode, Node, NonterminalNode } from 'ohm-js'
+import { TerminalNode, IterationNode, Node, NonterminalNode } from 'ohm-js'
 import { isObject } from 'lodash-es'
 
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
-import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/type-code'
+
+import keeperMap from './defs/keepers'
 
 import { Attrs } from './attrs'
-import { CountryByCode } from './attrs/countries'
-import * as C from './attrs/vehicles/common-fields'
+import * as C from './attrs/common'
+import * as V from './attrs/vehicles/common'
 import * as P from './attrs/code-parts'
+import { CountryByCode } from './attrs/countries'
 
 import grammarStr from './uic-grammar.ohm'
 import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
-import keeperMap from './defs/keepers'
+import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/type-code'
 import { uicHauledPassengerD56, uicHauledPassengerD78 } from './rules/hauled-passenger'
 
 
@@ -38,9 +39,10 @@ export const semantics = grammar.createSemantics()
       }
 
       return [
-        ...inner.attrs(),
         C.RawCode.value(this.sourceString).at(this.source),
-        checksumStatus
+        C.UICCode.absent(),
+        checksumStatus,
+        ...inner.attrs(),
       ]
     },
     UICCodeInner(this: NonterminalNode, n: NonterminalNode): Attrs {
@@ -134,7 +136,7 @@ export const semantics = grammar.createSemantics()
       const source = d1.source.coverageWith(d2.source, d3.source)
       
       return [
-        C.SerialNumber.value(serial).at(source),
+        V.SerialNumber.value(serial).at(source),
         P.SerialPart.value(serial).at(source)
        ]
     },
@@ -145,7 +147,7 @@ export const semantics = grammar.createSemantics()
       // Lookup keeper def and generate attribute
       const vkm = [ p2_l1, p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.sourceString).join('')
       const vkmSource = p2_l1.source.coverageWith(...[ p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.source))
-      const keeperAttr = [ keeperMap[vkm] ].filter(isObject).map(d => C.Keeper.value(d).at(vkmSource) )
+      const keeperAttr = [ keeperMap[vkm] ].filter(isObject).map(d => V.Keeper.value(d).at(vkmSource) )
 
       // Log warning if vkm doesn't exist in our definitions
       const keeperWarning = keeperAttr.length === 0 ? [ C.ParseWarnings.value(`Vehicle Keeper Marking '${this.sourceString}' doesn't appear to be a known value.`).at(this.source) ] : []
@@ -156,11 +158,11 @@ export const semantics = grammar.createSemantics()
         P.KeeperPart.value(this.sourceString).at(this.source)
       ]
     },
-    UICDesignation_RIV(tis: NonterminalNode, n: TerminalNode): Attrs {
-      return [ C.RIVVehicle.at(n.source) ]
+    UICDesignation_RIV(this: NonterminalNode, n: TerminalNode): Attrs {
+      return [ V.RIVVehicle.at(n.source) ]
     },
-    UICDesignation_TEN(tis: NonterminalNode, n: TerminalNode): Attrs {
-      return [ C.TENVehicle.at(n.source) ]
+    UICDesignation_TEN(this: NonterminalNode, n: TerminalNode): Attrs {
+      return [ V.TENVehicle.at(n.source) ]
     },
     // --------------------------- Top-level pattern expressions ---------------------------
 

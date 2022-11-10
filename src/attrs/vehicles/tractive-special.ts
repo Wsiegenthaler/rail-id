@@ -1,5 +1,5 @@
 import { Field } from '..'
-import { MaxSpeed } from './common-fields'
+import { MaxSpeed } from './common'
 
 
 // Special Type (tractives)

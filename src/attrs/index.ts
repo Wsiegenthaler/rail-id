@@ -18,7 +18,7 @@ import { Dictionary } from '../util/common'
 
 
 export const META_PATH = '_meta'
-const META_FIELDS_PATH = `${META_PATH}.fields`
+export const META_FIELDS_PATH = `${META_PATH}.fields`
 
 // Types
 export type ResultObject = { [META_PATH]: object }
@@ -86,7 +86,7 @@ export class ValueDef<V> {
     return new Attr<V>(this, [ ...this.footnotes, ...footnotes ], source)
   }
 
-  // Used to represent a value which doesn't correspond to a part of the code
+  // Used to represent a value which doesn't correspond to a specific part of the code.
   absent(...footnotes: string[]) {
     return new Attr<V>(this, [ ...this.footnotes, ...footnotes ])
   }

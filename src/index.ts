@@ -1,8 +1,8 @@
+import { MatchResult } from 'ohm-js'
 import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
 import { buildResult, META_PATH, ResultObject } from './attrs'
-import { MatchResult } from 'ohm-js'
 
 
 type Options = {

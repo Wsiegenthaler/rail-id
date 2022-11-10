@@ -1,4 +1,4 @@
-import { Field } from '..'
+import { Field, SetField } from '..'
 
 
 // Tractive vehicle sub-types
@@ -14,3 +14,11 @@ export const SpecialisedTrailer            = VehicleSubType.value('Specialised t
 export const ElectricShunter               = VehicleSubType.value('Electric shunting engine')
 export const DieselShunter                 = VehicleSubType.value('Diesel shunting engine')
 export const SpecialVehicle                = VehicleSubType.value('Special vehicle')
+
+//TODO these may be redundant
+// Types of traction (electric, diesel, etc)
+const Traction = new SetField('Traction', 'traction')
+
+export const ElectricTraction  = Traction.value('Electric')
+export const DieselTraction    = Traction.value('Diesel')
+export const SteamTraction     = Traction.value('Steam')

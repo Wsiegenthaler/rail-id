@@ -1,4 +1,4 @@
-import * as C from '../attrs/vehicles/common-fields'
+import * as C from '../attrs/vehicles/common'
 import * as S from '../attrs/vehicles/tractive-special'
 import { applyDigitRules, applySingleDigitRules, Rule } from '.'
 
