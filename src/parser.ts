@@ -11,7 +11,7 @@ import { CountryByCode } from './attributes/countries'
 import * as C from './attributes/vehicles/common-fields'
 import * as P from './attributes/code-parts'
 
-import grammarStr from './uic/grammar.ohm'
+import grammarStr from './uic-grammar.ohm'
 import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
 import keeperMap from './uic/keepers'
 import { uicHauledPassengerD56, uicHauledPassengerD78 } from './rules/hauled-passenger'
