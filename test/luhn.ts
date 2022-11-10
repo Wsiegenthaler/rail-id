@@ -25,7 +25,6 @@ test('verify - single digit values should always fail (string args)', t => {
 })
 
 test('verify - empty/no string should fail', t => {
-  t.false(luhnVerify())
   t.false(luhnVerify(''))
   t.false(luhnVerify(null))
 })
