@@ -1,7 +1,7 @@
 import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
-import { buildResult, META_PATH } from './attributes/builders'
+import { buildResult, META_PATH, ResultObject } from './attributes/builders'
 import { MatchResult } from 'ohm-js'
 
 
@@ -13,7 +13,7 @@ type Options = {
 const Defaults: Options = { metadata: true, debug: false }
 
 // Main
-export default (input: string, options: Options = {}) => {
+export default (input: string, options: Options = {}): ResultObject => {
   defaults(options, Defaults)
 
   // Log parse trace if debug flag set

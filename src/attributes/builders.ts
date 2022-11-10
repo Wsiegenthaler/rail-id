@@ -20,7 +20,11 @@ import { Dictionary } from '../util/common'
 export const META_PATH = '_meta'
 const META_FIELDS_PATH = `${META_PATH}.fields`
 
+// Types
+export type ResultObject = { [META_PATH]: object }
+
 type FieldType = 'scalar' | 'set'
+type Source = { start: number, end: number, len: number }
 
 abstract class AbstractField<V> {
   public readonly name: string
@@ -88,7 +92,7 @@ export class ValueDef<V> {
   }
 
   // Tests a result object for the presence of this field value
-  matches(o: object): boolean {
+  matches(o: ResultObject): boolean {
     if (this.field.type === 'scalar')
       return isEqual(get(o, this.field.path, undefined), this.value)
     else if (this.field.type === 'set')
@@ -112,7 +116,7 @@ export class Attr<V> {
 
 export type Attrs = Attr<any>[]
 
-const applyScalars = (o: object, attrs: Attr<any>[]): object => {
+const applyScalars = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
   // Apply values
   attrs.forEach((a: Attr<any>) => set(o, a.def.field.path, a.def.value))
 
@@ -122,7 +126,7 @@ const applyScalars = (o: object, attrs: Attr<any>[]): object => {
   return o
 }
 
-const applySets = (o: object, attrs: Attr<any>[]): object => {
+const applySets = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
   // Apply values
   const setMap = groupBy(attrs, (a: Attr<any>) => a.def.field.path)
   toPairs(setMap)
@@ -135,7 +139,7 @@ const applySets = (o: object, attrs: Attr<any>[]): object => {
   return o
 }
 
-const applyScalarMeta = (o: object, attrs: Attr<any>[]): object => {
+const applyScalarMeta = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
     // Build metadata updates
     const updates = zipObject(
       attrs.map((a: Attr<any>) => a.def.field.path),
@@ -154,7 +158,7 @@ const applyScalarMeta = (o: object, attrs: Attr<any>[]): object => {
     return o
 }
 
-const applySetMeta = (o: object, setMap: Dictionary<Attr<any>[]>): object => {
+const applySetMeta = (o: ResultObject, setMap: Dictionary<Attr<any>[]>): ResultObject => {
     for (let path in setMap) {
       const attrs = setMap[path]
 
@@ -187,8 +191,6 @@ const applySetMeta = (o: object, setMap: Dictionary<Attr<any>[]>): object => {
     return o
 }
 
-type Source = { start: number, end: number, len: number }
-
 // Convert Ohm `Interval` to `Source` to be included in the result
 const sourceResult = (a: Attr<any>): Source | undefined => {
   if (a?.source === undefined) return undefined
@@ -198,8 +200,8 @@ const sourceResult = (a: Attr<any>): Source | undefined => {
 }
 
 // Generate result object with attributes and their metadata
-export const buildResult = (attrs: Attr<any>[]): object => {
-  const o = {}
+export const buildResult = (attrs: Attr<any>[]): ResultObject => {
+  const o = { [META_PATH]: {} }
   const [ scalars, sets ] = partition(attrs, (a: Attr<any>) => a.def.field.type === 'scalar')
 
   applyScalars(o, scalars) 
