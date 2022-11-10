@@ -154,7 +154,12 @@ export const semantics = grammar.createSemantics()
         P.KeeperPart.value(this.sourceString).at(this.source)
       ]
     },
-    
+    UICDesignation_RIV(tis: NonterminalNode, n: TerminalNode): Attrs {
+      return [ C.RIVVehicle.at(n.source) ]
+    },
+    UICDesignation_TEN(tis: NonterminalNode, n: TerminalNode): Attrs {
+      return [ C.TENVehicle.at(n.source) ]
+    },
     // --------------------------- Top-level pattern expressions ---------------------------
 
     CodePattern3(this: NonterminalNode, free1: IterationNode, type: NonterminalNode, free2: IterationNode, country: NonterminalNode, free3: IterationNode, detail: NonterminalNode, checksum: IterationNode, xs: NonterminalNode, free4: IterationNode): Attrs {

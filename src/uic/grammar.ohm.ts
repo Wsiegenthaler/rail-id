@@ -96,11 +96,13 @@ UICCode {
   UICKeeper = upper upper? "-" upper upper? upper? upper? upper?
 
   // Tokens that may appear in any number of places throught the code
-  UICWagonFreeToken =     "RIV" | UICKeeper | uicWagonLetters
-  UICPassengerFreeToken = "TEN" | UICKeeper | uicPassengerLetters
+  UICWagonFreeToken =     UICDesignation_RIV | uicWagonLetters | UICKeeper 
+  UICPassengerFreeToken = UICDesignation_TEN | uicPassengerLetters | UICKeeper 
   UICTractiveFreeToken =  UICKeeper
   UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
 
+  UICDesignation_RIV = "RIV"
+  UICDesignation_TEN = "TEN"
 
   // ------ Wagon Letters ---------------------------------------------------------------
 

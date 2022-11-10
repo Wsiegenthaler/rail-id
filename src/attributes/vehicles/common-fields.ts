@@ -47,3 +47,11 @@ export const SpecialNumberedWagonNote = VehicleNotes.value('Wagon with special n
 
 // Warnings (a place to report oddities encountered during parsing)
 export const ParseWarnings = new SetField('Parse Warnings', `${META_PATH}.warnings`)
+
+// TEN Vehicle Designation
+const VehicleDesignation_TEN = new Field<boolean>('TEN Vehicle', `designations.ten`)
+export const TENVehicle = VehicleDesignation_TEN.value(true)
+
+// RIV Vehicle Designation
+const VehicleDesignation_RIV = new Field<boolean>('RIV Vehicle', `designations.riv`)
+export const RIVVehicle = VehicleDesignation_RIV.value(true)
