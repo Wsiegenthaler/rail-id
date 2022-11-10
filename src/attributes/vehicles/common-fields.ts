@@ -1,4 +1,4 @@
-import { KeeperDef } from '../../uic/keepers'
+import { KeeperDef } from '../../defs/keepers'
 import { Field, META_PATH, SetField } from '../builders'
 
 

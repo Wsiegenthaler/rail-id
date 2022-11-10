@@ -14,7 +14,7 @@
     "dump-grammars": "npm run dump-grammars-mjs; npm run dump-grammars-ts",
     "dump-grammars-mjs": "npx ts-node src/build/bin/dump-grammar.mjs dump-all src --out-dir data/grammars",
     "dump-grammars-ts": "npx ts-node src/build/bin/dump-grammar dump-all src --out-dir data/grammars",
-    "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/uic/keepers.ts",
+    "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/defs/keepers.ts",
     "gen-ohm-types": "npm run dump-grammars; npx ohm generateBundles --withTypes --esm data/grammars/**/*.ohm"
   },
   "author": "Weston Siegenthaler",
