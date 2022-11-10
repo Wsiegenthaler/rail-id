@@ -14,6 +14,7 @@ import * as P from './attributes/code-parts'
 import grammarStr from './uic/grammar.ohm'
 import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
 import keeperMap from './uic/keepers'
+import { uicHauledPassengerD78 } from './rules/hauled-passenger'
 
 
 export const grammar = ohm.grammar(grammarStr)
@@ -108,8 +109,9 @@ export const semantics = grammar.createSemantics()
       ]
     },
     UICPassengerDetail(this: NonterminalNode, d5: NonterminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
-      //TODO
+      //TODO digits 5 and 6
       return [
+        ...uicHauledPassengerD78(d7, d8),
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
     },
