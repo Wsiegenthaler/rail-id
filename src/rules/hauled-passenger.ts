@@ -6,6 +6,21 @@ import * as P from '../attributes/vehicles/hauled-passenger'
 import { applyDigitRules } from './helpers'
 
 
+// ---- General rules (digit 5 only) -----------------------------
+
+const UICHauledPassengerRulesD5: Rule[] = [
+  // TODO
+  { pattern: /[012]/,  defs: [ P.KphUnder120 ] },
+]
+
+
+// ---- Hauled-passenger (both digits 5 and 6) ----------------------
+
+const UICHauledPassengerRulesD56: Rule[] = [
+  // TODO
+  { pattern: /30/,          defs: [ P.AllTensions ] },
+]
+
 // ---- Energy Supply Notes --------------------------------------
 
 const { One, Two, Star } = P.EnergySupplyNotes
@@ -105,6 +120,9 @@ const UICHauledPassengerRulesD78: Rule[] = [
   // Energy Supply - Generator Power
   { pattern: /[89]9/,       defs: [ P.GeneratorPower.notes(Two) ] }
 ]
+
+// Returns vehicle attributes for the given Ohm parse node of digits 5 and 6 of special tractive units
+export const uicHauledPassengerD56 = applyDigitRules(UICHauledPassengerRulesD5, UICHauledPassengerRulesD56)
 
 // Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
 export const uicHauledPassengerD78 = applyDigitRules(UICHauledPassengerRulesD7, UICHauledPassengerRulesD78)
