@@ -7,7 +7,7 @@ import { SpeedRange, YesNo } from '../common-values'
 export const SerialNumber = new Field<string>('Serial Number', 'serial')
 
 // Max Speed field
-export const AllowedSpeeds = new SetField<SpeedRange>('Allowed Speed', 'speed')
+export const AllowedSpeeds = new SetField<SpeedRange>('Allowed Speed', 'speeds')
 
 // Axle Count
 type AxleCount = { exactly: number } | { min: number }
