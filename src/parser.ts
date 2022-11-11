@@ -1,12 +1,9 @@
 import { TerminalNode, IterationNode, Node, NonterminalNode } from 'ohm-js'
-import { isObject } from 'lodash-es'
 
 import grammar from './grammars/uic-grammar.ohm-bundle'
 
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
-
-import keeperMap from './defs/keepers'
 
 import { Attrs } from './attrs'
 import * as C from './attrs/common'
@@ -17,6 +14,7 @@ import { CountryByCode } from './attrs/countries'
 import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
 import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/type-code'
 import { uicHauledPassengerD56, uicHauledPassengerD78 } from './rules/hauled-passenger'
+import { KeeperByCode } from './attrs/keepers'
 
 
 export { grammar }
@@ -148,14 +146,9 @@ export const semantics = grammar.createSemantics()
       // Lookup keeper def and generate attribute
       const vkm = [ p2_l1, p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.sourceString).join('')
       const vkmSource = p2_l1.source.coverageWith(...[ p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.source))
-      const keeperAttr = [ keeperMap[vkm] ].filter(isObject).map(d => V.Keeper.value(d).at(vkmSource) )
-
-      // Log warning if vkm doesn't exist in our definitions
-      const keeperWarning = keeperAttr.length === 0 ? [ C.ParseWarnings.value(`Vehicle Keeper Marking '${this.sourceString}' doesn't appear to be a known value.`).at(this.source) ] : []
 
       return [
-        ...keeperAttr,
-        ...keeperWarning,
+        KeeperByCode(vkm).at(vkmSource),
         P.KeeperPart.value(this.sourceString).at(this.source)
       ]
     },
@@ -165,6 +158,7 @@ export const semantics = grammar.createSemantics()
     UICDesignation_TEN(this: NonterminalNode, n: TerminalNode): Attrs {
       return [ V.TENVehicle.at(n.source) ]
     },
+
     // --------------------------- Top-level pattern expressions ---------------------------
 
     CodePattern3(this: NonterminalNode, free1: IterationNode, type: NonterminalNode, free2: IterationNode, country: NonterminalNode, free3: IterationNode, detail: NonterminalNode, checksum: IterationNode, xs: NonterminalNode, free4: IterationNode): Attrs {

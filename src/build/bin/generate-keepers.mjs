@@ -89,9 +89,7 @@ function template(body) {
       ${body}
       ]
 
-      const keeperMap = zipObject(keepers.map(k => k.vkm), keepers)
-
-      export default keeperMap
+      export const UICKeeperCodeMap = zipObject(keepers.map(k => k.vkm), keepers)
     `.replaceAll(/^      /gm, '')
 }
 

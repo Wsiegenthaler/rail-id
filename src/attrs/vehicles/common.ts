@@ -6,9 +6,6 @@ import { SpeedRange, YesNo } from '../common-values'
 // Vehicle serial number
 export const SerialNumber = new Field<string>('Serial Number', 'serial')
 
-// Vehicle Owner (UIC VKM)
-export const Keeper = new Field<KeeperDef>('Vehicle Keeper', 'keeper')
-
 // Max Speed field
 export const AllowedSpeeds = new SetField<SpeedRange>('Allowed Speed', 'speed')
 
