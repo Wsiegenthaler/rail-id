@@ -20,9 +20,11 @@ import { Dictionary } from '../util/common'
 export const META_PATH = '_meta'
 export const META_FIELDS_PATH = `${META_PATH}.fields`
 
-// Types
-export type ResultObject = { [META_PATH]: object }
+// Main result type returned by the library
+export type RailID = { [META_PATH]: object }
+
 type FieldType = 'scalar' | 'set'
+
 type Source = { start: number, end: number, len: number }
 
 abstract class AbstractField<V> {
@@ -91,7 +93,7 @@ export class ValueDef<V> {
   }
 
   // Tests a result object for the presence of this field value
-  matches(o: ResultObject): boolean {
+  matches(o: RailID): boolean {
     if (this.field.type === 'scalar')
       return isEqual(get(o, this.field.path, undefined), this.value)
     else if (this.field.type === 'set')
@@ -115,7 +117,7 @@ export class Attr<V> {
 
 export type Attrs = Attr<any>[]
 
-const applyScalars = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
+const applyScalars = (o: RailID, attrs: Attr<any>[]): RailID => {
   // Apply values
   attrs.forEach((a: Attr<any>) => set(o, a.def.field.path, a.def.value))
 
@@ -125,7 +127,7 @@ const applyScalars = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
   return o
 }
 
-const applySets = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
+const applySets = (o: RailID, attrs: Attr<any>[]): RailID => {
   // Apply values
   const setMap = groupBy(attrs, (a: Attr<any>) => a.def.field.path)
   toPairs(setMap)
@@ -138,13 +140,13 @@ const applySets = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
   return o
 }
 
-const applyScalarMeta = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
+const applyScalarMeta = (o: RailID, attrs: Attr<any>[]): RailID => {
     // Build metadata updates
     const updates = zipObject(
       attrs.map((a: Attr<any>) => a.def.field.path),
       attrs.map((a: Attr<any>) => ({
-        name: a.def.field.name,
-        type: a.def.field.type,
+        fieldName: a.def.field.name,
+        fieldType: a.def.field.type,
         desc: a.def.field.desc ?? '',
         source: sourceResult(a),
         footnotes: a.footnotes
@@ -157,7 +159,7 @@ const applyScalarMeta = (o: ResultObject, attrs: Attr<any>[]): ResultObject => {
     return o
 }
 
-const applySetMeta = (o: ResultObject, setMap: Dictionary<Attr<any>[]>): ResultObject => {
+const applySetMeta = (o: RailID, setMap: Dictionary<Attr<any>[]>): RailID => {
     for (let path in setMap) {
       const attrs = setMap[path]
 
@@ -165,8 +167,8 @@ const applySetMeta = (o: ResultObject, setMap: Dictionary<Attr<any>[]>): ResultO
       const fieldUpdates = zipObject(
         attrs.map((a: Attr<any>) => a.def.field.path),
         attrs.map((a: Attr<any>) => ({
-          name: a.def.field.name,
-          type: a.def.field.type,
+          fieldName: a.def.field.name,
+          fieldType: a.def.field.type,
           length: attrs.length,
           desc: a.def.field.desc,
       })))
@@ -199,7 +201,7 @@ const sourceResult = (a: Attr<any>): Source | undefined => {
 }
 
 // Generate result object with attributes and their metadata
-export const buildResult = (attrs: Attr<any>[]): ResultObject => {
+export const buildResult = (attrs: Attr<any>[]): RailID => {
   const o = { [META_PATH]: {} }
   const [ scalars, sets ] = partition(attrs, (a: Attr<any>) => a.def.field.type === 'scalar')
 

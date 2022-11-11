@@ -2,7 +2,7 @@ import { MatchResult } from 'ohm-js'
 import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
-import { buildResult, META_PATH, ResultObject } from './attrs'
+import { buildResult, META_PATH, RailID } from './attrs'
 
 
 type Options = {
@@ -13,7 +13,7 @@ type Options = {
 const Defaults: Options = { metadata: true, debug: false }
 
 // Main
-export default (input: string, options: Options = {}): ResultObject => {
+export default (input: string, options: Options = {}): RailID => {
   defaults(options, Defaults)
 
   // Log parse trace if debug flag set

@@ -2,11 +2,11 @@ import { ExecutionContext } from 'ava'
 import { get, keys, set } from 'lodash-es'
 
 import railID from '../src/index'
-import { buildResult, META_FIELDS_PATH, META_PATH, ResultObject, ValueDef } from '../src/attrs'
+import { buildResult, META_FIELDS_PATH, META_PATH, RailID, ValueDef } from '../src/attrs'
 
 
 // Strips `source` field from result object metadata so it's not included in `match` tests
-const stripSource = (o: ResultObject) => {
+const stripSource = (o: RailID) => {
   keys(get(o, META_FIELDS_PATH) ?? []).forEach(k => set(o, `${META_FIELDS_PATH}['${k}'].source`, undefined))
   return o
 }
