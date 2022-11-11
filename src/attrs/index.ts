@@ -1,20 +1,6 @@
+import { filter, find, get, isEqual, some } from 'lodash-es'
 import { Interval } from 'ohm-js/index'
 
-import {
-  assign,
-  find,
-  get,
-  groupBy,
-  isEqual,
-  merge,
-  partition,
-  set,
-  some,
-  toPairs,
-  zipObject
-} from 'lodash-es'
-
-import { Dictionary } from '../util/common'
 
 
 export const META_PATH = '_meta'
@@ -23,9 +9,10 @@ export const META_FIELDS_PATH = `${META_PATH}.fields`
 // Main result type returned by the library
 export type RailID = { [META_PATH]: object }
 
+export type Attrs = Attr<any>[]
+
 type FieldType = 'scalar' | 'set'
 
-type Source = { start: number, end: number, len: number }
 
 abstract class AbstractField<V> {
   public readonly name: string
@@ -113,100 +100,4 @@ export class Attr<V> {
     this.source = source
     this.footnotes = footnotes
   }
-}
-
-export type Attrs = Attr<any>[]
-
-const applyScalars = (o: RailID, attrs: Attr<any>[]): RailID => {
-  // Apply values
-  attrs.forEach((a: Attr<any>) => set(o, a.def.field.path, a.def.value))
-
-  // Apply field metadata
-  applyScalarMeta(o, attrs)
-
-  return o
-}
-
-const applySets = (o: RailID, attrs: Attr<any>[]): RailID => {
-  // Apply values
-  const setMap = groupBy(attrs, (a: Attr<any>) => a.def.field.path)
-  toPairs(setMap)
-    .map(([path, attrs]) => [path, attrs.map((a: Attr<any>) => a.def.value)])
-    .forEach(([path, v]) => set(o, path, v))
-
-  // Apply field metadata
-  applySetMeta(o, setMap)
-
-  return o
-}
-
-const applyScalarMeta = (o: RailID, attrs: Attr<any>[]): RailID => {
-    // Build metadata updates
-    const updates = zipObject(
-      attrs.map((a: Attr<any>) => a.def.field.path),
-      attrs.map((a: Attr<any>) => ({
-        fieldName: a.def.field.name,
-        fieldType: a.def.field.type,
-        desc: a.def.field.desc ?? '',
-        source: sourceResult(a),
-        footnotes: a.footnotes
-    })))
-
-    // Apply metadata
-    const existing = get(o, META_FIELDS_PATH, {})
-    set(o, META_FIELDS_PATH, assign(existing, updates))
-
-    return o
-}
-
-const applySetMeta = (o: RailID, setMap: Dictionary<Attr<any>[]>): RailID => {
-    for (let path in setMap) {
-      const attrs = setMap[path]
-
-      // Build metadata updates for `set` fields
-      const fieldUpdates = zipObject(
-        attrs.map((a: Attr<any>) => a.def.field.path),
-        attrs.map((a: Attr<any>) => ({
-          fieldName: a.def.field.name,
-          fieldType: a.def.field.type,
-          length: attrs.length,
-          desc: a.def.field.desc,
-      })))
-
-      // Build metadata updates for values of the set
-      const valueUpdates = zipObject(
-        attrs.map((a: Attr<any>, i: number) => `${a.def.field.path}[${i}]`),
-        attrs.map((a: Attr<any>) => ({
-          name: a.def.value,
-          desc: a.def.desc ?? '',
-          footnotes: a.footnotes,
-          source: sourceResult(a)
-      })))
-
-      // Apply metadata
-      const updates = merge(fieldUpdates, valueUpdates)
-      const existing = get(o, META_FIELDS_PATH, {})
-      set(o, META_FIELDS_PATH, assign(existing, updates))
-    }
-
-    return o
-}
-
-// Convert Ohm `Interval` to `Source` to be included in the result
-const sourceResult = (a: Attr<any>): Source | undefined => {
-  if (a?.source === undefined) return undefined
-
-  const { startIdx, endIdx } = a.source!
-  return { start: startIdx, end: endIdx, len: endIdx - startIdx }
-}
-
-// Generate result object with attributes and their metadata
-export const buildResult = (attrs: Attr<any>[]): RailID => {
-  const o = { [META_PATH]: {} }
-  const [ scalars, sets ] = partition(attrs, (a: Attr<any>) => a.def.field.type === 'scalar')
-
-  applyScalars(o, scalars) 
-  applySets(o, sets)
-  
-  return o
 }

@@ -2,7 +2,8 @@ import { MatchResult } from 'ohm-js'
 import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
-import { buildResult, META_PATH, RailID } from './attrs'
+import { META_PATH, RailID } from './attrs'
+import { result } from './result'
 
 
 type Options = {
@@ -22,12 +23,12 @@ export default (input: string, options: Options = {}): RailID => {
   let parseResult = grammar.match(input)
   
   if (parseResult.succeeded()) {
-    const result = buildResult(semantics(parseResult).attrs())
+    const r = result(semantics(parseResult).attrs())
 
     // Omit metadata according to options
-    if (options.metadata === false) unset(result, META_PATH)
+    if (options.metadata === false) unset(r, META_PATH)
 
-    return result
+    return r
   } else {
     const e = new ParseError(parseResult, input)
     console.error(e)
