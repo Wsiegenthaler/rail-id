@@ -3,7 +3,7 @@ import { zipObject } from 'lodash-es'
 import { Dictionary } from '../util/common'
 
 
-interface Gauge { name: string, type: string, mm: number }
+export interface Gauge { name: string, type: string, mm: number }
 
 // Factories
 const Gauge = (name: string, type: string, mm: number): Readonly<Gauge> => ({ name, mm, type })
