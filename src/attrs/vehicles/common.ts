@@ -10,7 +10,7 @@ export const SerialNumber = new Field<string>('Serial Number', 'serial')
 export const AllowedSpeeds = new SetField<SpeedRange>('Allowed Speed', 'speeds')
 
 // Axle Count
-type AxleCount = { exactly: number } | { min: number }
+type AxleCount = { exactly: number } | { min?: number, max: number } | { min: number, max?: number }
 export const AxleCount = new Field<AxleCount>('Axle Count', 'axles')
 
 // Self-propulsion

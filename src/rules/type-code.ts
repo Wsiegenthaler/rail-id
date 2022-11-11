@@ -6,23 +6,26 @@ import { GaugesByDist } from '../attrs/gauge'
 import { applyDigitRules, Rule } from '.'
 
 
-// ---- General rules (first digit only) -----------------------------
-const UICTypeRulesD1: Rule[] = [
+// ---- Common (first digit only) ------------------------------------
+const CommonTypeRulesD1: Rule[] = [
   // Vehicle type
   { pattern: /[012348]/, defs: [ A.WagonVehicle ] },
   { pattern: /[567]/, defs: [ A.HauledPassenger ] },
-  { pattern: /9/, defs: [ A.TractiveVehicle ] },
+  { pattern: /9/, defs: [ A.TractiveVehicle ] }
+]
 
-  // Wagon - Suspension (axles or bogies)
+// ---- Wagons (first digit only) ------------------------------------
+const WagonTypeRulesD1: Rule[] = [
+  // Suspension (axles or bogies)
   { pattern: /[024]/, defs: [ A.Axles ] },
   { pattern: /[138]/, defs: [ A.Bogies ] },
 
-  // Wagons - Traffic (domestic/international)
+  // Traffic (domestic/international)
   { pattern: /[012348]/, defs: [ A.DomesticInternational ] }
 ]
 
-// ---- Wagons -------------------------------------------------------
-const UICWagonTypeRules: Rule[] = [
+// ---- Wagons (digit 1 and 2) ---------------------------------------
+const UICWagonTypeRulesD12: Rule[] = [
 
   // Track gauge type (fixed or variable)
   { pattern: /[012348][1357]/, defs: [ A.FixedGauge ] },
@@ -50,7 +53,7 @@ const UICWagonTypeRules: Rule[] = [
 ]
 
 // ---- Passenger stock ----------------------------------------------
-const UICPassengerTypeRules: Rule[] = [
+const UICPassengerTypeRulesD12: Rule[] = [
   // Traffic
   { pattern: /[567]0/, defs: [ A.Domestic ] },
   { pattern: /[567]5/, defs: [ A.DomesticInternational ] },
@@ -109,7 +112,7 @@ const UICPassengerTypeRules: Rule[] = [
 ]
 
 // ---- Tractive stock -----------------------------------------------
-const UICTractiveTypeRules: Rule[] = [
+const UICTractiveTypeRulesD12: Rule[] = [
   { pattern: /90/, defs: [ T.MiscellaneousVehicle ] },
   { pattern: /91/, defs: [ T.ElectricLocomotive,            T.Traction.value('electric') ] },
   { pattern: /92/, defs: [ T.DieselLocomotive,              T.Traction.value('diesel') ] },
@@ -123,10 +126,10 @@ const UICTractiveTypeRules: Rule[] = [
 ]
 
 // Returns vehicle attrs for the given Ohm parse node of wagon unit type codes
-export const uicWagonTypeCode = applyDigitRules(UICTypeRulesD1, UICWagonTypeRules)
+export const applyWagonTypeRulesD12 = applyDigitRules([ ...CommonTypeRulesD1, ...WagonTypeRulesD1 ], UICWagonTypeRulesD12)
 
 // Returns vehicle attrs for the given Ohm parse node of hauled-passenger unit type codes
-export const uicPassengerTypeCode = applyDigitRules(UICTypeRulesD1, UICPassengerTypeRules)
+export const applyPassengerTypeRulesD12 = applyDigitRules(CommonTypeRulesD1, UICPassengerTypeRulesD12)
 
 // Returns vehicle attrs for the given Ohm parse node of tractive unit type codes
-export const uicTractiveTypeCode = applyDigitRules(UICTypeRulesD1, UICTractiveTypeRules)
+export const applyTractiveTypeRulesD12 = applyDigitRules(CommonTypeRulesD1, UICTractiveTypeRulesD12)

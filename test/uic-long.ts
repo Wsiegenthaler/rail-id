@@ -43,7 +43,7 @@ test('whitespace 2', t => {
 test('checksum digit - exhaustive test', t => 
   range(0, 10).forEach(d => matches(`9280 1 218 455-${d}`, d == 4 ? ChecksumStatus.value('passed') : ChecksumStatus.value('failed'))(t)))
 
-test('checksum digit - absent', t => matches(`9280 1 218 455`, ChecksumStatus.value('absent')))
+test('checksum digit - absent', t => matches(`9280 1 218 455`, ChecksumStatus.value('absent'))(t))
 
 // Test each known UIC country in our definitions
 UICCountries.forEach(c =>

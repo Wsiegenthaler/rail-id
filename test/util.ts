@@ -2,7 +2,8 @@ import { ExecutionContext } from 'ava'
 import { get, keys, set } from 'lodash-es'
 
 import railID from '../src/index'
-import { buildResult, META_FIELDS_PATH, META_PATH, RailID, ValueDef } from '../src/attrs'
+import { META_FIELDS_PATH, RailID, ValueDef } from '../src/attrs'
+import { result } from '../src/result'
 
 
 // Strips `source` field from result object metadata so it's not included in `match` tests
@@ -24,4 +25,4 @@ export const throws = (code: string, expected?: object, message?: string) => (t:
 
 // Parses code and ensures the result expected attribute value(s)
 export const matches = (code: string, ...expected: ValueDef<any>[]) => (t: ExecutionContext) =>
-  t.like(stripSource(railID(code)), buildResult(expected.map(v => v.absent())))
+  t.like(stripSource(railID(code)), result(expected.map(v => v.absent())))

@@ -1,33 +1,39 @@
-import * as C from '../attrs/vehicles/common'
+import * as C from '../attrs/common'
+import * as V from '../attrs/vehicles/common'
 import * as S from '../attrs/vehicles/tractive-special'
-import { applyDigitRules, applySingleDigitRules, Rule } from '.'
+import { applyDigitRules, Rule } from '.'
 
 
-// ---- Special tractive rules (digit 6 only) --------------------
-const UICTractiveSpecialRulesD6: Rule[] = [
+// ---- Special Tractives (digit 5 only) -----------------------------
+const tractiveSpecialRulesD5: Rule[] = [
+  { pattern: /[^9]/, defs: [ C.ParseWarnings.value('The leading digit of the \'technical characteristics\' block is generally \'9\'') ] }
+]
+
+// ---- Special tractive rules (digit 5 and 6) -----------------------
+const tractiveSpecialRulesD56: Rule[] = [
   // Train compatibility
   { pattern: /[123458]/, defs: [ S.TrainCompatibility.value('yes') ] },
   { pattern: /[679]/, defs: [ S.TrainCompatibility.value('no') ] },
   { pattern: /0/, defs: [ S.TrainCompatibility.value('maybe', 'Special conditions concerning inclusion in a train must be complied with.') ] },
 
   // Self-propulsion
-  { pattern: /[124689]/, defs: [ C.SelfPropelled.value('yes') ] },
-  { pattern: /[3570]/, defs: [ C.SelfPropelled.value('no') ] },
+  { pattern: /[124689]/, defs: [ V.SelfPropelled.value('yes') ] },
+  { pattern: /[3570]/, defs: [ V.SelfPropelled.value('no') ] },
 
   // Max speed
-  { pattern: /[45]/, defs: [ C.AllowedSpeeds.value({ max: 100, unit: 'km/h' }) ] },
-  { pattern: /[123]/, defs: [ C.AllowedSpeeds.value({ min: 100, unit: 'km/h' }) ] },
+  { pattern: /[45]/, defs: [ V.AllowedSpeeds.value({ max: 100, unit: 'km/h' }) ] },
+  { pattern: /[123]/, defs: [ V.AllowedSpeeds.value({ min: 100, unit: 'km/h' }) ] },
 
   // Self-propelled travelling speed
   { pattern: /1/, defs: [ S.SelfPropelledMaxSpeed.value({ min: 100, unit: 'km/h' }) ] },
   { pattern: /[24689]/, defs: [ S.SelfPropelledMaxSpeed.value({ max: 100, unit: 'km/h' }) ] },
 
   // Notes
-  { pattern: /[890]/, defs: [ C.VehicleNotes.value('Special conditions concerning inclusion in a train must be complied with.') ] }
+  { pattern: /[890]/, defs: [ V.VehicleNotes.value('Special conditions concerning inclusion in a train must be complied with.') ] }
 ]
 
-// ---- General rules (digit 7 only) -----------------------------
-const UICTractiveSpecialRulesD7: Rule[] = [
+// ---- Special Tractives (digit 7) ----------------------------------
+const tractiveSpecialRulesD7: Rule[] = [
   // Special vehicle type
   { pattern: /0/, defs: [ S.RailOrRoadVehicle ] },
   { pattern: /1/, defs: [ S.InfrastructureVehicle ] },
@@ -42,7 +48,7 @@ const UICTractiveSpecialRulesD7: Rule[] = [
 ]
 
 // ---- Special Tractives (both digits 7 and 8) ----------------------
-const UICTractiveSpecialRulesD78: Rule[] = [
+const tractiveSpecialRulesD78: Rule[] = [
 
   // Infrastructure and superstructure
   { pattern: /11/, defs: [ S.TrackLayer ] },
@@ -132,8 +138,8 @@ const UICTractiveSpecialRulesD78: Rule[] = [
   { pattern: /.0/, defs: [ S.Other ] }
 ]
 
-// Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
-export const uicSpecialTractiveD78 = applyDigitRules(UICTractiveSpecialRulesD7, UICTractiveSpecialRulesD78)
-
 // Returns vehicle attributes for the given Ohm parse node of digit 6 of special tractive units
-export const uicSpecialTractiveD6 = applySingleDigitRules(UICTractiveSpecialRulesD6)
+export const specialTractiveD56 = applyDigitRules(tractiveSpecialRulesD5, tractiveSpecialRulesD56)
+
+// Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
+export const specialTractiveD78 = applyDigitRules(tractiveSpecialRulesD7, tractiveSpecialRulesD78)

@@ -9,12 +9,13 @@ import { Attrs } from './attrs'
 import * as C from './attrs/common'
 import * as V from './attrs/vehicles/common'
 import * as P from './attrs/code-parts'
-import { CountryByCode } from './attrs/countries'
 
-import { uicSpecialTractiveD6, uicSpecialTractiveD78 } from './rules/tractive-special'
-import { uicPassengerTypeCode, uicTractiveTypeCode, uicWagonTypeCode } from './rules/type-code'
-import { uicHauledPassengerD56, uicHauledPassengerD78 } from './rules/hauled-passenger'
+import { CountryByCode } from './attrs/countries'
 import { KeeperByCode } from './attrs/keepers'
+
+import { specialTractiveD56, specialTractiveD78 } from './rules/tractive-special'
+import { applyPassengerTypeRulesD12, applyTractiveTypeRulesD12, applyWagonTypeRulesD12 } from './rules/type-code'
+import { applyHauledPassengerD56, applyHauledPassengerD78 } from './rules/hauled-passenger'
 
 
 export { grammar }
@@ -67,25 +68,25 @@ export const semantics = grammar.createSemantics()
 
     UICWagonType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: NonterminalNode): Attrs {
       return [
-        ...uicWagonTypeCode(d1, d2),
+        ...applyWagonTypeRulesD12(d1, d2),
         P.TypePart.value(this.sourceString).at(this.source)
       ]
     },
     UICPassengerType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: NonterminalNode): Attrs {
       return [
-        ...uicPassengerTypeCode(d1, d2),
+        ...applyPassengerTypeRulesD12(d1, d2),
         P.TypePart.value(this.sourceString).at(this.source)
       ]
     },
     UICTractiveType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: TerminalNode): Attrs {
       return [
-        ...uicTractiveTypeCode(d1, d2),
+        ...applyTractiveTypeRulesD12(d1, d2),
         P.TypePart.value(this.sourceString).at(this.source)
       ]
     },
     UICSpecialType(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: TerminalNode): Attrs {
       return [
-        ...uicTractiveTypeCode(d1, d2),
+        ...applyTractiveTypeRulesD12(d1, d2),
         P.TypePart.value(this.sourceString).at(this.source)
       ]
     },
@@ -111,19 +112,22 @@ export const semantics = grammar.createSemantics()
     },
     UICPassengerDetail(this: NonterminalNode, d5: NonterminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
       return [
-        ...uicHauledPassengerD56(d5, d6),
-        ...uicHauledPassengerD78(d7, d8),
+        ...applyHauledPassengerD56(d5, d6),
+        ...applyHauledPassengerD78(d7, d8),
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
     },
     UICTractiveDetail(this: NonterminalNode, d5: TerminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode, xs4: NonterminalNode, d9: NonterminalNode, xs5: NonterminalNode, d10: NonterminalNode, xs6: NonterminalNode, d11: NonterminalNode): Attrs {
-      // This block is defined by the Member States, eventually by bilateral or multilateral agreement
-      return [ P.VehicleDetailPart.value(this.sourceString).at(this.source) ]
+      return [
+        P.VehicleDetailPart.value(this.sourceString)
+          .notes('This block is defined by the Member States, eventually by bilateral or multilateral agreement')
+          .at(this.source)
+        ]
     },
     UICSpecialDetail(this: NonterminalNode, d5: TerminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
       return [
-        ...uicSpecialTractiveD6(d6),
-        ...uicSpecialTractiveD78(d7, d8),
+        ...specialTractiveD56(d5, d6),
+        ...specialTractiveD78(d7, d8),
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
     },
