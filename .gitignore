@@ -1,7 +1,9 @@
-package-lock.json
+dist
 coverage
 node_modules
-dist
-data/grammars
+package-lock.json
+
+# generated artifacts
 src/grammars/uic-grammar.ohm-bundle.d.ts
 src/grammars/uic-grammar.ohm-bundle.js
+src/defs/keepers.ts

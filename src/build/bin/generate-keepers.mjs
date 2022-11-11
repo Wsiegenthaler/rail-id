@@ -76,7 +76,7 @@ function template(body) {
 
       export type KeeperStatus = 'in use' | 'blocked' | 'revoked'
 
-      export interface Keeper {
+      export interface KeeperDef {
         vkm: string,
         status: KeeperStatus,
         country: string,
@@ -85,7 +85,7 @@ function template(body) {
         otif?: boolean
       }
 
-      export const keepers: Keeper[] = [
+      export const keepers: KeeperDef[] = [
       ${body}
       ]
 

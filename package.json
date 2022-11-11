@@ -7,12 +7,17 @@
   "module": "dist/rail-id.mjs",
   "browser": "dist/rail-id.umd.js",
   "scripts": {
-    "build": "npm run gen-ohm-types; rollup -c",
-    "dev": "rollup -c -w --watch.onStart='npm run gen-ohm-types'",
+    "build": "rollup -c",
+    "dev": "rollup -c -w --watch.onStart='npm run gen-all'",
     "test": "c8 -r html -r text ava",
     "test-watch": "ava -w",
+    "gen-all": "npm run gen-keepers; npm run gen-ohm-types",
     "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/defs/keepers.ts",
-    "gen-ohm-types": "npx ohm generateBundles --withTypes --esm src/grammars/**/*.ohm"
+    "gen-ohm-types": "npx ohm generateBundles --withTypes --esm src/grammars/**/*.ohm",
+    "prebuild": "npm run gen-all",
+    "pretest": "npm run gen-all",
+    "pretest-watch": "npm run gen-all",
+    "postinstall": "npm run build"
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
