@@ -23,8 +23,12 @@ program
         // Generate output content
         let body = sortBy(rows, [3, 1])
           .map(r => {
+            const vkm = r[1].toUpperCase()
+            const country = r[3].toUpperCase()
+            const company = r[2]
+
             const website = (r[5] ?? '')
-            const otif = (r[6] ?? '').toLowerCase() !== 'otif'
+            const otif = (r[6] ?? '').toLowerCase() === 'otif'
             const status = (r[4] ?? '').toLowerCase().trim()
               .replace(/ı/g, 'i') // hack to replace errant turkish character present in data file
 
@@ -32,7 +36,7 @@ program
             if (website.length > 0) optional += `, website: '${website}'`
             if (otif)               optional += `, otif: true`
 
-            return `  { vkm: '${r[1].toUpperCase()}', country: '${r[3].toUpperCase()}', company: '${r[2]}', status: '${status}'${optional} }`
+            return `  { vkm: '${vkm}', country: '${country}', company: '${company}', status: '${status}'${optional} }`
           })
           .join(',\n')
         let data = template(body)
