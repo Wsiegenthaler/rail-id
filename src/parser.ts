@@ -5,7 +5,7 @@ import grammar from './grammars/uic-grammar.ohm-bundle'
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
 
-import { Attrs } from './attrs'
+import { Attrs, Attr } from './attrs'
 import * as C from './attrs/common'
 import * as V from './attrs/vehicles/common'
 import * as P from './attrs/code-parts'
@@ -30,18 +30,25 @@ export const semantics = grammar.createSemantics()
 
       // Checksum validation
       let checksumStatus = C.ChecksumStatus.value('absent').absent()
+      let checksumWarning = [ C.ParseWarnings.value(`This code does not include a checksum digit and so cannot be verified`).absent() ]
       const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
-        checksumStatus = uicVerify(digits) ?
-          C.ChecksumStatus.value('passed').at(checksumPart.source) :
-          C.ChecksumStatus.value('failed').at(checksumPart.source)
+        const checksumSource = checksumPart.source as Interval
+        const valid = uicVerify(digits)
+        checksumStatus = valid ?
+          C.ChecksumStatus.value('passed').at(checksumSource) :
+          C.ChecksumStatus.value('failed').at(checksumSource)
+
+        // Parse warning on failed/absent checksum
+        checksumWarning = valid ? [] : [ C.ParseWarnings.value(`This code does not match checksum digit "${checksumPart.def.value}"`).at(checksumSource) ]
       }
 
       return [
         C.RawCode.value(this.sourceString).at(this.source),
         C.CodeType.value('uic').absent(),
         checksumStatus,
+        ...checksumWarning,
         ...inner.attrs(),
       ]
     },
