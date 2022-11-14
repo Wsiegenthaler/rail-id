@@ -5,8 +5,8 @@ import { Field, SetField, META_PATH } from '.'
 export const RawCode = new Field<string>('Raw Code', `${META_PATH}.raw`)
 
 // Code Type
-type CodeType = 'uic'
-export const CodeType = new Field<CodeType>('Code Type', `${META_PATH}.codeType`)
+type CodeType = 'UIC'
+export const CodeType = new Field<CodeType>('Code Type', `${META_PATH}.type`)
 
 // UIC Checksum status
 type ChecksumStatus = 'passed' | 'failed' | 'absent'

@@ -15,7 +15,7 @@ export const CoachClass = new Field<Class>('Passenger Class', 'coach.class')
 
 // Double-deck
 const DoubleDeckerField = new Field<YesNo>('Double Deck Coach', 'coach.doubleDecker')
-export const DoubleDecker = DoubleDeckerField.value('yes')
+export const DoubleDecker = DoubleDeckerField.value('Yes')
 
 // Mail Van or with mail compartment
 export const Mail = new Field<YesNoMaybe>('Mail', 'coach.mail')
@@ -24,7 +24,7 @@ export const Mail = new Field<YesNoMaybe>('Mail', 'coach.mail')
 export const Luggage = new Field<YesNoMaybe>('Luggage', 'coach.luggage')
 
 // Car-carrying Wagon
-export const CarCarryingWagon = new Field<YesNo>('Car-carrying Wagon', 'coach.carCarrier').value('yes')
+export const CarCarryingWagon = new Field<YesNo>('Car-carrying Wagon', 'coach.carCarrier').value('Yes')
 
 // Dining Car
 export const DiningAmenities = new Field<YesNoMaybe>('Dining Car', 'coach.dining', 'Dining car or coach with bar or buffet')
@@ -33,7 +33,7 @@ export const DiningAmenities = new Field<YesNoMaybe>('Dining Car', 'coach.dining
 export const SpecialAmenities = new Field<YesNoMaybe>('Special Amenities', 'coach.specialAmenities', 'Car with other special amenities (conference, disco, cinema, video, child area, ambulance coaches)')
 
 // Driving Trailer
-export const DrivingTrailer = new Field<YesNoMaybe>('Driving Cab', 'coach.drivingCab', 'An unpowered coach fitted with a driving cab for reversible working').value('yes')
+export const DrivingTrailer = new Field<YesNoMaybe>('Driving Cab', 'coach.drivingCab', 'An unpowered coach fitted with a driving cab for reversible working').value('Yes')
 
 //TODO Driving cab
 //TODO Service vehicle?

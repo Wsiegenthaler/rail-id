@@ -8,7 +8,7 @@ const KeeperField = new Field<KeeperDef>('Vehicle Keeper', 'keeper')
 export const KeeperByCode = (vkm: string) => {
   const def = UICKeeperCodeMap[vkm]
   if (def === undefined) {
-    return ParseWarnings.value(`Vehicle Keeper Marking '${vkm}' doesn't appear to be a known value.`)
+    return ParseWarnings.value(`Vehicle Keeper Marking '${vkm}' doesn't appear to be a known value`)
   } else {
     return KeeperField.value(def)
   }

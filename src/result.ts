@@ -1,17 +1,74 @@
 import {
-  assign,
-  get,
   groupBy,
-  merge,
   partition,
   set,
   toPairs,
-  zipObject
 } from 'lodash-es'
 
-import { Attr, META_FIELDS_PATH, META_PATH, RailID } from './attrs'
+import { Attr, FieldType, META_PATH } from './attrs'
 import { Dictionary } from './util/common'
-  
+
+export interface RailID {
+  [META_PATH]: {
+    type: string
+    raw: string
+    fields: FieldMap,
+    warnings: string[]
+  }
+}
+
+export interface FieldMap {
+  [path: string]: FieldMeta<any>
+}
+
+export type FieldMeta<V> = ScalarFieldMeta<V> | SetFieldMeta<V>
+
+interface AbstractFieldMeta {
+  type: FieldType,
+  name: string
+  desc: string,
+  path: string
+  //TODO footnotes: string[]
+  //TODO source?: Source
+}
+
+export interface ValueMeta<V> {
+  value: V
+  desc: string
+  footnotes: string[]
+  source?: Source
+}
+
+export interface ScalarFieldMeta<V> extends AbstractFieldMeta {
+  type: 'scalar'
+  valueMeta: ValueMeta<V>
+}
+
+export interface SetFieldMeta<V> extends AbstractFieldMeta {
+  type: 'set'
+  valueMetas: ValueMeta<V>[]
+}
+
+// Scalar meta
+//   fieldName: a.def.field.name,
+//   fieldType: a.def.field.type,
+//   desc: a.def.field.desc ?? '',
+//   source: sourceResult(a),
+//   footnotes: a.footnotes
+
+// Set meta
+//   fieldName: a.def.field.name,
+//   fieldType: a.def.field.type,
+//   desc: a.def.field.desc ?? '',
+//   source: sourceResult(a),
+//   footnotes: a.footnotes
+
+// Set value meta
+//   name: a.def.value,
+//   desc: a.def.desc ?? '',
+//   footnotes: a.footnotes,
+//   source: sourceResult(a)
+
 
 type Source = { start: number, end: number, len: number }
 
@@ -39,68 +96,63 @@ const applySets = (o: RailID, attrs: Attr<any>[]): RailID => {
 }
 
 const applyScalarMeta = (o: RailID, attrs: Attr<any>[]): RailID => {
-    // Build metadata updates
-    const updates = zipObject(
-      attrs.map((a: Attr<any>) => a.def.field.path),
-      attrs.map((a: Attr<any>) => ({
-        fieldName: a.def.field.name,
-        fieldType: a.def.field.type,
-        desc: a.def.field.desc ?? '',
-        source: sourceResult(a),
-        footnotes: a.footnotes
-    })))
-
-    // Apply metadata
-    const existing = get(o, META_FIELDS_PATH, {})
-    set(o, META_FIELDS_PATH, assign(existing, updates))
+    // Add field metadata to field map for each scalar attribute
+    for (const i in attrs) {
+      const a = attrs[i]
+      const field = a.def.field
+    
+      o[META_PATH].fields[field.path] = {
+        type: 'scalar',
+        name: field.name,
+        desc: field.desc ?? '',
+        path: field.path,
+        valueMeta: {
+          value: a.def.value,
+          desc: a.def.desc ?? '',
+          footnotes: a.def.footnotes,
+          source: attrSource(a)
+        }
+      }
+    }
 
     return o
 }
 
 const applySetMeta = (o: RailID, setMap: Dictionary<Attr<any>[]>): RailID => {
+    // Add field metadata to field map for each group of attributes with the same path
     for (let path in setMap) {
       const attrs = setMap[path]
+      const field = attrs[0].def.field
 
-      // Build metadata updates for `set` fields
-      const fieldUpdates = zipObject(
-        attrs.map((a: Attr<any>) => a.def.field.path),
-        attrs.map((a: Attr<any>) => ({
-          fieldName: a.def.field.name,
-          fieldType: a.def.field.type,
-          length: attrs.length,
-          desc: a.def.field.desc,
-      })))
-
-      // Build metadata updates for values of the set
-      const valueUpdates = zipObject(
-        attrs.map((a: Attr<any>, i: number) => `${a.def.field.path}[${i}]`),
-        attrs.map((a: Attr<any>) => ({
-          name: a.def.value,
+      o[META_PATH].fields[path] = {
+        type: 'set',
+        name: field.name,
+        desc: field.desc ?? '',
+        path: path,
+        valueMetas: attrs.map(a => ({
+          value: a.def.value,
           desc: a.def.desc ?? '',
           footnotes: a.footnotes,
-          source: sourceResult(a)
-      })))
-
-      // Apply metadata
-      const updates = merge(fieldUpdates, valueUpdates)
-      const existing = get(o, META_FIELDS_PATH, {})
-      set(o, META_FIELDS_PATH, assign(existing, updates))
+          source: attrSource(a)
+        }))
+      }
     }
 
     return o
 }
 
 // Convert Ohm `Interval` to `Source` to be included in the result
-const sourceResult = (a: Attr<any>): Source | undefined => {
+const attrSource = (a: Attr<any>): Source | undefined => {
   if (a?.source === undefined) return undefined
 
   const { startIdx, endIdx } = a.source!
   return { start: startIdx, end: endIdx, len: endIdx - startIdx }
 }
 
-// Generate result object with attributes and their metadata
+// Generate result object with attribute values and their metadata
 export const result = (attrs: Attr<any>[]): RailID => {
-  const o = { [META_PATH]: {} }
+  const o: RailID = { [META_PATH]: { type: '', raw: '', fields: {}, warnings: [] }
+  }
   const [ scalars, sets ] = partition(attrs, (a: Attr<any>) => a.def.field.type === 'scalar')
 
   applyScalars(o, scalars) 

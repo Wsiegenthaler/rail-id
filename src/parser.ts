@@ -1,4 +1,4 @@
-import { TerminalNode, IterationNode, Node, NonterminalNode } from 'ohm-js'
+import { TerminalNode, IterationNode, Node, NonterminalNode, Interval } from 'ohm-js'
 
 import grammar from './grammars/uic-grammar.ohm-bundle'
 
@@ -46,7 +46,7 @@ export const semantics = grammar.createSemantics()
 
       return [
         C.RawCode.value(this.sourceString).at(this.source),
-        C.CodeType.value('uic').absent(),
+        C.CodeType.value('UIC').absent(),
         checksumStatus,
         ...checksumWarning,
         ...inner.attrs(),
@@ -100,7 +100,7 @@ export const semantics = grammar.createSemantics()
 
     // --------------------------- Country expression --------------------------------------
 
-    UICCountriesAny(this: NonterminalNode, d1: TerminalNode, xs: NonterminalNode, d2: TerminalNode): Attrs {
+    UICCountriesAny(this: NonterminalNode, d1: TerminalNode, d2: TerminalNode): Attrs {
         const code = parseInt(d1.sourceString + d2.sourceString)
         const source = d1.source.coverageWith(d2.source)
         return [
@@ -141,7 +141,7 @@ export const semantics = grammar.createSemantics()
 
     // --------------------------- General expressions -------------------------------------
 
-    UICSerial(this: NonterminalNode, d1: NonterminalNode, xs1: NonterminalNode, d2: NonterminalNode, xs2: NonterminalNode, d3: NonterminalNode): Attrs {
+    UICSerial(this: NonterminalNode, d1: NonterminalNode, d2: NonterminalNode, d3: NonterminalNode): Attrs {
       const serial = [ d1, d2, d3 ].map(d => d.sourceString).join('')
       const source = d1.source.coverageWith(d2.source, d3.source)
       

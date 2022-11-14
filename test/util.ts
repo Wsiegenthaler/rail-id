@@ -1,14 +1,14 @@
 import { ExecutionContext } from 'ava'
-import { get, keys, set } from 'lodash-es'
+import { keys, set } from 'lodash-es'
 
 import railID from '../src/index'
-import { META_FIELDS_PATH, RailID, ValueDef } from '../src/attrs'
-import { result } from '../src/result'
+import { META_PATH, ValueDef } from '../src/attrs'
+import { result, RailID } from '../src/result'
 
 
 // Strips `source` field from result object metadata so it's not included in `match` tests
 const stripSource = (o: RailID) => {
-  keys(get(o, META_FIELDS_PATH) ?? []).forEach(k => set(o, `${META_FIELDS_PATH}['${k}'].source`, undefined))
+  keys(o[META_PATH].fields ?? []).forEach(k => set(o[META_PATH].fields, `${k}.source`, undefined))
   return o
 }
 

@@ -1,13 +1,12 @@
 import { Field, SetField } from '..'
-import { KeeperDef } from '../../defs/keepers'
 import { SpeedRange, YesNo } from '../common-values'
 
 
 // Vehicle serial number
-export const SerialNumber = new Field<string>('Serial Number', 'serial')
+export const SerialNumber = new Field<string>('Vehicle Serial Number', 'serial')
 
-// Max Speed field
-export const AllowedSpeeds = new SetField<SpeedRange>('Allowed Speed', 'speeds')
+// Permitted Speeds field
+export const PermittedSpeeds = new SetField<SpeedRange>('Permitted Speed', 'speeds')
 
 // Axle Count
 type AxleCount = { exactly: number } | { min?: number, max: number } | { min: number, max?: number }
@@ -18,11 +17,11 @@ export const SelfPropelled = new Field<YesNo>('Self Propelled', 'selfPropelled')
 
 // Vehicle Designation
 const VehicleDesignation_TEN = new Field<YesNo>('TEN Vehicle', `designations.ten`)
-export const TENVehicle = VehicleDesignation_TEN.value('yes')
+export const TENVehicle = VehicleDesignation_TEN.value('Yes')
 
 // RIV Vehicle Designation
 const VehicleDesignation_RIV = new Field<YesNo>('RIV Vehicle', `designations.riv`)
-export const RIVVehicle = VehicleDesignation_RIV.value('yes')
+export const RIVVehicle = VehicleDesignation_RIV.value('Yes')
 
 // Notes - general info which doesn't fit into other fields
 export const VehicleNotes = new SetField<string>('Vehicle Notes', 'notes')

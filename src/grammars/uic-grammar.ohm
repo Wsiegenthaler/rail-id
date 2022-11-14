@@ -52,7 +52,7 @@ UICCode {
 
   // ------ Country ---------------------------------------------------------------------
 
-  UICCountriesAny = digit xs digit
+  UICCountriesAny = digit digit
 
 
   // ------ Detail ---------------------------------------------------------------------
@@ -72,12 +72,12 @@ UICCode {
     | "7" xs digit xs digit xs digit xs digit xs digit xs digit
     | "8" xs digit xs digit xs digit xs digit xs digit xs digit
 
-  UICSpecialDetail = digit xs digit xs digit xs digit
+  UICSpecialDetail = "9" xs digit xs digit xs digit
 
 
   // ------ Misc ------------------------------------------------------------------------
 
-  UICSerial = digit xs digit xs digit
+  UICSerial = digit digit digit
 
   UICChecksum = "-" digit
 

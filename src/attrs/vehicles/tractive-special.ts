@@ -5,16 +5,16 @@ import { SpeedRange, YesNoMaybe } from '../common-values'
 // Special Type (tractives)
 const SpecialType = new Field<string>('Special Tractives Type', 'special.type')
 
-export const InfrastructureVehicle   = SpecialType.value('Infrastructure and superstructure')
+export const InfrastructureVehicle   = SpecialType.value('Infrastructure and Superstructure')
 export const TrackVehicle            = SpecialType.value('Track')
-export const OverheadLineVehicle     = SpecialType.value('Overhead line')
+export const OverheadLineVehicle     = SpecialType.value('Overhead Line')
 export const StructuresVehicle       = SpecialType.value('Structures')
-export const LoadingVehicle          = SpecialType.value('Loading, unloading and various transport')
+export const LoadingVehicle          = SpecialType.value('Loading, Unloading and Various Transport')
 export const MeasuringVehicle        = SpecialType.value('Measuring')
 export const EmergencyVehicle        = SpecialType.value('Emergency')
-export const TransportEnergyVehicle  = SpecialType.value('Traction, transport, energy, etc')
+export const TransportEnergyVehicle  = SpecialType.value('Traction, Transport, Energy, etc')
 export const EnvironmentVehicle      = SpecialType.value('Environment')
-export const RailOrRoadVehicle       = SpecialType.value('Rail/road')
+export const RailOrRoadVehicle       = SpecialType.value('Rail/Road')
 
 
 // Special Sub-Type field
@@ -107,7 +107,10 @@ export const Other                = SpecialSubType.value('Other')
 
 
 // Train Compatibility
-export const TrainCompatibility = new Field<YesNoMaybe>('Train Compatibility', 'trainCompatible', 'The ability to include this vehicle as part of a train')
+const TrainCompatibility = new Field<YesNoMaybe>('Train Compatibility', 'trainCompatible', 'The ability to include this vehicle as part of a train')
+export const TrainCompatible = TrainCompatibility.value('Yes', 'This vehicle can be made part of a train')
+export const NotTrainCompatible = TrainCompatibility.value('No', 'This vehicle cannot be made part of a train')
+export const MaybeTrainCompatible = TrainCompatibility.value('Maybe', 'Special conditions concerning inclusion in a train must be complied with.')
 
 // Self-propelled travelling speed
-export const SelfPropelledMaxSpeed = new Field<SpeedRange>('Self-Propelled Travelling Speed', 'selfPropelledVmax', 'The self-propelled travelling speed of this vehicle')
+export const SelfPropelledMaxSpeed = new Field<SpeedRange>('Self-Propelled Travelling Speed', 'selfPropelledSpeeds', 'The self-propelled travelling speed of this vehicle')

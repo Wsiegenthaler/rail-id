@@ -12,11 +12,11 @@ import { eq, like, matches, throws } from './util'
 
 test('whitespace 1', t => {
   const expected = [
-    CodeType.value('uic'),
+    CodeType.value('UIC'),
     ChecksumStatus.value('passed'),
     CountryByCode(85),
     ElectricLocomotive,
-    Traction.value('electric')
+    Traction.value('Electric')
   ]
 
   matches('91 85 4605 205-4 CH-BLS', ...expected)(t)
@@ -28,11 +28,11 @@ test('whitespace 1', t => {
 
 test('whitespace 2', t => {
   const expected = [
-    CodeType.value('uic'),
+    CodeType.value('UIC'),
     ChecksumStatus.value('passed'),
     CountryByCode(80),
     DieselLocomotive,
-    Traction.value('diesel')
+    Traction.value('Diesel')
   ]
 
   matches('9280 1 218 455-4 D-DB', ...expected)(t)

@@ -2,8 +2,8 @@ import { MatchResult } from 'ohm-js'
 import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
-import { META_PATH, RailID } from './attrs'
-import { result } from './result'
+import { META_PATH } from './attrs'
+import { result, RailID } from './result'
 
 
 export type Options = {

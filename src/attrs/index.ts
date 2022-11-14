@@ -1,17 +1,13 @@
 import { filter, find, get, isEqual, some } from 'lodash-es'
 import { Interval } from 'ohm-js/index'
-
+import { RailID } from '../result'
 
 
 export const META_PATH = '_meta'
-export const META_FIELDS_PATH = `${META_PATH}.fields`
-
-// Main result type returned by the library
-export type RailID = { [META_PATH]: object }
 
 export type Attrs = Attr<any>[]
 
-type FieldType = 'scalar' | 'set'
+export type FieldType = 'scalar' | 'set'
 
 
 abstract class AbstractField<V> {
@@ -37,9 +33,14 @@ abstract class AbstractField<V> {
     return other === this
   }
 
-  // Finds an instance of this field in a list of `Attr<V>`
-  find(attrs: Attr<any>[]): Attr<any> {
+  // Finds the first instance of this field in a list of `Attr<V>`
+  find(attrs: Attr<any>[]): Attr<any> | undefined {
     return find(attrs, a => a.def.field.is(this))
+  }
+
+  // Finds all instances of this field in a list of `Attr<V>`
+  findAll(attrs: Attr<any>[]): Attrs {
+    return filter(attrs, a => a.def.field.is(this))
   }
 }
 

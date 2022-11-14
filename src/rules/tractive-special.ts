@@ -12,17 +12,17 @@ const tractiveSpecialRulesD5: Rule[] = [
 // ---- Special tractive rules (digit 5 and 6) -----------------------
 const tractiveSpecialRulesD56: Rule[] = [
   // Train compatibility
-  { pattern: /[123458]/, defs: [ S.TrainCompatibility.value('yes') ] },
-  { pattern: /[679]/, defs: [ S.TrainCompatibility.value('no') ] },
-  { pattern: /0/, defs: [ S.TrainCompatibility.value('maybe', 'Special conditions concerning inclusion in a train must be complied with.') ] },
+  { pattern: /[123458]/, defs: [ S.TrainCompatible ] },
+  { pattern: /[679]/, defs: [ S.NotTrainCompatible ] },
+  { pattern: /0/, defs: [ S.MaybeTrainCompatible ] },
 
   // Self-propulsion
-  { pattern: /[124689]/, defs: [ V.SelfPropelled.value('yes') ] },
-  { pattern: /[3570]/, defs: [ V.SelfPropelled.value('no') ] },
+  { pattern: /[124689]/, defs: [ V.SelfPropelled.value('Yes') ] },
+  { pattern: /[3570]/, defs: [ V.SelfPropelled.value('No') ] },
 
   // Max speed
-  { pattern: /[45]/, defs: [ V.AllowedSpeeds.value({ max: 100, unit: 'km/h' }) ] },
-  { pattern: /[123]/, defs: [ V.AllowedSpeeds.value({ min: 100, unit: 'km/h' }) ] },
+  { pattern: /[45]/, defs: [ V.PermittedSpeeds.value({ max: 100, unit: 'km/h' }) ] },
+  { pattern: /[123]/, defs: [ V.PermittedSpeeds.value({ min: 100, unit: 'km/h' }) ] },
 
   // Self-propelled travelling speed
   { pattern: /1/, defs: [ S.SelfPropelledMaxSpeed.value({ min: 100, unit: 'km/h' }) ] },

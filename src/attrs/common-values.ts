@@ -1,7 +1,7 @@
 
-export type YesNo = 'yes' | 'no'
+export type YesNo = 'Yes' | 'No'
 
-export type YesNoMaybe = 'yes' | 'no' | 'maybe'
+export type YesNoMaybe = 'Yes' | 'No' | 'Maybe'
 
 export type SpeedUnit = 'km/h' | 'm/h'
 

@@ -66,10 +66,10 @@ const HauledPassengerRulesD56: Rule[] = [
   ].map(r => ({ pattern: r.pattern, defs: r.defs.map(d => d.notes(CompartmentNote)) })),
 
   // Dining Amenities
-  { pattern: /8[578]/, defs: [ P.DiningAmenities.value('yes') ] },
+  { pattern: /8[578]/, defs: [ P.DiningAmenities.value('Yes') ] },
   
   // Special Amenities
-  { pattern: /8[49]/, defs: [ P.SpecialAmenities.value('yes') ] },
+  { pattern: /8[49]/, defs: [ P.SpecialAmenities.value('Yes') ] },
 
   // Double Decker
   { pattern: /[1238]6/, defs: [ P.DoubleDecker ] },
@@ -87,16 +87,16 @@ const HauledPassengerRulesD56: Rule[] = [
   { pattern: /8[0456]/,  defs: [ P.CoachClass.value('1st/2nd') ] },
 
   // Mail
-  { pattern: /9[015]/, defs: [ P.Mail.value('yes') ] },
-  { pattern: /93/,     defs: [ P.Mail.value('maybe') ] },
+  { pattern: /9[015]/, defs: [ P.Mail.value('Yes') ] },
+  { pattern: /93/,     defs: [ P.Mail.value('Maybe') ] },
 
   // Luggage
-  { pattern: /8[012]/, defs: [ P.Luggage.value('maybe') ] },
-  { pattern: /86/,     defs: [ P.Luggage.value('maybe') ] },
-  { pattern: /87/,     defs: [ P.Luggage.value('yes') ] },
-  { pattern: /93/,     defs: [ P.Luggage.value('maybe') ] },
-  { pattern: /9[124]/, defs: [ P.Luggage.value('yes') ] },
-  { pattern: /95/,     defs: [ P.Luggage.value('yes') ] },
+  { pattern: /8[012]/, defs: [ P.Luggage.value('Maybe') ] },
+  { pattern: /86/,     defs: [ P.Luggage.value('Maybe') ] },
+  { pattern: /87/,     defs: [ P.Luggage.value('Yes') ] },
+  { pattern: /93/,     defs: [ P.Luggage.value('Maybe') ] },
+  { pattern: /9[124]/, defs: [ P.Luggage.value('Yes') ] },
+  { pattern: /95/,     defs: [ P.Luggage.value('Yes') ] },
 
   // Driving Trailer
   { pattern: /8[06]/,  defs: [ P.DrivingTrailer ] },
@@ -108,14 +108,14 @@ const HauledPassengerRulesD56: Rule[] = [
 
 // ---- General rules (digit 7 only) -----------------------------
 
-// Allowed Speed defs
+// Permitted Speed defs
 
 const HauledPassengerRulesD7: Rule[] = [
   // Max Speed
-  { pattern: /[012]/,  defs: [ C.AllowedSpeeds.value({ max: 120, unit: 'km/h' }) ] },
-  { pattern: /[3456]/, defs: [ C.AllowedSpeeds.value({ min: 121, max: 140, unit: 'km/h' }) ] },
-  { pattern: /[78]/,   defs: [ C.AllowedSpeeds.value({ min: 141, max: 160, unit: 'km/h' }) ] },
-  { pattern: /9/,      defs: [ C.AllowedSpeeds.value({ min: 160, unit: 'km/h' }) ] }
+  { pattern: /[012]/,  defs: [ C.PermittedSpeeds.value({ max: 120, unit: 'km/h' }) ] },
+  { pattern: /[3456]/, defs: [ C.PermittedSpeeds.value({ min: 121, max: 140, unit: 'km/h' }) ] },
+  { pattern: /[78]/,   defs: [ C.PermittedSpeeds.value({ min: 141, max: 160, unit: 'km/h' }) ] },
+  { pattern: /9/,      defs: [ C.PermittedSpeeds.value({ min: 160, unit: 'km/h' }) ] }
 ]
 
 

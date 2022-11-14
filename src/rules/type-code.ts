@@ -44,11 +44,11 @@ const UICWagonTypeRulesD12: Rule[] = [
   // Warnings for blocks designated "Not to be used"
   {
     pattern: /[01][3-8]/,
-    defs: [ C.ParseWarnings.value('Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service.') ]
+    defs: [ C.ParseWarnings.value('Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service') ]
   },
   {
     pattern: /[0-3]0/,
-    defs: [ C.ParseWarnings.value('Wagons with starting digits 0-3 followed by 0 are not to be used according to Part 6 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
+    defs: [ C.ParseWarnings.value('Wagons with starting digits 0-3 followed by 0 are not to be used according to Part 6 of the \'Operation and Traffic Management’ UIC manual (2011)') ]
   }
 ]
 
@@ -64,9 +64,9 @@ const UICPassengerTypeRulesD12: Rule[] = [
   { pattern: /[56][2489]/, defs: [ A.VariableGauge ] },
 
   // Air conditioning
-  { pattern: /7[03]/,  defs: [ A.AirConditioned.value('yes') ] },
-  { pattern: /6[124]/, defs: [ A.AirConditioned.value('yes') ] },
-  { pattern: /5[124]/, defs: [ A.AirConditioned.value('no') ] },
+  { pattern: /7[03]/,  defs: [ A.AirConditioned.value('Yes') ] },
+  { pattern: /6[124]/, defs: [ A.AirConditioned.value('Yes') ] },
+  { pattern: /5[124]/, defs: [ A.AirConditioned.value('No') ] },
   
   // Historic vehicles
   { pattern: /55/, defs: [ A.HistoricVehicle ] },
@@ -114,14 +114,14 @@ const UICPassengerTypeRulesD12: Rule[] = [
 // ---- Tractive stock -----------------------------------------------
 const UICTractiveTypeRulesD12: Rule[] = [
   { pattern: /90/, defs: [ T.MiscellaneousVehicle ] },
-  { pattern: /91/, defs: [ T.ElectricLocomotive,            T.Traction.value('electric') ] },
-  { pattern: /92/, defs: [ T.DieselLocomotive,              T.Traction.value('diesel') ] },
-  { pattern: /93/, defs: [ T.HighSpeedElectricMultiUnitSet, T.Traction.value('electric') ] },
-  { pattern: /94/, defs: [ T.LowSpeedElectricMultiUnitSet,  T.Traction.value('electric') ] },
-  { pattern: /95/, defs: [ T.DieselMultiUnitSet,            T.Traction.value('diesel') ] },
+  { pattern: /91/, defs: [ T.ElectricLocomotive,            T.Traction.value('Electric') ] },
+  { pattern: /92/, defs: [ T.DieselLocomotive,              T.Traction.value('Diesel') ] },
+  { pattern: /93/, defs: [ T.HighSpeedElectricMultiUnitSet, T.Traction.value('Electric') ] },
+  { pattern: /94/, defs: [ T.LowSpeedElectricMultiUnitSet,  T.Traction.value('Electric') ] },
+  { pattern: /95/, defs: [ T.DieselMultiUnitSet,            T.Traction.value('Diesel') ] },
   { pattern: /96/, defs: [ T.SpecialisedTrailer ] },
-  { pattern: /97/, defs: [ T.ElectricShunter,               T.Traction.value('electric') ] },
-  { pattern: /98/, defs: [ T.DieselShunter,                 T.Traction.value('diesel') ] },
+  { pattern: /97/, defs: [ T.ElectricShunter,               T.Traction.value('Electric') ] },
+  { pattern: /98/, defs: [ T.DieselShunter,                 T.Traction.value('Diesel') ] },
   { pattern: /99/, defs: [ T.SpecialVehicle ] }
 ]
 
