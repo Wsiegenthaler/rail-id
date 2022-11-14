@@ -2,8 +2,11 @@
   "compilerOptions": {
     "lib": [ "es2022" ],
     "esModuleInterop": true,
-    "module": "es2022",
-    "moduleResolution": "node"
+    "module": "es2020",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "./dist/dts",
+    "declarationMap": true
   },
   "ts-node": {
     "esm": true,

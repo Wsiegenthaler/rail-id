@@ -2,6 +2,7 @@ import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from 'rollup-plugin-typescript2'
+import dts from 'rollup-plugin-dts'
 import terser from '@rollup/plugin-terser'
 import analyze from 'rollup-plugin-analyzer'
 
@@ -53,9 +54,17 @@ const esCjsConfig = {
   ]
 }
 
+const typescriptDef = {
+  input: './dist/src/index.d.ts',
+  output: [{ file: 'dist/rail-id.d.ts', format: 'es' }],
+  plugins: [dts()]
+}
+
 export default cliArgs => {
   // Only produce UMD target if not in watch mode
-  return cliArgs.watch ?  [ esCjsConfig ] : [ esCjsConfig, umdConfig ]
+  return cliArgs.watch ?
+    [ esCjsConfig, typescriptDef ] :
+    [ esCjsConfig, typescriptDef, umdConfig ]
 }
 
 

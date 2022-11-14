@@ -6,6 +6,7 @@
   "main": "dist/rail-id.cjs",
   "module": "dist/rail-id.mjs",
   "browser": "dist/rail-id.umd.js",
+  "types": "dist/rail-id.d.ts",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w --watch.onStart='npm run gen-all'",
@@ -42,6 +43,7 @@
     "prettyjson": "^1.2.5",
     "rollup": "^3.2.3",
     "rollup-plugin-analyzer": "^4.0.0",
+    "rollup-plugin-dts": "^5.0.0",
     "rollup-plugin-typescript2": "^0.34.1",
     "ts-node": "^10.9.1"
   },
