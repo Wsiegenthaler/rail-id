@@ -1,7 +1,7 @@
 import * as C from '../attrs/common'
 import * as V from '../attrs/vehicles/common'
 import * as S from '../attrs/vehicles/tractive-special'
-import { applyDigitRules, Rule } from '.'
+import { applyDigitRules, applySingleDigitRules, Rule } from '.'
 
 
 // ---- Special Tractives (digit 5 only) -----------------------------
@@ -9,8 +9,8 @@ const tractiveSpecialRulesD5: Rule[] = [
   { pattern: /[^9]/, defs: [ C.ParseWarnings.value('The leading digit of the \'technical characteristics\' block is generally \'9\'') ] }
 ]
 
-// ---- Special tractive rules (digit 5 and 6) -----------------------
-const tractiveSpecialRulesD56: Rule[] = [
+// ---- Special tractive rules (digit 6) -----------------------
+const tractiveSpecialRulesD6: Rule[] = [
   // Train compatibility
   { pattern: /[123458]/, defs: [ S.TrainCompatible ] },
   { pattern: /[679]/, defs: [ S.NotTrainCompatible ] },
@@ -139,7 +139,7 @@ const tractiveSpecialRulesD78: Rule[] = [
 ]
 
 // Returns vehicle attributes for the given Ohm parse node of digit 6 of special tractive units
-export const specialTractiveD56 = applyDigitRules(tractiveSpecialRulesD5, tractiveSpecialRulesD56)
+export const specialTractiveD6 = applySingleDigitRules(tractiveSpecialRulesD6)
 
 // Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
 export const specialTractiveD78 = applyDigitRules(tractiveSpecialRulesD7, tractiveSpecialRulesD78)

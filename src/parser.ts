@@ -13,7 +13,7 @@ import * as P from './attrs/code-parts'
 import { CountryByCode, CountryByShortCode } from './attrs/countries'
 import { KeeperByCode, KeeperField } from './attrs/keepers'
 
-import { specialTractiveD56, specialTractiveD78 } from './rules/tractive-special'
+import { specialTractiveD6, specialTractiveD78 } from './rules/tractive-special'
 import { applyPassengerTypeRulesD12, applyTractiveTypeRulesD12, applyWagonTypeRulesD12 } from './rules/type-code'
 import { applyHauledPassengerD56, applyHauledPassengerD78 } from './rules/hauled-passenger'
 import { KeeperDef } from '../dist/rail-id'
@@ -134,7 +134,7 @@ export const semantics = grammar.createSemantics()
     },
     UICSpecialDetail(this: NonterminalNode, d5: TerminalNode, xs1: NonterminalNode, d6: NonterminalNode, xs2: NonterminalNode, d7: NonterminalNode, xs3: NonterminalNode, d8: NonterminalNode): Attrs {
       return [
-        ...specialTractiveD56(d5, d6),
+        ...specialTractiveD6(d6),
         ...specialTractiveD78(d7, d8),
         P.VehicleDetailPart.value(this.sourceString).at(this.source)
       ]
