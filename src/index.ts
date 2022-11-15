@@ -9,10 +9,10 @@ import { result, RailID } from './result'
 export type Options = {
   metadata?: boolean
   debug?: boolean
-  logErrors?: boolean
+  logLevel?: 'none' | 'warn' | 'error'
 }
 
-const Defaults: Options = { metadata: true, debug: false, logErrors: false }
+const Defaults: Options = { metadata: true, debug: false, logLevel: 'none' }
 
 // Main
 export default (input: string, options: Options = {}): RailID => {
@@ -29,10 +29,14 @@ export default (input: string, options: Options = {}): RailID => {
     // Omit metadata according to options
     if (options.metadata === false) unset(r, META_PATH)
 
+    // Log warnings
+    if (options.logLevel === 'warn' || options.logLevel === 'error')
+      r._meta.warnings.forEach(w => console.warn('[rail-id] parse warning', w))
+
     return r
   } else {
     const e = new ParseError(parseResult, input)
-    if (options.logErrors) console.error(e)
+    if (options.logLevel === 'error') console.error('[rail-id] parse error', e)
     throw e
   }
 }
