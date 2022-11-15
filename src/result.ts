@@ -28,8 +28,6 @@ interface AbstractFieldMeta {
   name: string
   desc: string,
   path: string
-  //TODO footnotes: string[]
-  //TODO source?: Source
 }
 
 export interface ValueMeta<V> {
@@ -48,27 +46,6 @@ export interface SetFieldMeta<V> extends AbstractFieldMeta {
   type: 'set'
   valueMetas: ValueMeta<V>[]
 }
-
-// Scalar meta
-//   fieldName: a.def.field.name,
-//   fieldType: a.def.field.type,
-//   desc: a.def.field.desc ?? '',
-//   source: sourceResult(a),
-//   footnotes: a.footnotes
-
-// Set meta
-//   fieldName: a.def.field.name,
-//   fieldType: a.def.field.type,
-//   desc: a.def.field.desc ?? '',
-//   source: sourceResult(a),
-//   footnotes: a.footnotes
-
-// Set value meta
-//   name: a.def.value,
-//   desc: a.def.desc ?? '',
-//   footnotes: a.footnotes,
-//   source: sourceResult(a)
-
 
 type Source = { start: number, end: number, len: number }
 
@@ -148,6 +125,9 @@ const attrSource = (a: Attr<any>): Source | undefined => {
   const { startIdx, endIdx } = a.source!
   return { start: startIdx, end: endIdx, len: endIdx - startIdx }
 }
+
+// TODO dedup redundant fields, logging ParseWarnings when their values conflict
+// TODO revise source/interval to support disjoint mapping of portions of the code
 
 // Generate result object with attribute values and their metadata
 export const result = (attrs: Attr<any>[]): RailID => {
