@@ -1,11 +1,11 @@
-import { TerminalNode, IterationNode, Node, NonterminalNode, Interval } from 'ohm-js'
+import { TerminalNode, IterationNode, Node, NonterminalNode } from 'ohm-js'
 
 import grammar from './grammars/uic-grammar.ohm-bundle'
 
 import { luhnClean } from './util/luhn'
 import { uicVerify } from './util/luhn-uic'
 
-import { Attrs, Attr } from './attrs'
+import { Attrs } from './attrs'
 import * as C from './attrs/common'
 import * as V from './attrs/vehicles/common'
 import * as P from './attrs/code-parts'
@@ -16,7 +16,7 @@ import { KeeperByCode, KeeperField } from './attrs/keepers'
 import { specialTractiveD6, specialTractiveD78 } from './rules/tractive-special'
 import { applyPassengerTypeRulesD12, applyTractiveTypeRulesD12, applyWagonTypeRulesD12 } from './rules/type-code'
 import { applyHauledPassengerD56, applyHauledPassengerD78 } from './rules/hauled-passenger'
-import { KeeperDef } from '../dist/rail-id'
+import { UICCountryShortMap } from './defs/countries'
 
 
 export { grammar }
@@ -35,14 +35,14 @@ export const semantics = grammar.createSemantics()
       const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
-        const checksumSource = checksumPart.source as Interval
+        const checksumSource = checksumPart.source
         const valid = uicVerify(digits)
         checksumStatus = valid ?
-          C.ChecksumStatus.value('passed').at(checksumSource) :
-          C.ChecksumStatus.value('failed').at(checksumSource)
+          C.ChecksumStatus.value('passed').atSource(checksumSource) :
+          C.ChecksumStatus.value('failed').atSource(checksumSource)
 
         // Parse warning on failed/absent checksum
-        checksumWarning = valid ? [] : [ C.ParseWarnings.value(`This code does not match checksum digit "${checksumPart.def.value}"`).at(checksumSource) ]
+        checksumWarning = valid ? [] : [ C.ParseWarnings.value(`This code does not match checksum digit "${checksumPart.def.value}"`).atSource(checksumSource) ]
       }
 
       return [
@@ -160,14 +160,22 @@ export const semantics = grammar.createSemantics()
 
       // Cross check prefix (i.e. country part) with expected value given keeper def
       const countryPart = P.KeeperCountryPart.find(prefixAttrs)
-      const keeperDefAttr = KeeperField.find(suffixAttrs) as Attr<KeeperDef>
-      const countryWarning =
-        (countryPart && keeperDefAttr && countryPart.def.value !== keeperDefAttr.def.value.country) ? [ C.ParseWarnings.value(`Vehicle Keeper Marking is inconsistent. Country portion of the code is "${countryPart.def.value}" when "${keeperDefAttr.def.value.country}" is expected.`).at(countryPart.source) ] : []
+      const keeperDefAttr = KeeperField.find(suffixAttrs)
+      let countryWarning = []
+      if (countryPart && keeperDefAttr && countryPart.def.value !== keeperDefAttr.def.value.country) {
+        const expectedCountry = UICCountryShortMap[keeperDefAttr.def.value.country]
+        const foundShort = countryPart.def.value
+        const company = keeperDefAttr.def.value.company
+        countryWarning = [ C.ParseWarnings
+          .value(`Country portion of the Vehicle Keeper Marking is "${foundShort}" but "${company}" is located in ${expectedCountry.long} (${expectedCountry.short})`)
+          .atSource(countryPart.source, keeperDefAttr.source)
+        ]
+      }
 
       // Add country attribute (possibly redundant)
       const countryShort = keeperDefAttr ? keeperDefAttr.def.value.country : (countryPart ? countryPart.def.value : undefined)
       const countryShortSource = keeperDefAttr ? keeperDefAttr.source : (countryPart ? countryPart.source : undefined)
-      const countryAttr = [ CountryByShortCode(countryShort) ].filter(a => a).map(a => a.at(countryShortSource))
+      const countryAttr = [ CountryByShortCode(countryShort) ].filter(a => a).map(a => a.atSource(countryShortSource))
 
       return [
         ...prefixAttrs,

@@ -1,6 +1,6 @@
-import { filter, find, get, isEqual, some } from 'lodash-es'
+import { filter, find, get, isEqual, range, some } from 'lodash-es'
 import { Interval } from 'ohm-js/index'
-import { RailID } from '../result'
+import { RailID, Source } from '../result'
 
 
 export const META_PATH = '_meta'
@@ -28,13 +28,13 @@ abstract class AbstractField<V> {
     return new ValueDef(this, value, desc)
   }
 
-  // Compare this field with another for equality
+  // Compare this field with another (only checks field type)
   is(other: AbstractField<any>): boolean {
-    return other === this
+    return this.type === other.type && this.path === other.path
   }
 
   // Finds the first instance of this field in a list of `Attr<V>`
-  find(attrs: Attr<any>[]): Attr<any> | undefined {
+  find(attrs: Attr<any>[]): Attr<V> | undefined {
     return find(attrs, a => a.def.field.is(this))
   }
 
@@ -71,13 +71,19 @@ export class ValueDef<V> {
   }
 
   // Used to represent an instance of this value for a particular part of the code
-  at(source: Interval, ...footnotes: string[]) {
-    return new Attr<V>(this, [ ...this.footnotes, ...footnotes ], source)
+  at(...intervals: Interval[]) {
+    const source = intervals.map(iv => range(iv.startIdx, iv.endIdx)).flat()
+    return this.atSource(source)
+  }
+
+  // Used to represent an instance of this value for a particular part of the code
+  atSource(...source: Source[]) {
+    return new Attr<V>(this, source.flat(), this.footnotes)
   }
 
   // Used to represent a value which doesn't correspond to a specific part of the code.
-  absent(...footnotes: string[]) {
-    return new Attr<V>(this, [ ...this.footnotes, ...footnotes ])
+  absent() {
+    return new Attr<V>(this, [], this.footnotes)
   }
 
   // Tests a result object for the presence of this field value
@@ -89,16 +95,25 @@ export class ValueDef<V> {
     else
       return false
   }
+
+  // Compares the value of this def with that of another def (ignores description and footnotes)
+  compare(other: ValueDef<any>) {
+    return this.field.is(other.field) && isEqual(this.value, other.value)
+  }
 }
 
 export class Attr<V> {
   public readonly def: ValueDef<V>
-  public readonly source?: Interval
+  public readonly source: Source = []
   public readonly footnotes: string[] = []
 
-  constructor(def: ValueDef<V>, footnotes: string[], source?: Interval)  {
+  constructor(def: ValueDef<V>, source: Source, footnotes: string[]) {
     this.def = def
     this.source = source
     this.footnotes = footnotes
+  }
+
+  compare(other: Attr<any>) {
+    return this.def.compare(other.def)
   }
 }
