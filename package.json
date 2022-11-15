@@ -15,10 +15,11 @@
     "gen-all": "npm run gen-keepers; npm run gen-ohm-types",
     "gen-keepers": "node src/build/bin/generate-keepers.mjs data/keeper-data.csv src/defs/keepers.ts",
     "gen-ohm-types": "npx ohm generateBundles --withTypes --esm src/grammars/**/*.ohm",
-    "prebuild": "npm run gen-all",
+    "prebuild": "npm run clean; npm run gen-all",
     "pretest": "npm run gen-all",
     "pretest-watch": "npm run gen-all",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "clean": "rm -rf ./dist"
   },
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
