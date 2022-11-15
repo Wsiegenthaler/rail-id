@@ -30,19 +30,31 @@ export const semantics = grammar.createSemantics()
       const childAttrs = inner.attrs()
 
       // Checksum validation
-      let checksumStatus = C.ChecksumStatus.value('absent').absent()
-      let checksumWarning = [ C.ParseWarnings.value(`This code does not include a checksum digit and so cannot be verified`).absent() ]
+      let checksumStatus = C.ChecksumStatus.value('Absent').absent()
+      let checksumWarning = [ C.ParseWarnings.value(
+        {
+          type: 'checksum',
+          subType: 'absent',
+          msg: `This code does not include a checksum digit and so cannot be verified`
+        }).absent()
+      ]
       const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
         const checksumSource = checksumPart.source
         const valid = uicVerify(digits)
         checksumStatus = valid ?
-          C.ChecksumStatus.value('passed').atSource(checksumSource) :
-          C.ChecksumStatus.value('failed').atSource(checksumSource)
+          C.ChecksumStatus.value('Passed').atSource(checksumSource) :
+          C.ChecksumStatus.value('Failed').atSource(checksumSource)
 
         // Parse warning on failed/absent checksum
-        checksumWarning = valid ? [] : [ C.ParseWarnings.value(`This code does not match checksum digit "${checksumPart.def.value}"`).atSource(checksumSource) ]
+        checksumWarning = valid ? [] : [
+          C.ParseWarnings.value({
+            type: 'checksum',
+            subType: 'failed',
+            msg: `This code does not match checksum digit "${checksumPart.def.value}"`
+          }).atSource(checksumSource)
+        ]
       }
 
       return [
@@ -167,7 +179,11 @@ export const semantics = grammar.createSemantics()
         const foundShort = countryPart.def.value
         const company = keeperDefAttr.def.value.company
         countryWarning = [ C.ParseWarnings
-          .value(`Country portion of the Vehicle Keeper Marking is "${foundShort}" but "${company}" is located in ${expectedCountry.long} (${expectedCountry.short})`)
+          .value({
+            type: 'conflict',
+            subType: 'vkm',
+            msg: `Country portion of the Vehicle Keeper Marking is "${foundShort}" but "${company}" is located in ${expectedCountry.long} (${expectedCountry.short})`
+          })
           .atSource(countryPart.source, keeperDefAttr.source)
         ]
       }

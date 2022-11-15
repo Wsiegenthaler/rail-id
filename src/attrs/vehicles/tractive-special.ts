@@ -1,5 +1,5 @@
 import { Field } from '..'
-import { SpeedRange, YesNoMaybe } from '../common-values'
+import { readableSpeedRange, SpeedRange, YesNoMaybe } from '../common-values'
 
 
 // Special Type (tractives)
@@ -107,10 +107,13 @@ export const Other                = SpecialSubType.value('Other')
 
 
 // Train Compatibility
-const TrainCompatibility = new Field<YesNoMaybe>('Train Compatibility', 'trainCompatible', 'The ability to include this vehicle as part of a train')
+const TrainCompatibility = new Field<YesNoMaybe>('Train Compatibility', 'trainCompatible', { desc: 'The ability to include this vehicle as part of a train' })
 export const TrainCompatible = TrainCompatibility.value('Yes', 'This vehicle can be made part of a train')
 export const NotTrainCompatible = TrainCompatibility.value('No', 'This vehicle cannot be made part of a train')
 export const MaybeTrainCompatible = TrainCompatibility.value('Maybe', 'Special conditions concerning inclusion in a train must be complied with.')
 
 // Self-propelled travelling speed
-export const SelfPropelledMaxSpeed = new Field<SpeedRange>('Self-Propelled Travelling Speed', 'selfPropelledSpeeds', 'The self-propelled travelling speed of this vehicle')
+export const SelfPropelledMaxSpeed = new Field<SpeedRange>('Self-Propelled Travelling Speed', 'selfPropelledSpeeds', {
+  desc: 'The self-propelled travelling speed of this vehicle',
+  readableFn: readableSpeedRange
+})

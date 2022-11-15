@@ -3,16 +3,20 @@ import { zipObject } from 'lodash-es'
 import { Dictionary } from '../util/common'
 
 
-export interface Gauge { name: string, type: string, mm: number }
+type GaugeType = 'Standard' | 'Broad' | 'Narrow' | 'Minimum'
+
+export interface Gauge { name: string, mm: number, type: GaugeType }
+
+export const readableGauge = (g: Gauge) => `${g.name} / ${g.type} / ${g.mm} mm`
 
 // Factories
-const Gauge = (name: string, type: string, mm: number): Readonly<Gauge> => ({ name, mm, type })
-const NarrowGauge = (name: string, mm: number): Readonly<Gauge> => ({ name, mm, type: 'narrow' })
-const BroadGauge = (name: string, mm: number): Readonly<Gauge> => ({ name, mm, type: 'broad' })
+const Gauge = (name: string, type: GaugeType, mm: number): Readonly<Gauge> => ({ name, mm, type })
+const NarrowGauge = (name: string, mm: number): Readonly<Gauge> => ({ name, mm, type: 'Narrow' })
+const BroadGauge = (name: string, mm: number): Readonly<Gauge> => ({ name, mm, type: 'Broad' })
 
 // Definitions
 export const GaugeDefs = [
-  Gauge('Fifteen Inch', 'minimum', 381),
+  Gauge('Fifteen Inch', 'Minimum', 381),
   
   NarrowGauge('600 mm', 600),
   NarrowGauge('Two Foot', 610),
@@ -29,7 +33,7 @@ export const GaugeDefs = [
   NarrowGauge('Four Foot Six Inch', 1372),
   NarrowGauge('1432 mm', 1432),
 
-  Gauge('Standard', 'standard', 1435),
+  Gauge('Standard', 'Standard', 1435),
 
   BroadGauge('Italian Broad Gauge', 1445),
   BroadGauge('Dresden Gauge', 1450),

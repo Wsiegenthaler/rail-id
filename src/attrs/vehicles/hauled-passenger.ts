@@ -27,13 +27,13 @@ export const Luggage = new Field<YesNoMaybe>('Luggage', 'coach.luggage')
 export const CarCarryingWagon = new Field<YesNo>('Car-carrying Wagon', 'coach.carCarrier').value('Yes')
 
 // Dining Car
-export const DiningAmenities = new Field<YesNoMaybe>('Dining Car', 'coach.dining', 'Dining car or coach with bar or buffet')
+export const DiningAmenities = new Field<YesNoMaybe>('Dining Car', 'coach.dining', { desc: 'Dining car or coach with bar or buffet' })
 
 // Special Amenities
-export const SpecialAmenities = new Field<YesNoMaybe>('Special Amenities', 'coach.specialAmenities', 'Car with other special amenities (conference, disco, cinema, video, child area, ambulance coaches)')
+export const SpecialAmenities = new Field<YesNoMaybe>('Special Amenities', 'coach.specialAmenities', { desc: 'Car with other special amenities (conference, disco, cinema, video, child area, ambulance coaches)' })
 
 // Driving Trailer
-export const DrivingTrailer = new Field<YesNoMaybe>('Driving Cab', 'coach.drivingCab', 'An unpowered coach fitted with a driving cab for reversible working').value('Yes')
+export const DrivingTrailer = new Field<YesNoMaybe>('Driving Cab', 'coach.drivingCab', { desc: 'An unpowered coach fitted with a driving cab for reversible working' }).value('Yes')
 
 //TODO Driving cab
 //TODO Service vehicle?

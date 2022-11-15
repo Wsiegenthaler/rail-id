@@ -8,6 +8,8 @@ import {
   values,
 } from 'lodash-es'
 
+import { ParseWarning } from './attrs/common'
+
 import { Attr, Attrs, FieldType, META_PATH } from './attrs'
 import { ParseWarnings } from './attrs/common'
 import { Dictionary } from './util/common'
@@ -16,8 +18,8 @@ export interface RailID {
   [META_PATH]: {
     type: string
     raw: string
-    fields: FieldMap,
-    warnings: string[]
+    fields: FieldMap
+    warnings: ParseWarning[]
   }
 }
 
@@ -28,14 +30,15 @@ export interface FieldMap {
 export type FieldMeta<V> = ScalarFieldMeta<V> | SetFieldMeta<V>
 
 interface AbstractFieldMeta {
-  type: FieldType,
+  type: FieldType
   name: string
-  desc: string,
+  desc: string
   path: string
 }
 
 export interface ValueMeta<V> {
   value: V
+  readableValue: string
   desc: string
   footnotes: string[]
   source: Source
@@ -71,12 +74,13 @@ const dedupeAttrs = (attrs: Attr<any>[]): Attrs => {
       const msg = valType === 'string' || valType === 'number' ?
       `This code contains conflicting "${aRef.def.field.name}" information: "${aRef.def.value}" versus "${conflict.def.value}` :
       `This code contains conflicting "${aRef.def.field.name}" information`
-      return ParseWarnings.value(msg).atSource([ ...aRef.source, ...conflict.source ])
+      return ParseWarnings
+        .value({ type: 'conflict', subType: 'field-conflict', msg })
+        .atSource([ ...aRef.source, ...conflict.source ])
     } else {
       // Produce merged version of attribute
       const source = attrs.flatMap(a => a.source)
       const footnotes = attrs.flatMap(a => a.footnotes)
-      console.log(`Merging ${aRef.def.field.name} field... source=${source}`)//TODO
       return new Attr<any>(aRef.def, source, footnotes)
     }
   }))
@@ -120,6 +124,7 @@ const applyScalarMeta = (o: RailID, attrs: Attr<any>[]): RailID => {
       path: field.path,
       valueMeta: {
         value: a.def.value,
+        readableValue: a.def.readableValue(),
         desc: a.def.desc ?? '',
         footnotes: a.def.footnotes,
         source: a.source
@@ -143,6 +148,7 @@ const applySetMeta = (o: RailID, setMap: Dictionary<Attr<any>[]>): RailID => {
       path: path,
       valueMetas: attrs.map(a => ({
         value: a.def.value,
+        readableValue: a.def.readableValue(),
         desc: a.def.desc ?? '',
         footnotes: a.footnotes,
         source: a.source

@@ -1,4 +1,4 @@
-import { filter, find, get, isEqual, range, some } from 'lodash-es'
+import { filter, find, get, isEqual, range, some, toPairs } from 'lodash-es'
 import { Interval } from 'ohm-js/index'
 import { RailID, Source } from '../result'
 
@@ -9,18 +9,26 @@ export type Attrs = Attr<any>[]
 
 export type FieldType = 'scalar' | 'set'
 
+type FieldOptionals<V> = { desc?: string, readableFn?: readableFn<V> }
+
+type readableFn<V> = (v: V) => string
 
 abstract class AbstractField<V> {
+
   public readonly name: string
   public readonly path: string
   public readonly desc?: string
 
+  readonly readableFn?: readableFn<V>
+
   abstract readonly type: FieldType
 
-  constructor(name: string, path: string, desc?: string) {
+  constructor(name: string, path: string, optionals: FieldOptionals<V> = {}) {
     this.name = name
     this.path = path
-    this.desc = desc
+
+    this.desc = optionals.desc
+    this.readableFn = optionals.readableFn
   }
 
   // Create new `ValueDef<V>` for this field
@@ -99,6 +107,23 @@ export class ValueDef<V> {
   // Compares the value of this def with that of another def (ignores description and footnotes)
   compare(other: ValueDef<any>) {
     return this.field.is(other.field) && isEqual(this.value, other.value)
+  }
+
+  // Generate a human readable version of this fields value
+  readableValue(): string {
+    const vType = typeof this.value
+
+    // If a literal then use `toString()`
+    if (vType === 'string' || vType === 'number') return this.value.toString()
+
+    // Use `Field`-provided function if one exists
+    if (this.field.readableFn) return this.field.readableFn(this.value)
+
+    // If an object (should be by this point) then make a decent key/value string
+    if (vType === 'object') return toPairs(this.value as object).map(([k, v]) => `${k}=${v}`).join(', ')
+
+    // Give up
+    return ''
   }
 }
 

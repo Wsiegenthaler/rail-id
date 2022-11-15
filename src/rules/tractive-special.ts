@@ -6,7 +6,12 @@ import { applyDigitRules, applySingleDigitRules, Rule } from '.'
 
 // ---- Special Tractives (digit 5 only) -----------------------------
 const tractiveSpecialRulesD5: Rule[] = [
-  { pattern: /[^9]/, defs: [ C.ParseWarnings.value('The leading digit of the \'technical characteristics\' block is generally \'9\'') ] }
+  { pattern: /[^9]/, defs: [
+    C.ParseWarnings.value({
+      type: 'unexpected-value',
+      subType: 'special-tractive',
+      msg: 'The leading digit of the \'technical characteristics\' block is generally \'9\''
+    }) ] }
 ]
 
 // ---- Special tractive rules (digit 6) -----------------------

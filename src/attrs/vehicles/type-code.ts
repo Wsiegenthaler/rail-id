@@ -34,7 +34,7 @@ export const DomesticInternational = TrafficType.value('Domestic / International
 export const AirConditioned = new Field<YesNo>('Air Conditioning', 'airConditioning')
 
 // Historic vehicles
-export const HistoricVehicle = new Field<YesNo>('Historic Vehicle', 'historic', 'Heritage vehicle for purposes of tourism and historical preservation').value('Yes')
+export const HistoricVehicle = new Field<YesNo>('Historic Vehicle', 'historic', { desc: 'Heritage vehicle for purposes of tourism and historical preservation' }).value('Yes')
 
 // Car carrying wagons
 export const CarCarrier = new Field<YesNo>('Car Carrying Vehicle', 'carCarrier').value('Yes')

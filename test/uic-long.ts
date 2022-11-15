@@ -13,7 +13,7 @@ import { eq, like, matches, throws } from './util'
 test('whitespace 1', t => {
   const expected = [
     CodeType.value('UIC'),
-    ChecksumStatus.value('passed'),
+    ChecksumStatus.value('Passed'),
     CountryByCode(85),
     ElectricLocomotive,
     Traction.value('Electric')
@@ -29,7 +29,7 @@ test('whitespace 1', t => {
 test('whitespace 2', t => {
   const expected = [
     CodeType.value('UIC'),
-    ChecksumStatus.value('passed'),
+    ChecksumStatus.value('Passed'),
     CountryByCode(80),
     DieselLocomotive,
     Traction.value('Diesel')
@@ -41,9 +41,9 @@ test('whitespace 2', t => {
 })
 
 test('checksum digit - exhaustive test', t => 
-  range(0, 10).forEach(d => matches(`9280 1 218 455-${d}`, d == 4 ? ChecksumStatus.value('passed') : ChecksumStatus.value('failed'))(t)))
+  range(0, 10).forEach(d => matches(`9280 1 218 455-${d}`, d == 4 ? ChecksumStatus.value('Passed') : ChecksumStatus.value('Failed'))(t)))
 
-test('checksum digit - absent', t => matches(`9280 1 218 455`, ChecksumStatus.value('absent'))(t))
+test('checksum digit - absent', t => matches(`9280 1 218 455`, ChecksumStatus.value('Absent'))(t))
 
 // Test each known UIC country in our definitions
 UICCountries.forEach(c =>
@@ -56,7 +56,11 @@ range(0, 100)
   .map(d => d.toString().padStart(2, '0'))
   .forEach(code => 
     test(`country - invalid - ${code}`,
-      matches(`91 ${code} 4605 205`, ParseWarnings.value(`Country code '${code}' doesn't appear to be a known value.`))))
+      matches(`91 ${code} 4605 205`, ParseWarnings.value({
+        type: 'unknown-value',
+        subType: 'country',
+        msg: `Country code '${code}' doesn't appear to be a known value.`
+      }))))
 
 // Generate tests for each known UIC locomotive/vehicle type
 //TODO

@@ -44,11 +44,23 @@ const UICWagonTypeRulesD12: Rule[] = [
   // Warnings for blocks designated "Not to be used"
   {
     pattern: /[01][3-8]/,
-    defs: [ C.ParseWarnings.value('Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service') ]
+    defs: [
+      C.ParseWarnings.value({
+        type: 'unexpected-value',
+        subType: 'uic-type-code',
+        msg: 'Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service'
+      })
+    ]
   },
   {
     pattern: /[0-3]0/,
-    defs: [ C.ParseWarnings.value('Wagons with starting digits 0-3 followed by 0 are not to be used according to Part 6 of the \'Operation and Traffic Management’ UIC manual (2011)') ]
+    defs: [
+      C.ParseWarnings.value({
+        type: 'unexpected-value',
+        subType: 'uic-type-code',
+        msg: 'Wagons with starting digits 0-3 followed by 0 are not to be used according to Part 6 of the \'Operation and Traffic Management’ UIC manual (2011)'
+      })
+    ]
   }
 ]
 

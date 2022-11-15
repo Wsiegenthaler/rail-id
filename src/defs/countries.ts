@@ -3,6 +3,8 @@ import { zipObject } from 'lodash-es'
 
 export type Country = { code: number, short: string, long: string }
 
+export const readableCountry = (c: Country) => `${c.long} (${c.short})`
+
 // List of UIC-defined countries
 export const UICCountries: Country[] = [
   { code: 10, short: 'FI', long: 'Finland' },

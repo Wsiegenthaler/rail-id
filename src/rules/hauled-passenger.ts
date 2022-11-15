@@ -76,10 +76,10 @@ const HauledPassengerRulesD56: Rule[] = [
   { pattern: /25/,      defs: [ P.DoubleDecker ] },
 
   // Axles
-  { pattern: /[13]4/,  defs: [ C.AxleCount.value({ min: 2, max: 3 }) ] },
-  { pattern: /23/,     defs: [ C.AxleCount.value({ exactly: 3 }) ] },
-  { pattern: /24/,     defs: [ C.AxleCount.value({ exactly: 2 }) ] },
-  { pattern: /9[357]/, defs: [ C.AxleCount.value({ min: 2, max: 3 }) ] },
+  { pattern: /[13]4/,  defs: [ C.AxleCountField.value({ type: 'between', min: 2, max: 3 }) ] },
+  { pattern: /23/,     defs: [ C.AxleCountField.value({ type: 'exact', value: 3 }) ] },
+  { pattern: /24/,     defs: [ C.AxleCountField.value({ type: 'exact', value: 2 }) ] },
+  { pattern: /9[357]/, defs: [ C.AxleCountField.value({ type: 'between', min: 2, max: 3 }) ] },
 
   // Class
   { pattern: /81/,       defs: [ P.CoachClass.value('1st or 1st/2nd') ] },

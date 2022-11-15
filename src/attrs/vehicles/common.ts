@@ -1,16 +1,16 @@
 import { Field, SetField } from '..'
-import { SpeedRange, YesNo } from '../common-values'
+import { AxleCount, SpeedRange, YesNo } from '../common-values'
+import { readableAxleCount, readableSpeedRange } from '../common-values'
 
 
 // Vehicle serial number
 export const SerialNumber = new Field<string>('Vehicle Serial Number', 'serial')
 
 // Permitted Speeds field
-export const PermittedSpeeds = new SetField<SpeedRange>('Permitted Speed', 'speeds')
+export const PermittedSpeeds = new SetField<SpeedRange>('Permitted Speed', 'speeds', { readableFn: readableSpeedRange })
 
 // Axle Count
-type AxleCount = { exactly: number } | { min?: number, max: number } | { min: number, max?: number }
-export const AxleCount = new Field<AxleCount>('Axle Count', 'axles')
+export const AxleCountField = new Field<AxleCount>('Axle Count', 'axles', { readableFn: readableAxleCount })
 
 // Self-propulsion
 export const SelfPropelled = new Field<YesNo>('Self Propelled', 'selfPropelled')
