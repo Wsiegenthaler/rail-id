@@ -3,7 +3,7 @@ import { UICKeeperCodeMap, KeeperDef } from '../defs/keepers'
 import { ParseWarnings } from './common'
 
 // Vehicle Owner (UIC VKM)
-const KeeperField = new Field<KeeperDef>('Vehicle Keeper', 'keeper')
+export const KeeperField = new Field<KeeperDef>('Vehicle Keeper', 'keeper')
 
 export const KeeperByCode = (vkm: string) => {
   const def = UICKeeperCodeMap[vkm]

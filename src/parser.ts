@@ -10,12 +10,13 @@ import * as C from './attrs/common'
 import * as V from './attrs/vehicles/common'
 import * as P from './attrs/code-parts'
 
-import { CountryByCode } from './attrs/countries'
-import { KeeperByCode } from './attrs/keepers'
+import { CountryByCode, CountryByShortCode } from './attrs/countries'
+import { KeeperByCode, KeeperField } from './attrs/keepers'
 
 import { specialTractiveD56, specialTractiveD78 } from './rules/tractive-special'
 import { applyPassengerTypeRulesD12, applyTractiveTypeRulesD12, applyWagonTypeRulesD12 } from './rules/type-code'
 import { applyHauledPassengerD56, applyHauledPassengerD78 } from './rules/hauled-passenger'
+import { KeeperDef } from '../dist/rail-id'
 
 
 export { grammar }
@@ -139,6 +140,44 @@ export const semantics = grammar.createSemantics()
       ]
     },
 
+    // --------------------------- Keeper expressions --------------------------------------
+
+    UICKeeperPrefix(this: NonterminalNode, d1: NonterminalNode, d2: IterationNode, dash: TerminalNode): Attrs {
+      const country = [ d1, d2 ].map(l => l.sourceString).join('')
+      const countrySource = d1.source.coverageWith(d2.source)
+
+      return [ P.KeeperCountryPart.value(country).at(countrySource) ]
+    },
+    UICKeeperSuffix(this: NonterminalNode, d1: NonterminalNode, d2: IterationNode, d3: IterationNode, d4: IterationNode, d5: IterationNode): Attrs {
+      return [
+        KeeperByCode(this.sourceString).at(this.source),
+        P.KeeperCompanyPart.value(this.sourceString).at(this.source)
+      ]
+    },
+    UICKeeper(this: NonterminalNode, prefix: IterationNode, suffix: NonterminalNode): Attrs {
+      const prefixAttrs = prefix.attrs()
+      const suffixAttrs = suffix.attrs()
+
+      // Cross check prefix (i.e. country part) with expected value given keeper def
+      const countryPart = P.KeeperCountryPart.find(prefixAttrs)
+      const keeperDefAttr = KeeperField.find(suffixAttrs) as Attr<KeeperDef>
+      const countryWarning =
+        (countryPart && keeperDefAttr && countryPart.def.value !== keeperDefAttr.def.value.country) ? [ C.ParseWarnings.value(`Vehicle Keeper Marking is inconsistent. Country portion of the code is "${countryPart.def.value}" when "${keeperDefAttr.def.value.country}" is expected.`).at(countryPart.source) ] : []
+
+      // Add country attribute (possibly redundant)
+      const countryShort = keeperDefAttr ? keeperDefAttr.def.value.country : (countryPart ? countryPart.def.value : undefined)
+      const countryShortSource = keeperDefAttr ? keeperDefAttr.source : (countryPart ? countryPart.source : undefined)
+      const countryAttr = [ CountryByShortCode(countryShort) ].filter(a => a).map(a => a.at(countryShortSource))
+
+      return [
+        ...prefixAttrs,
+        ...suffixAttrs,
+        ...countryAttr,
+        ...countryWarning,
+        P.KeeperMarkingPart.value(this.sourceString).at(this.source)
+      ]
+    },
+
     // --------------------------- General expressions -------------------------------------
 
     UICSerial(this: NonterminalNode, d1: NonterminalNode, d2: NonterminalNode, d3: NonterminalNode): Attrs {
@@ -152,16 +191,6 @@ export const semantics = grammar.createSemantics()
     },
     UICChecksum(this: NonterminalNode, dash: TerminalNode, digit: NonterminalNode): Attrs {
       return [ P.ChecksumDigitPart.value(digit.sourceString).at(digit.source) ]
-    },
-    UICKeeper(this: NonterminalNode, p1_l1: NonterminalNode, p1_l2: IterationNode, dash: TerminalNode, p2_l1: NonterminalNode, p2_l2: IterationNode, p2_l3: IterationNode, p2_l4: IterationNode, p2_l5: IterationNode): Attrs {
-      // Lookup keeper def and generate attribute
-      const vkm = [ p2_l1, p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.sourceString).join('')
-      const vkmSource = p2_l1.source.coverageWith(...[ p2_l2, p2_l3, p2_l4, p2_l5 ].map(l => l.source))
-
-      return [
-        KeeperByCode(vkm).at(vkmSource),
-        P.KeeperPart.value(this.sourceString).at(this.source)
-      ]
     },
     UICDesignation_RIV(this: NonterminalNode, n: TerminalNode): Attrs {
       return [ V.RIVVehicle.at(n.source) ]

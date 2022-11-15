@@ -13,4 +13,6 @@ export const SerialPart = new Field<string>('Serial Number', `${rootPath}.serial
 export const ChecksumDigitPart = new Field<string>('Checksum Digit', `${rootPath}.checksum`)
 
 //TODO add to parser
-export const KeeperPart = new Field<string>('Vehicle Keeper Marking (VKM)', `${rootPath}.keeper`)
+export const KeeperCountryPart = new Field<string>('Keeper Marking (Country)', `${rootPath}.keeper.country`)
+export const KeeperCompanyPart = new Field<string>('Keeper Marking (Company)', `${rootPath}.keeper.company`)
+export const KeeperMarkingPart = new Field<string>('Keeper Marking (VKM)', `${rootPath}.keeper.marking`)

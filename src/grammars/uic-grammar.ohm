@@ -75,13 +75,18 @@ UICCode {
   UICSpecialDetail = "9" xs digit xs digit xs digit
 
 
+  // ------ Keeper Vehicle Marking ------------------------------------------------------
+
+  UICKeeper = UICKeeperPrefix? UICKeeperSuffix
+  UICKeeperPrefix = upper upper? "-"
+  UICKeeperSuffix = upper upper? upper? upper? upper?
+
+
   // ------ Misc ------------------------------------------------------------------------
 
   UICSerial = digit digit digit
 
   UICChecksum = "-" digit
-
-  UICKeeper = upper upper? "-" upper upper? upper? upper? upper?
 
   // Tokens that may appear in any number of places throught the code
   UICWagonFreeToken =     UICDesignation_RIV | uicWagonLetters | UICKeeper 

@@ -1,5 +1,5 @@
-import { Field } from '.'
-import { Country, UICCountryCodeMap } from '../defs/countries'
+import { Field, ValueDef } from '.'
+import { Country, UICCountryCodeMap, UICCountryShortMap } from '../defs/countries'
 import { ParseWarnings } from './common'
 
 const CountryField = new Field<Country>('Country', 'country')
@@ -11,4 +11,9 @@ export const CountryByCode = (code: number) => {
   } else {
     return CountryField.value(def)
   }
+}
+
+export const CountryByShortCode = (short: string): ValueDef<Country> | undefined => {
+  const def = UICCountryShortMap[short]
+  return (def !== undefined) ? CountryField.value(def) : undefined
 }
