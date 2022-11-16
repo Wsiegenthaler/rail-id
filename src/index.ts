@@ -12,7 +12,7 @@ export type Options = {
   logLevel?: 'none' | 'warn' | 'error'
 }
 
-const Defaults: Options = { metadata: true, debug: false, logLevel: 'none' }
+const Defaults: Options = { metadata: true, debug: false, logLevel: 'warn' }
 
 // Main
 export default (input: string, options: Options = {}): RailID => {
