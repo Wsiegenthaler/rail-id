@@ -232,6 +232,15 @@ export const semantics = grammar.createSemantics()
       return [ free1, type, free2, country, free3, detail1, detail2, checksum, free4 ].flatMap(n => n.attrs())
     },
 
+    // --------------------------- TODO ----------------------------------------------------
+
+    uicWagonLetters(this: NonterminalNode, arg0: NonterminalNode): Attrs {
+      return [] //TODO
+    },
+    uicPassengerLetters(this: NonterminalNode, arg0: NonterminalNode, arg1: NonterminalNode): Attrs {
+      return [] //TODO
+    },
+
     // --------------------------- Other expressions ---------------------------------------
 
     xt(this: NonterminalNode, xs: NonterminalNode, n: Node): Attrs {

@@ -92,7 +92,9 @@ UICCode {
   UICWagonFreeToken =     UICDesignation_RIV | uicWagonLetters | UICKeeper 
   UICPassengerFreeToken = UICDesignation_TEN | uicPassengerLetters | UICKeeper 
   UICTractiveFreeToken =  UICKeeper
-  UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
+  //TODO implement letter codes for special vehicles
+  //UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
+  UICSpecialFreeToken =   UICKeeper
 
   UICDesignation_RIV = "RIV"
   UICDesignation_TEN = "TEN"
@@ -621,7 +623,7 @@ UICCode {
   // This marking is indicated in document EN 14033-1 "Railway applications — Track — Technical requirements
   // for railbound construction and maintenance machines — Part 1: Running of railbound machines".
 
-  uicSpecialLetters = "TODO"
+  uicSpecialLetters = ""
 
 
   // ------ Utility ---------------------------------------------------------------------

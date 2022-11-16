@@ -70,20 +70,24 @@ const dedupeAttrs = (attrs: Attr<any>[]): Attrs => {
 
     // If a conflict exists then produce warning, otherwise merge into single attribute
     if (conflict) {
+      // Produce parse warning to document the conflict
       const valType = typeof aRef.def.field.value
       const msg = valType === 'string' || valType === 'number' ?
       `This code contains conflicting "${aRef.def.field.name}" information: "${aRef.def.value}" versus "${conflict.def.value}` :
       `This code contains conflicting "${aRef.def.field.name}" information`
-      return ParseWarnings
+      const warning = ParseWarnings
         .value({ type: 'conflict', subType: 'field-conflict', msg })
         .atSource([ ...aRef.source, ...conflict.source ])
+     
+      // Return reference attribute and warning
+      return [ aRef, warning ]
     } else {
       // Produce merged version of attribute
       const source = attrs.flatMap(a => a.source)
       const footnotes = attrs.flatMap(a => a.footnotes)
       return new Attr<any>(aRef.def, source, footnotes)
     }
-  }))
+  })).flat()
   
   return [ ...dedupedScalars, ...sets ]
 }
