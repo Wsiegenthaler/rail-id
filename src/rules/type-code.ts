@@ -120,15 +120,27 @@ const UICPassengerTypeRulesD12: Rule[] = [
   // "Not to be used" blocks
   {
     pattern: /53/,
-    defs: [ V.VehicleNotes.value('Passenger vehicles starting with digits \'53\' are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
+    defs: [ C.ParseWarnings.value({
+      type: 'unexpected-value',
+      subType: 'uic-type-code',
+      msg: 'Passenger vehicles starting with digits \'53\' are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).'
+    }) ]
   },
   {
     pattern: /7[1246789]/,
-    defs: [ V.VehicleNotes.value('Passenger vehicles starting with digit 7 followed by 1, 2, 4, 6, 7, 8, or 9 are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).') ]
+    defs: [ C.ParseWarnings.value({
+      type: 'unexpected-value',
+      subType: 'uic-type-code',
+      msg: 'Passenger vehicles starting with digit 7 followed by 1, 2, 4, 6, 7, 8, or 9 are not to be used according to Part 7 of the \'Operation and Traffic Management’ UIC manual (2011).'
+    }) ]
   },
   {
     pattern: /[56]6/,
-    defs: [ V.VehicleNotes.value('Passenger vehicles starting with digits \'56\' or \'66\' are not to be used, but are excepted for coaches with fixed gauge (\'56\') and adjustable gauge (\'66\') already in service and not to be used for new vehicles.') ]
+    defs: [ C.ParseWarnings.value({
+      type: 'unexpected-value',
+      subType: 'uic-type-code',
+      msg: 'Passenger vehicles starting with digits \'56\' or \'66\' are not to be used, but are excepted for coaches with fixed gauge (\'56\') and adjustable gauge (\'66\') already in service and not to be used for new vehicles.'
+    }) ]
   }
 ]
 
