@@ -6,6 +6,15 @@ import { GaugesByDist } from '../attrs/gauge'
 import { applyDigitRules, Rule } from '.'
 
 
+// ---- Other Notes ------------------------------------
+
+const MaintenanceWagonNote     = V.OtherNotes.value('This code is generally used to describe "Maintenance related wagons"')
+const MiscWagonNote            = V.OtherNotes.value('This code is generally used to describe "Miscellaneous wagons"')
+const MiscPassengerVehicleNote = V.OtherNotes.value('This code is generally used to describe "Miscellaneous passenger vehicles"')
+const TEN_COTIF_WagonNote      = V.OtherNotes.value('This code is generally used to describe "TEN and/or COTIF wagons"')
+const PPV_PPW_WagonNote        = V.OtherNotes.value('This code is generally used to describe "PPV/PPW wagons"')
+const SpecialNumberedWagonNote = V.OtherNotes.value('Wagon with special numbering for technical characteristics not placed in service inside EU')
+
 // ---- Common (first digit only) ------------------------------------
 const CommonTypeRulesD1: Rule[] = [
   // Vehicle type
@@ -34,12 +43,12 @@ const UICWagonTypeRulesD12: Rule[] = [
   { pattern: /[23]9/, defs: [ A.FixedGauge ] },
 
   // General description
-  { pattern: /[48]0/, defs: [ V.MaintenanceWagonNote ] },
-  { pattern: /[01][12]/, defs: [ V.TEN_COTIF_WagonNote ] },
-  { pattern: /[23][1-8]/, defs: [ V.TEN_COTIF_WagonNote ] },
-  { pattern: /[48][1-8]/, defs: [ V.MiscWagonNote ] },
-  { pattern: /[0-3]9/, defs: [ V.PPV_PPW_WagonNote ] },
-  { pattern: /[48][9]/, defs: [ V.SpecialNumberedWagonNote ] },
+  { pattern: /[48]0/, defs: [ MaintenanceWagonNote ] },
+  { pattern: /[01][12]/, defs: [ TEN_COTIF_WagonNote ] },
+  { pattern: /[23][1-8]/, defs: [ TEN_COTIF_WagonNote ] },
+  { pattern: /[48][1-8]/, defs: [ MiscWagonNote ] },
+  { pattern: /[0-3]9/, defs: [ PPV_PPW_WagonNote ] },
+  { pattern: /[48][9]/, defs: [ SpecialNumberedWagonNote ] },
 
   // Warnings for blocks designated "Not to be used"
   {
@@ -87,12 +96,12 @@ const UICPassengerTypeRulesD12: Rule[] = [
   { pattern: /65/, defs: [ A.CarCarrier ] },
   
   // Miscellaneous vehicles
-  { pattern: /[48][1-8]/, defs: [ V.MiscPassengerVehicleNote ] },
+  { pattern: /[48][1-8]/, defs: [ MiscPassengerVehicleNote ] },
 
   // General description
-  { pattern: /[567]6/, defs: [ V.TEN_COTIF_WagonNote ] },
-  { pattern: /[567][789]/, defs: [ V.PPV_PPW_WagonNote ] },
-  { pattern: /[567][1234]/, defs: [ V.TEN_COTIF_WagonNote, V.PPV_PPW_WagonNote ] },
+  { pattern: /[567]6/, defs: [ TEN_COTIF_WagonNote ] },
+  { pattern: /[567][789]/, defs: [ PPV_PPW_WagonNote ] },
+  { pattern: /[567][1234]/, defs: [ TEN_COTIF_WagonNote, PPV_PPW_WagonNote ] },
  
   // Service vehicles
   { pattern: /6[03]/, defs: [ A.ServiceVehicle ] },

@@ -1,4 +1,4 @@
-import { Field } from '..'
+import { Field, SetField } from '..'
 import { YesNo, YesNoMaybe } from '../common-values'
 
 
@@ -18,10 +18,10 @@ const DoubleDeckerField = new Field<YesNo>('Double Deck Coach', 'coach.doubleDec
 export const DoubleDecker = DoubleDeckerField.value('Yes')
 
 // Mail Van or with mail compartment
-export const Mail = new Field<YesNoMaybe>('Mail', 'coach.mail')
+export const Mail = new Field<YesNoMaybe>('Mail', 'coach.mail', { desc: 'Vehicle for the dedicated purpose of mail carriage or with special mail compartment' })
 
 // Luggage Van
-export const Luggage = new Field<YesNoMaybe>('Luggage', 'coach.luggage')
+export const Luggage = new Field<YesNoMaybe>('Luggage', 'coach.luggage', { desc: 'Vehicle for the dedicated purpose of luggage carriage or with special luggage compartment'})
 
 // Car-carrying Wagon
 export const CarCarryingWagon = new Field<YesNo>('Car-carrying Wagon', 'coach.carCarrier').value('Yes')
@@ -35,13 +35,8 @@ export const SpecialAmenities = new Field<YesNoMaybe>('Special Amenities', 'coac
 // Driving Trailer
 export const DrivingTrailer = new Field<YesNoMaybe>('Driving Cab', 'coach.drivingCab', { desc: 'An unpowered coach fitted with a driving cab for reversible working' }).value('Yes')
 
-//TODO Driving cab
-//TODO Service vehicle?
-//TODO Car carrier
-//TODO Child area
-
 // Energy Supply
-const Energy = new Field<string>('Energy Supply', 'coach.energy')
+const Energy = new SetField<string>('Energy Supply', 'coach.energy')
 
 export const AC1000              = Energy.value('1000 V AC')
 export const AC1500              = Energy.value('1500 V AC')
@@ -50,7 +45,7 @@ export const DC1500              = Energy.value('1500 V DC')
 export const DC3000              = Energy.value('3000 V DC')
 export const AllTensions         = Energy.value('All Tensions', 'Single phase alternating current 1000 V 51 to 15 Hz, single phase alternating current 1500 V 50 Hz, direct current 1500 V, direct current 3000 V. Can include single phase alternating current 3000 V 50 Hz.')
 export const NonStandardTensions = Energy.value('Non-Standard Tensions', 'Tensions other than 1000 V, 1500 V, 3000 V')
-export const SteamPower          = Energy.value('Steam Heating', 'Steam heating only. If tensions are written, the code is also available for vehicles without steam heating.')
+export const SteamPower          = Energy.value('Steam Heating', 'Steam used for heating only. If tensions are written, the code is also available for vehicles without steam heating.')
 export const AutonomousPower     = Energy.value('Autonomous Power', 'Autonomous heating, without train bus electricity supply line.')
 export const GeneratorPower      = Energy.value('Generator Power', 'Vehicles with train bus electricity supply line for all voltages, but requiring a generator van to supply air-conditioning.')
 

@@ -4,7 +4,7 @@ import { readableAxleCount, readableSpeedRange } from '../common-values'
 
 
 // Vehicle serial number
-export const SerialNumber = new Field<string>('Vehicle Serial Number', 'serial')
+export const SerialNumber = new Field<string>('Vehicle Serial', 'serial')
 
 // Permitted Speeds field
 export const PermittedSpeeds = new SetField<SpeedRange>('Permitted Speed', 'speeds', { readableFn: readableSpeedRange })
@@ -16,20 +16,13 @@ export const AxleCountField = new Field<AxleCount>('Axle Count', 'axles', { read
 export const SelfPropelled = new Field<YesNo>('Self Propelled', 'selfPropelled')
 
 // Vehicle Designation
-const VehicleDesignation_TEN = new Field<YesNo>('TEN Vehicle', `designations.ten`)
+const VehicleDesignation_TEN = new Field<YesNo>('TEN Interoperable', `designations.TEN`, { desc: 'This marking describes vehicles interoperable with the "Trans-European Transport Network" (TEN-T)' })
 export const TENVehicle = VehicleDesignation_TEN.value('Yes')
 
 // RIV Vehicle Designation
-const VehicleDesignation_RIV = new Field<YesNo>('RIV Vehicle', `designations.riv`)
+//TODO better metadata
+const VehicleDesignation_RIV = new Field<YesNo>('RIV Vehicle', `designations.RIV`)
 export const RIVVehicle = VehicleDesignation_RIV.value('Yes')
 
-// Notes - general info which doesn't fit into other fields
-export const VehicleNotes = new SetField<string>('Vehicle Notes', 'notes')
-
-export const MaintenanceWagonNote     = VehicleNotes.value('Maintenance related wagon')
-export const MiscWagonNote            = VehicleNotes.value('Miscellaneous wagon')
-export const MiscPassengerVehicleNote = VehicleNotes.value('Miscellaneous passenger vehicle')
-export const TEN_COTIF_WagonNote      = VehicleNotes.value('TEN and/or COTIF wagon')
-export const PPV_PPW_WagonNote        = VehicleNotes.value('PPV/PPW wagon')
-export const SpecialNumberedWagonNote = VehicleNotes.value('Wagon with special numbering for technical characteristics not placed in service inside EU')
-
+// Other Notes - General info which doesn't fit into other fields
+export const OtherNotes = new SetField<string>('Other Notes', 'notes')

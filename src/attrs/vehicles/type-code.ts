@@ -21,7 +21,7 @@ type GaugeType = 'Fixed Gauge' | 'Variable Gauge'
 const GaugeType = new Field<GaugeType>('Gauge Type', 'gaugeType')
 
 export const FixedGauge      = GaugeType.value('Fixed Gauge', 'This vehicle supports operation on only one track gauge')
-export const VariableGauge   = GaugeType.value('Variable Gauge', 'This vehicle supports operation on more than one track gauge')
+export const VariableGauge   = GaugeType.value('Variable Gauge', 'This vehicle is able to travel across a break of gauge between two railway networks with different track gauges')
 
 // Type of traffic (domestic/international)
 const TrafficType = new Field<string>('Traffic Type', 'traffic')

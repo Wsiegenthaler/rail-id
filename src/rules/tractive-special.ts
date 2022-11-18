@@ -34,7 +34,7 @@ const tractiveSpecialRulesD6: Rule[] = [
   { pattern: /[24689]/, defs: [ S.SelfPropelledMaxSpeed.value({ max: 100, unit: 'km/h' }) ] },
 
   // Notes
-  { pattern: /[890]/, defs: [ V.VehicleNotes.value('Special conditions concerning inclusion in a train must be complied with.') ] }
+  { pattern: /[890]/, defs: [ V.OtherNotes.value('Special conditions concerning inclusion in a train must be complied with.') ] }
 ]
 
 // ---- Special Tractives (digit 7) ----------------------------------
