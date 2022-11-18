@@ -8,23 +8,32 @@ import { result, RailID } from './result'
 
 export type Options = {
   metadata?: boolean
-  debug?: boolean
-  logLevel?: 'none' | 'warn' | 'error'
+  logLevel?: 'debug' | 'warn' | 'error' | 'none'
 }
 
-const Defaults: Options = { metadata: true, debug: false, logLevel: 'warn' }
+const Defaults: Options = { metadata: true, logLevel: 'warn' }
+
+const debugLog = (dataFn: () => any, options: Options) =>
+  (options.logLevel! === 'debug') && console.debug(dataFn())
 
 // Main
 export default (input: string, options: Options = {}): RailID => {
   defaults(options, Defaults)
 
   // Log parse trace if debug flag set
-  if (options.debug) console.info(grammar.trace(input).toString())
+  debugLog(() => grammar.trace(input).toString(), options)
 
   let parseResult = grammar.match(input)
   
   if (parseResult.succeeded()) {
-    const r = result(semantics(parseResult).attrs())
+    // Parse and generate attributes
+    const attrs = semantics(parseResult).attrs()
+
+    // Log attributes if debug flag set
+    debugLog(() => attrs, options)
+
+    // Build result object
+    const r = result(attrs)
 
     // Omit metadata according to options
     if (options.metadata === false) unset(r, META_PATH)
