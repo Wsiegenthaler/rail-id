@@ -89,6 +89,7 @@ UICCode {
   UICChecksum = "-" digit
 
   // Tokens that may appear in any number of places throught the code
+  //TODO refactor 'free tokens' so that letter markings are only expected towards the end
   UICWagonFreeToken =     UICDesignation_RIV | uicWagonLetters | UICKeeper 
   UICPassengerFreeToken = UICDesignation_TEN | uicPassengerLetters | UICKeeper 
   UICTractiveFreeToken =  UICKeeper
