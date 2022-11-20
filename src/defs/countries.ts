@@ -76,7 +76,13 @@ export const UICCountries: Country[] = [
 ]
 
 // Countries mapped by UIC numerical code
-export const UICCountryCodeMap = zipObject(UICCountries.map(c => c.code), UICCountries)
+const CountryCodeMap = zipObject(UICCountries.map(c => c.code), UICCountries)
 
-// Countries mapped by short name
-export const UICCountryShortMap = zipObject(UICCountries.map(c => c.short), UICCountries)
+export const UICCountryByCode = (code: number) => CountryCodeMap[code]
+
+// Some short codes are in common usage that are incorrect, remap them here
+const ShortRemap = { 'UK': 'GB' }
+
+// Countries mapped by short alphabetic code
+const CountryShortMap = zipObject(UICCountries.map(c => c.short), UICCountries)
+export const UICCountryByShort = (short: string) => CountryShortMap[short] ?? CountryShortMap[ShortRemap[short]]

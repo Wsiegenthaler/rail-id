@@ -16,7 +16,7 @@ import { KeeperByCode, KeeperField } from './attrs/keepers'
 import { specialTractiveD6, specialTractiveD78 } from './rules/tractive-special'
 import { applyPassengerTypeRulesD12, applyTractiveTypeRulesD12, applyWagonTypeRulesD12 } from './rules/type-code'
 import { applyHauledPassengerD56, applyHauledPassengerD78 } from './rules/hauled-passenger'
-import { UICCountryShortMap } from './defs/countries'
+import { UICCountryByShort } from './defs/countries'
 
 
 export { grammar }
@@ -175,17 +175,20 @@ export const semantics = grammar.createSemantics()
       const keeperDefAttr = KeeperField.find(suffixAttrs)
       let countryWarning = []
       if (countryPart && keeperDefAttr && countryPart.def.value !== keeperDefAttr.def.value.country) {
-        const expectedCountry = UICCountryShortMap[keeperDefAttr.def.value.country]
-        const foundShort = countryPart.def.value
-        const company = keeperDefAttr.def.value.company
-        countryWarning = [ C.ParseWarnings
-          .value({
-            type: 'conflict',
-            subType: 'vkm',
-            msg: `Country portion of the Vehicle Keeper Marking is "${foundShort}" but "${company}" is located in ${expectedCountry.long} (${expectedCountry.short})`
-          })
-          .atSource(countryPart.source, keeperDefAttr.source)
-        ]
+        const expectedCountry = UICCountryByShort(keeperDefAttr.def.value.country)
+        if (expectedCountry) {
+          /* Issue warning that the country def doesn't match the country portion of the KVM */
+          const foundShort = countryPart.def.value
+          const company = keeperDefAttr.def.value.company
+          countryWarning = [ C.ParseWarnings
+            .value({
+              type: 'conflict',
+              subType: 'vkm',
+              msg: `Country portion of the Vehicle Keeper Marking is "${foundShort}" but "${company}" is located in ${expectedCountry.long} (${expectedCountry.short})`
+            })
+            .atSource(countryPart.source, keeperDefAttr.source)
+          ]
+        }
       }
 
       // Add country attribute (possibly redundant)

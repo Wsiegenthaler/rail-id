@@ -1,12 +1,12 @@
 import { Field, ValueDef } from '.'
-import { Country, readableCountry, UICCountryCodeMap, UICCountryShortMap } from '../defs/countries'
+import { Country, readableCountry, UICCountryByCode, UICCountryByShort } from '../defs/countries'
 import { ParseWarnings } from './common'
 
 
 const CountryField = new Field<Country>('Country', 'country', { readableFn: readableCountry })
 
 export const CountryByCode = (code: number) => {
-  const def = UICCountryCodeMap[code]
+  const def = UICCountryByCode(code)
   if (def === undefined) {
     return ParseWarnings.value({
       type: 'unknown-value',
@@ -19,6 +19,6 @@ export const CountryByCode = (code: number) => {
 }
 
 export const CountryByShortCode = (short: string): ValueDef<Country> | undefined => {
-  const def = UICCountryShortMap[short]
+  const def = UICCountryByShort(short)
   return (def !== undefined) ? CountryField.value(def) : undefined
 }
