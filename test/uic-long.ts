@@ -1,11 +1,11 @@
 import test from 'ava'
-import { range } from 'lodash-es'
+import { range, some } from 'lodash-es'
 
 import { CountryByCode } from '../src/attrs/countries'
 import { ChecksumStatus, ParseWarnings, CodeType } from '../src/attrs/common'
 import { Traction, DieselLocomotive, ElectricLocomotive } from '../src/attrs/vehicles/tractive'
 
-import { UICCountryCodeMap, UICCountries } from '../src/defs/countries'
+import { UICCountries } from '../src/defs/countries'
 
 import { eq, like, matches, throws } from './util'
 
@@ -52,7 +52,7 @@ UICCountries.forEach(c =>
 
 // Ensure warnings are generated for unknown country codes
 range(0, 100)
-  .filter(d => !(d in UICCountryCodeMap))
+  .filter(d => !some(UICCountries, c => d === c.code))
   .map(d => d.toString().padStart(2, '0'))
   .forEach(code => 
     test(`country - invalid - ${code}`,
