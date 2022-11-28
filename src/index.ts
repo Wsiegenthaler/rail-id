@@ -3,6 +3,7 @@ import { defaults, unset } from 'lodash-es'
 import { grammar, semantics } from './parser'
 import { META_PATH } from './attrs'
 import { result, RailID } from './result'
+import { ParseError } from './errors'
 
 
 export type Options = {
@@ -19,13 +20,10 @@ const debugLog = (dataFn: () => any, options: Options) =>
 export default (input: string, options: Options = {}): RailID => {
   defaults(options, Defaults)
 
-  // Log parse trace if debug flag set
-  debugLog(() => grammar.trace(input).toString(), options)
-
   let parseResult = grammar.match(input)
   
   if (parseResult.succeeded()) {
-    // Parse and generate attributes
+    // Generate attributes
     const attrs = semantics(parseResult).attrs()
 
     // Log attributes if debug flag set
@@ -44,7 +42,12 @@ export default (input: string, options: Options = {}): RailID => {
     return r
   } else {
     const e = new ParseError(parseResult, input)
+
+    // Log parse trace if debug flag set
+    debugLog(() => grammar.trace(input).toString(), options)
+
     if (options.logLevel === 'error') console.error('[rail-id] parse error', e)
+
     throw e
   }
 }
