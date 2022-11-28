@@ -1,7 +1,7 @@
 import * as C from '../attrs/common'
 import * as V from '../attrs/vehicles/common'
 import * as S from '../attrs/vehicles/tractive-special'
-import { applyDigitRules, applySingleDigitRules, Rule } from '.'
+import { applyDigitRules, applyRules, Rule } from '.'
 
 
 // ---- Special Tractives (digit 5 only) -----------------------------
@@ -144,7 +144,7 @@ const tractiveSpecialRulesD78: Rule[] = [
 ]
 
 // Returns vehicle attributes for the given Ohm parse node of digit 6 of special tractive units
-export const specialTractiveD6 = applySingleDigitRules(tractiveSpecialRulesD6)
+export const specialTractiveD6 = applyRules(tractiveSpecialRulesD6)
 
 // Returns vehicle attributes for the given Ohm parse node of digits 7 and 8 of special tractive units
 export const specialTractiveD78 = applyDigitRules(tractiveSpecialRulesD7, tractiveSpecialRulesD78)
