@@ -17,6 +17,7 @@ import { specialTractiveD6, specialTractiveD78 } from './rules/tractive-special'
 import { applyPassengerTypeRulesD12, applyTractiveTypeRulesD12, applyWagonTypeRulesD12 } from './rules/type-code'
 import { applyHauledPassengerD56, applyHauledPassengerD78 } from './rules/hauled-passenger'
 import { UICCountryByShort } from './defs/countries'
+import { applyHauledPassenger_Serial, applyHauledPassenger_Index } from './rules/letters/hauled-passenger'
 
 
 export { grammar }
@@ -240,8 +241,19 @@ export const semantics = grammar.createSemantics()
     uicWagonLetters(this: NonterminalNode, arg0: NonterminalNode): Attrs {
       return [] //TODO
     },
-    uicPassengerLetters(this: NonterminalNode, arg0: NonterminalNode, arg1: NonterminalNode): Attrs {
-      return [] //TODO
+    
+    // --------------------------- Hauled-Passenger Letters --------------------------------
+
+    uicPassengerLetters(this: NonterminalNode, serialTokens: NonterminalNode, indexTokens: NonterminalNode): Attrs {
+      return [ ...serialTokens.attrs(), ...indexTokens.attrs() ]
+    },
+    
+    uicPassengerLetters_Serial(this: NonterminalNode, token: NonterminalNode): Attrs {
+      return [ ...applyHauledPassenger_Serial(token) ]
+    },
+    
+    uicPassengerLetters_Index(this: NonterminalNode, token: NonterminalNode): Attrs {
+      return [ ...applyHauledPassenger_Index(token) ]
     },
 
     // --------------------------- Other expressions ---------------------------------------
