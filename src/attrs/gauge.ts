@@ -2,12 +2,12 @@ import { zipObject } from 'lodash-es'
 
 import { Dictionary } from '../util/common'
 import { SetField, ValueDef } from '.'
-import { Gauge, GaugeDefs, readableGauge } from '../defs/gauge'
+import { Gauge, GaugeDefs, displayGauge } from '../defs/gauge'
 
 // Gauge Support attribute
 const GaugeSupport = new SetField<Gauge>('Supported Gauges', 'supportedGauges', {
   desc: 'The distance(s) between the two rails of a railway track supported by this vehicle',
-  readableFn: readableGauge
+  displayFn: displayGauge
 })
 
 // Dictionary of Gauge Support attributes keyed by distance (`mm`)

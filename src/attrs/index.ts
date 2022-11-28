@@ -9,9 +9,9 @@ export type Attrs = Attr<any>[]
 
 export type FieldType = 'scalar' | 'set'
 
-type FieldOptionals<V> = { desc?: string, readableFn?: readableFn<V> }
+type FieldOptionals<V> = { desc?: string, displayFn?: displayFn<V> }
 
-type readableFn<V> = (v: V) => string
+type displayFn<V> = (v: V) => string
 
 abstract class AbstractField<V> {
 
@@ -19,7 +19,7 @@ abstract class AbstractField<V> {
   public readonly path: string
   public readonly desc?: string
 
-  readonly readableFn?: readableFn<V>
+  readonly displayFn?: displayFn<V>
 
   abstract readonly type: FieldType
 
@@ -28,7 +28,7 @@ abstract class AbstractField<V> {
     this.path = path
 
     this.desc = optionals.desc
-    this.readableFn = optionals.readableFn
+    this.displayFn = optionals.displayFn
   }
 
   // Create new `ValueDef<V>` for this field
@@ -109,15 +109,15 @@ export class ValueDef<V> {
     return this.field.is(other.field) && isEqual(this.value, other.value)
   }
 
-  // Generate a human readable version of this fields value
-  readableValue(): string {
+  // Generate a human display version of this fields value
+  displayValue(): string {
     const vType = typeof this.value
 
     // If a literal then use `toString()`
     if (vType === 'string' || vType === 'number') return this.value.toString()
 
     // Use `Field`-provided function if one exists
-    if (this.field.readableFn) return this.field.readableFn(this.value)
+    if (this.field.displayFn) return this.field.displayFn(this.value)
 
     // If an object (should be by this point) then make a decent key/value string
     if (vType === 'object') return toPairs(this.value as object).map(([k, v]) => `${k}=${v}`).join(', ')

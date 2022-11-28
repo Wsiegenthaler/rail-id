@@ -7,7 +7,7 @@ type GaugeType = 'Standard' | 'Broad' | 'Narrow' | 'Minimum'
 
 export interface Gauge { name: string, mm: number, type: GaugeType }
 
-export const readableGauge = (g: Gauge) => `${g.name} / ${g.type} / ${g.mm} mm`
+export const displayGauge = (g: Gauge) => `${g.name} / ${g.type} / ${g.mm} mm`
 
 // Factories
 const Gauge = (name: string, type: GaugeType, mm: number): Readonly<Gauge> => ({ name, mm, type })

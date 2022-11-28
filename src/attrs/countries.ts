@@ -1,9 +1,9 @@
 import { Field, ValueDef } from '.'
-import { Country, readableCountry, UICCountryByCode, UICCountryByShort } from '../defs/countries'
+import { Country, displayCountry, UICCountryByCode, UICCountryByShort } from '../defs/countries'
 import { ParseWarnings } from './common'
 
 
-const CountryField = new Field<Country>('Country', 'country', { readableFn: readableCountry })
+const CountryField = new Field<Country>('Country', 'country', { displayFn: displayCountry })
 
 export const CountryByCode = (code: number) => {
   const def = UICCountryByCode(code)

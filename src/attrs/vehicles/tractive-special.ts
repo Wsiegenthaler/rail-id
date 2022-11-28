@@ -1,5 +1,5 @@
 import { Field } from '..'
-import { readableSpeedRange, SpeedRange, YesNoMaybe } from '../common-values'
+import { displaySpeedRange, SpeedRange, YesNoMaybe } from '../common-values'
 
 
 // Special Type (tractives)
@@ -115,5 +115,5 @@ export const MaybeTrainCompatible = TrainCompatibility.value('Maybe', 'Special c
 // Self-propelled travelling speed
 export const SelfPropelledMaxSpeed = new Field<SpeedRange>('Self-Propelled Speed', 'selfSpeed', {
   desc: 'The maximum speed of this vehicle while travelling under its own tractive power',
-  readableFn: readableSpeedRange
+  displayFn: displaySpeedRange
 })

@@ -38,7 +38,7 @@ interface AbstractFieldMeta {
 
 export interface ValueMeta<V> {
   value: V
-  readableValue: string
+  displayValue: string
   desc: string
   footnotes: string[]
   source: Source
@@ -128,7 +128,7 @@ const applyScalarMeta = (o: RailID, attrs: Attr<any>[]): RailID => {
       path: field.path,
       valueMeta: {
         value: a.def.value,
-        readableValue: a.def.readableValue(),
+        displayValue: a.def.displayValue(),
         desc: a.def.desc ?? '',
         footnotes: a.def.footnotes,
         source: a.source
@@ -152,7 +152,7 @@ const applySetMeta = (o: RailID, setMap: Dictionary<Attr<any>[]>): RailID => {
       path: path,
       valueMetas: attrs.map(a => ({
         value: a.def.value,
-        readableValue: a.def.readableValue(),
+        displayValue: a.def.displayValue(),
         desc: a.def.desc ?? '',
         footnotes: a.footnotes,
         source: a.source

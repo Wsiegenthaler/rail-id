@@ -19,5 +19,5 @@ export type ParseWarning = {
   subType?: string
   msg: string
 }
-const readableParseWarning = (w: ParseWarning) => w.msg
-export const ParseWarnings = new SetField<ParseWarning>('Parse Warnings', `${META_PATH}.warnings`, { readableFn: readableParseWarning })
+const displayParseWarning = (w: ParseWarning) => w.msg
+export const ParseWarnings = new SetField<ParseWarning>('Parse Warnings', `${META_PATH}.warnings`, { displayFn: displayParseWarning })
