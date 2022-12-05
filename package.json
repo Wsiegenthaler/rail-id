@@ -1,6 +1,6 @@
 {
   "name": "rail-id",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A general purpose parser for European rolling stock identification codes",
   "type": "module",
   "exports": {
@@ -48,6 +48,7 @@
     "c8": "^7.12.0",
     "commander": "^9.4.1",
     "csv": "^6.2.1",
+    "csv-parse": "^5.3.3",
     "prettyjson": "^1.2.5",
     "rollup": "^3.2.3",
     "rollup-plugin-analyzer": "^4.0.0",
