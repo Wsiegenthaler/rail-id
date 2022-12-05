@@ -90,12 +90,12 @@ UICCode {
 
   // Tokens that may appear in any number of places throught the code
   //TODO refactor 'free tokens' so that letter markings are only expected towards the end
-  UICWagonFreeToken =     UICDesignation_RIV | uicWagonLetters | UICKeeper 
-  UICPassengerFreeToken = UICDesignation_TEN | uicPassengerLetters | UICKeeper 
-  UICTractiveFreeToken =  UICKeeper
+  UICWagonFreeToken =     tD<UICDesignation_RIV> | tD<uicWagonLetters> | tD<UICKeeper>
+  UICPassengerFreeToken = tD<UICDesignation_TEN> | tD<uicPassengerLetters> | tD<UICKeeper>
+  UICTractiveFreeToken =  tD<UICKeeper>
   //TODO implement letter codes for special vehicles
   //UICSpecialFreeToken =   UICKeeper | uicSpecialLetters
-  UICSpecialFreeToken =   UICKeeper
+  UICSpecialFreeToken =   tD<UICKeeper>
 
   UICDesignation_RIV = "RIV"
   UICDesignation_TEN = "TEN"
@@ -634,6 +634,9 @@ UICCode {
   xs = x*
 
   xt<token> = xs token  // Token which may appear with extended whitespace before
+
+  td<token> = token &space  // Token whose end must be delimeted by whitespace
+  tD<token> = token &(space | end)  // Token whose end must be delimeted by whitespace or end of stream
 
   // 3-part pattern template
   CodePattern3<type, country, detail, free>

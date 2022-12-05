@@ -261,6 +261,9 @@ export const semantics = grammar.createSemantics()
     xt(this: NonterminalNode, xs: NonterminalNode, n: Node): Attrs {
       return n.attrs()
     },
+    tD(this: NonterminalNode, xs: NonterminalNode, n: Node): Attrs {
+      return xs.attrs()
+    },
     _iter(this: NonterminalNode, ...children: TerminalNode[]): Attrs {
       return children.flatMap(c => c.attrs())
     }  
