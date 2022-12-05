@@ -32,7 +32,7 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "ohm-js": "^16.4.0",
-    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-sourcemaps": "^0.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
