@@ -32,11 +32,7 @@ program
             const status = (r[4] ?? '').toLowerCase().trim()
               .replace(/ı/g, 'i') // hack to replace errant turkish character present in data file
 
-            let optional = ''
-            if (website.length > 0) optional += `, website: '${website}'`
-            if (otif)               optional += `, otif: true`
-
-            return `  { vkm: '${vkm}', country: '${country}', company: '${company}', status: '${status}'${optional} }`
+            return `  ['${vkm}', '${country}', '${company}', '${status}', '${website}', ${otif ? 0 : 1}]`
           })
           .join(',\n')
         let data = template(body)
@@ -89,9 +85,19 @@ function template(body) {
         otif?: boolean
       }
 
-      export const keepers: KeeperDef[] = [
+      const keeperData: any[] = [
       ${body}
       ]
+
+      export const keepers: KeeperDef[] =
+        keeperData.map(d => ({
+          vkm: d[0],
+          country: d[1],
+          company: d[2],
+          status: d[3],
+          website: d[4].length > 0 ? d[4] : undefined,
+          otif: d[5] === 1 ? true : undefined
+        }))
 
       export const UICKeeperCodeMap = zipObject(keepers.map(k => k.vkm), keepers)
     `.replaceAll(/^      /gm, '')
