@@ -596,7 +596,7 @@ UICCode {
     = "AB"                  -- AB
     | "A"                   -- A
     | "B"                   -- B
-    | "WL"                  -- WL
+    | ("WL" | "WLS")        -- WL
     | "WR"                  -- WR
     | "R"                   -- R
     | "DD"                  -- DD

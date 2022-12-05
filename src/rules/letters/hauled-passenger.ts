@@ -6,35 +6,47 @@ import * as P from '../../attrs/vehicles/hauled-passenger'
 // ---- Hauled-Passenger - Serial Letters ------------------------
 
 const HauledPassengerRules_Serial: Rule[] = [
-  { pattern: /AB/,       defs: [  ] },
-  { pattern: /A/,        defs: [  ] },
-  { pattern: /B/,        defs: [  ] },
-  { pattern: /WL/,       defs: [  ] },
-  { pattern: /WR/,       defs: [  ] },
-  { pattern: /R/,        defs: [  ] },
-  { pattern: /DD/,       defs: [  ] },
-  { pattern: /D/,        defs: [  ] },
+  { pattern: /AB/,       defs: [ P.CoachClass.value('1st/2nd') ] },
+  { pattern: /A/,        defs: [ P.CoachClass.value('1st') ] },
+  { pattern: /B/,        defs: [ P.CoachClass.value('2nd') ] },
+  { pattern: /WL/,       defs: [ P.CoachType.value('Sleeper Car') ] },
+  { pattern: /WLS/,      defs: [ P.CoachType.value('Sleeper Car').notes('This sleeper car has special accomodations') ] },
+  { pattern: /WR/,       defs: [ P.DiningAmenities.value('Yes') ] },
+  { pattern: /R/,        defs: [ P.DiningAmenities.value('Yes') ] },
+  { pattern: /DD/,       defs: [
+    P.CarCarryingWagon,
+    P.CarCarryingType.value('Open'),
+    P.CarCarryingType.value('2-tier'),
+    P.DoubleDecker
+  ] },
+  { pattern: /D/,        defs: [ P.CoachType.value('Van') ] },
   { pattern: /Post/,     defs: [ P.Mail.value('Yes') ] },
-  { pattern: /AS|SR|WG/, defs: [  ] },
-  { pattern: /WSP/,      defs: [  ] },
-  { pattern: /Laeq/,     defs: [  ] },
-  { pattern: /Leq/,      defs: [  ] },
-  { pattern: /Le/,       defs: [  ] }
+  { pattern: /AS|SR|WG/, defs: [ P.SpecialAmenities.value('Yes') ] },
+  { pattern: /WSP/,      defs: [ P.CoachType.value('Pullman Coach') ] },
+  { pattern: /Laeq/,     defs: [
+    C.AxleCountField.value({ type: 'exact', value: 3 }),
+    P.CarCarryingWagon,
+    P.CarCarryingType.value('Open'),
+    P.CarCarryingType.value('2-tier'),
+    P.CarCarryingType.value('Fitted with train supply cable'),
+    P.DoubleDecker
+  ] },
+  { pattern: /Leq/,      defs: [
+    C.AxleCountField.value({ type: 'exact', value: 2 }),
+    P.CarCarryingWagon,
+    P.CarCarryingType.value('Open'),
+    P.CarCarryingType.value('2-tier'),
+    P.CarCarryingType.value('Fitted with train supply cable'),
+    P.DoubleDecker
 
-//  = "AB"                  -- AB
-//  | "A"                   -- A
-//  | "B"                   -- B
-//  | "WL"                  -- WL
-//  | "WR"                  -- WR
-//  | "R"                   -- R
-//  | "DD"                  -- DD
-//  | "D"                   -- D
-//  | "Post"                -- Post
-//  | ("AS" | "SR" | "WG")  -- AS_SR_WG
-//  | "WSP"                 -- WSP
-//  | "Laeq"                -- Laeq
-//  | "Leq"                 -- Leq
-//  | "Le"                  -- Le
+  ] },
+  { pattern: /Le/,       defs: [
+    C.AxleCountField.value({ type: 'exact', value: 2 }),
+    P.CarCarryingWagon,
+    P.CarCarryingType.value('Open'),
+    P.CarCarryingType.value('2-tier'),
+    P.DoubleDecker
+  ] }
 ]
 
 // ---- Hauled-Passenger - Index Letters -------------------------
@@ -46,7 +58,7 @@ const HauledPassengerRules_Index: Rule[] = [
   { pattern: /ee|z/, defs: [  ] },
   { pattern: /f/,    defs: [  ] },
   { pattern: /p|t/,  defs: [  ] },
-  { pattern: /m/,    defs: [  ] },
+  { pattern: /m/,    defs: [ P.CoachLength.value({ length: { type: 'exact', value: 24.5 }, unit: 'meters', type: 'static' }) ] },
   { pattern: /s/,    defs: [  ] },
 ]
 

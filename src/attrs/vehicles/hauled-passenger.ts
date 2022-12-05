@@ -1,10 +1,10 @@
 import { Field, SetField } from '..'
-import { YesNo, YesNoMaybe } from '../common-values'
+import { displayVehicleLength, VehicleLength, YesNo, YesNoMaybe } from '../common-values'
 
 
 // Hauled-passenger Vehicle Type
-type CoachType = 'Passenger Car' | 'Couchette Car' | 'Sleeper Car' | 'Special Car or Van'
-export const CoachType = new Field<CoachType>('Coach Type', 'coach.type')
+type CoachType = 'Passenger Car' | 'Couchette Car' | 'Sleeper Car' | 'Special Car or Van' | 'Van' | 'Pullman Coach'
+export const CoachType = new SetField<CoachType>('Coach Type', 'coach.type')
 
 // Coach Description
 export const CoachDesc = new Field<string>('Coach Description', 'coach.description')
@@ -17,6 +17,11 @@ export const CoachClass = new Field<Class>('Passenger Class', 'coach.class')
 const DoubleDeckerField = new Field<YesNo>('Double Deck Coach', 'coach.doubleDecker')
 export const DoubleDecker = DoubleDeckerField.value('Yes')
 
+// Coach Length
+export const CoachLength = new Field<VehicleLength>('Coach Length', 'coach.length', {
+  displayFn: displayVehicleLength
+})
+
 // Mail Van or with mail compartment
 export const Mail = new Field<YesNoMaybe>('Mail', 'coach.mail', { desc: 'Vehicle for the dedicated purpose of mail carriage or with special mail compartment' })
 
@@ -24,7 +29,11 @@ export const Mail = new Field<YesNoMaybe>('Mail', 'coach.mail', { desc: 'Vehicle
 export const Luggage = new Field<YesNoMaybe>('Luggage', 'coach.luggage', { desc: 'Vehicle for the dedicated purpose of luggage carriage or with special luggage compartment'})
 
 // Car-carrying Wagon
-export const CarCarryingWagon = new Field<YesNo>('Car-carrying Wagon', 'coach.carCarrier').value('Yes')
+export const CarCarryingWagon = new Field<YesNo>('Car-Carrying Wagon', 'coach.carCarrier').value('Yes')
+
+// Car-carrying Type
+type CarCarryingType = 'Open' | '2-tier' | 'Fitted with train supply cable'
+export const CarCarryingType = new SetField<CarCarryingType>('Car-Carrying Type', 'coach.carCarrierType')
 
 // Dining Car
 export const DiningAmenities = new Field<YesNoMaybe>('Dining Car', 'coach.dining', { desc: 'Dining car or coach with bar or buffet' })
