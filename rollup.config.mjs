@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import typescript from 'rollup-plugin-typescript2'
 import dts from 'rollup-plugin-dts'
 import terser from '@rollup/plugin-terser'
+import sourcemaps from 'rollup-plugin-sourcemaps'
 import analyze from 'rollup-plugin-analyzer'
 
 import pkg from './package.json' assert { type: "json" }
@@ -27,6 +28,7 @@ const umdConfig = {
       targets: "defaults or cover 96%"
     }),
     terser(),
+    sourcemaps(),
     analyze({ limit: 20, summaryOnly: true })
   ]
 }
@@ -38,8 +40,18 @@ const esCjsConfig = {
   input: 'src/index.ts',
   external: [],
   output: [
-    { file: pkg.main, format: 'cjs' },
-    { file: pkg.module, format: 'es' }
+    {
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap: true
+    },
+    {
+      //file: pkg.module,
+      dir: './dist/esm',
+      format: 'esm',
+      preserveModules: true,
+      sourcemap: true
+    }
   ],
   plugins: [
     typescript(),
@@ -50,7 +62,8 @@ const esCjsConfig = {
         "maintained node versions",
         "last 3 versions"
       ]
-    })
+    }),
+    sourcemaps()
   ]
 }
 
@@ -66,5 +79,3 @@ export default cliArgs => {
     [ esCjsConfig, typescriptDef ] :
     [ esCjsConfig, typescriptDef, umdConfig ]
 }
-
-
