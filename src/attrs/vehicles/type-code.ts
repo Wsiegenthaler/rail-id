@@ -7,8 +7,8 @@ const VehicleType = new Field('Vehicle Type', 'type')
 
 export const WagonVehicle    = VehicleType.value('Wagon', 'An unpowered railway vehicle used for the transportation of cargo')
 export const HauledPassenger = VehicleType.value('Hauled-Passenger Car', 'An unpowered railway vehicle used for the transportation of passengers')
-export const TractiveVehicle = VehicleType.value('Tractive Vehicle', 'A powered railway vehicle')
-export const SpecialVehicle  = VehicleType.value('Special Vehicle', 'A powered railway vehicle with a special utility or purpose')
+export const TractiveVehicle = VehicleType.value('Tractive Vehicle', 'A railway vehicle capable of travelling under its own power')
+export const SpecialVehicle  = VehicleType.value('Special Vehicle', 'A railway vehicle of special utility or purpose')
 
 // Vehicle suspension
 const Suspension = new Field('Suspension', 'suspension')
