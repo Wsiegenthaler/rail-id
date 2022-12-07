@@ -32,7 +32,7 @@ program
             const status = (r[4] ?? '').toLowerCase().trim()
               .replace(/ı/g, 'i') // hack to replace errant turkish character present in data file
 
-            return `  ['${vkm}', '${country}', '${company}', '${status}', '${website}', ${otif ? 0 : 1}]`
+            return `  ['${vkm}', '${country}', '${company}', '${status}', '${website}', ${otif ? 1 : 0}]`
           })
           .join(',\n')
         let data = template(body)
