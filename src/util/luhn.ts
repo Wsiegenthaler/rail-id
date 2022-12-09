@@ -18,8 +18,8 @@ const luhnSum = (n: string, factor=evenFactor) => n.split('')
 // Computes checksum digit for value `n`
 export const luhn = (n: string | number, factor=evenFactor) => (10 - luhnSum(luhnClean(n), factor) % 10) % 10
 
-// Verifies luhn checksum of value `n` with trailing checksum digit
-export const luhnVerify = (n: string | number, factor=evenFactor) =>
+// Validates luhn checksum of value `n` with trailing checksum digit
+export const luhnValidate = (n: string | number, factor=evenFactor) =>
   ((typeof n === 'string' && n.length > 1) || (Number.isInteger(n) && n > 9)) &&
   [ luhnClean(n) ]
     .map(m => parseInt(m[m.length-1]) === luhn(m.slice(0, m.length-1), factor))

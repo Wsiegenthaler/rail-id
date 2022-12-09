@@ -3,7 +3,7 @@ import { TerminalNode, IterationNode, Node, NonterminalNode } from 'ohm-js'
 import grammar from './grammars/uic-grammar.ohm-bundle'
 
 import { luhnClean } from './util/luhn'
-import { uicVerify } from './util/luhn-uic'
+import { uicValidate } from './util/luhn-uic'
 
 import { Attrs } from './attrs'
 import * as C from './attrs/common'
@@ -36,14 +36,14 @@ export const semantics = grammar.createSemantics()
         {
           type: 'checksum',
           subType: 'absent',
-          msg: `This code does not include a checksum digit and so cannot be verified`
+          msg: `This code does not include a checksum digit and cannot be validated`
         }).absent()
       ]
       const checksumPart = P.ChecksumDigitPart.find(childAttrs)
       if (checksumPart) {
         const digits = luhnClean(this.sourceString)
         const checksumSource = checksumPart.source
-        const valid = uicVerify(digits)
+        const valid = uicValidate(digits)
         checksumStatus = valid ?
           C.ChecksumStatus.value('Passed').atSource(checksumSource) :
           C.ChecksumStatus.value('Failed').atSource(checksumSource)
