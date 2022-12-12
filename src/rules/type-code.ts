@@ -8,11 +8,11 @@ import { applyDigitRules, Rule } from '.'
 
 // ---- Other Notes ------------------------------------
 
-const MaintenanceWagonNote     = V.OtherNotes.value('This code is generally used to describe "Maintenance related wagons"')
-const MiscWagonNote            = V.OtherNotes.value('This code is generally used to describe "Miscellaneous wagons"')
-const MiscPassengerVehicleNote = V.OtherNotes.value('This code is generally used to describe "Miscellaneous passenger vehicles"')
-const TEN_COTIF_WagonNote      = V.OtherNotes.value('This code is generally used to describe "TEN and/or COTIF wagons"')
-const PPV_PPW_WagonNote        = V.OtherNotes.value('This code is generally used to describe "PPV/PPW wagons"')
+const MaintenanceWagonNote     = V.OtherNotes.value('This code is generally used to describe **Maintenance related vehicles**')
+const MiscWagonNote            = V.OtherNotes.value('This code is generally used to describe **Miscellaneous vehicles**')
+const MiscPassengerVehicleNote = V.OtherNotes.value('This code is generally used to describe **Miscellaneous passenger vehicles**')
+const TEN_COTIF_WagonNote      = V.OtherNotes.value('This code is generally used to describe vehicles with **TEN** and/or **COTIF** compliance')
+const PPV_PPW_WagonNote        = V.OtherNotes.value('This code is generally used to describe vehicles with **PPV** and/or **PPW** compliance')
 const SpecialNumberedWagonNote = V.OtherNotes.value('Wagon with special numbering for technical characteristics not placed in service inside EU')
 
 // ---- Common (first digit only) ------------------------------------
@@ -57,7 +57,7 @@ const UICWagonTypeRulesD12: Rule[] = [
       C.ParseWarnings.value({
         type: 'unexpected-value',
         subType: 'uic-type-code',
-        msg: 'Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in category I (temperature-controlled wagons) and not to be used for new vehicles placed in service'
+        msg: 'Wagons with starting digits 0 or 1 followed by 3-8 are not to be used, but are excepted for wagons in Category I (temperature-controlled wagons) and not to be used for new vehicles placed in service'
       })
     ]
   },

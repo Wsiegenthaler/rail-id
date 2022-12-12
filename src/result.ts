@@ -8,6 +8,8 @@ import {
   values,
 } from 'lodash-es'
 
+import { markdownToTxt } from 'markdown-to-txt'
+
 import { ParseWarning } from './attrs/common'
 
 import { Attr, Attrs, FieldType, META_PATH } from './attrs'
@@ -161,6 +163,24 @@ const applySetMeta = (o: RailID, setMap: Dictionary<Attr<any>[]>): RailID => {
   }
 
   return o
+}
+
+// Render out markdown syntax from textual metadata results. This mutates the result object.
+export const omitMarkdown = (result: RailID) => {
+  const cleanValue = (vm: ValueMeta<any>) => {
+    vm.desc = markdownToTxt(vm.desc)
+    vm.displayValue = markdownToTxt(vm.displayValue)
+    vm.footnotes = vm.footnotes.map(markdownToTxt)
+  }
+
+  values(result[META_PATH].fields).forEach(f => {
+    f.desc = markdownToTxt(f.desc)
+    if (f.type === 'scalar') {
+      cleanValue(f.valueMeta)
+    } else if (f.type === 'set') {
+      f.valueMetas.forEach(cleanValue)
+    }
+  })
 }
 
 // Generate result object with attribute values and their metadata

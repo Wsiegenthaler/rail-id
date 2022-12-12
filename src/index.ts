@@ -2,7 +2,7 @@ import { defaults, unset } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
 import { META_PATH } from './attrs'
-import { result, RailID } from './result'
+import { result, RailID, omitMarkdown } from './result'
 import { ParseError } from './errors'
 
 
@@ -15,6 +15,13 @@ export type Options = {
   metadata?: boolean
 
   /**
+   * Field/value metadata (descriptions, footnotes, etc) are expressed in
+   * Markdown syntax. Setting this to `false` renders these values as
+   * plain text. (default: `true`)
+   */
+  markdown?: boolean
+
+  /**
    * Log level (default: `warn`)
    */
   logLevel?: 'debug' | 'warn' | 'error' | 'none'
@@ -22,6 +29,7 @@ export type Options = {
 
 const Defaults: Options = {
   metadata: true,
+  markdown: true,
   logLevel: 'warn'
 }
 
@@ -46,6 +54,9 @@ export default (input: string, options: Options = {}): RailID => {
 
     // Omit metadata according to options
     if (!options.metadata) unset(r, META_PATH)
+    
+    // Render out markdown syntax if disabled
+    if (options.metadata && !options.markdown) omitMarkdown(r)
 
     // Log warnings
     if (options.logLevel === 'warn' || options.logLevel === 'error')
