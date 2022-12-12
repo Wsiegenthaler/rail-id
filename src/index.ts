@@ -7,11 +7,23 @@ import { ParseError } from './errors'
 
 
 export type Options = {
+  /**
+   * Whether to include field metadata in the result such as field names,
+   * descriptions, footnotes, sourcemaps, human-friendly display values,
+   * etc. (default: `true`)
+   */
   metadata?: boolean
+
+  /**
+   * Log level (default: `warn`)
+   */
   logLevel?: 'debug' | 'warn' | 'error' | 'none'
 }
 
-const Defaults: Options = { metadata: true, logLevel: 'warn' }
+const Defaults: Options = {
+  metadata: true,
+  logLevel: 'warn'
+}
 
 const debugLog = (dataFn: () => any, options: Options) =>
   (options.logLevel! === 'debug') && console.debug(dataFn())
@@ -33,7 +45,7 @@ export default (input: string, options: Options = {}): RailID => {
     const r = result(attrs)
 
     // Omit metadata according to options
-    if (options.metadata === false) unset(r, META_PATH)
+    if (!options.metadata) unset(r, META_PATH)
 
     // Log warnings
     if (options.logLevel === 'warn' || options.logLevel === 'error')
