@@ -11,7 +11,7 @@ export const CoachDesc = new Field<string>('Coach Description', 'coach.descripti
 
 // Coach Class
 type Class = '1st' | '2nd' | '1st/2nd' | '1st or 1st/2nd'
-export const CoachClass = new Field<Class>('Passenger Class', 'coach.class')
+export const CoachClass = new Field<Class>('Coach Class', 'coach.class')
 
 // Double-deck
 const DoubleDeckerField = new Field<YesNo>('Double Deck Coach', 'coach.doubleDecker')

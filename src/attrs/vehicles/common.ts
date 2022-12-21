@@ -13,7 +13,7 @@ export const PermittedSpeeds = new SetField<SpeedRange>('Permitted Speed', 'spee
 export const AxleCountField = new Field<AxleCount>('Axle Count', 'axles', { displayFn: displayAxleCount })
 
 // Self-propulsion
-export const SelfPropelled = new Field<YesNo>('Self Propelled', 'selfPropelled')
+export const SelfPropelled = new Field<YesNo>('Self-Propelled', 'selfPropelled')
 
 // Vehicle Designation
 const VehicleDesignation_TEN = new Field<YesNo>('TEN Interoperable', `designations.TEN`, { desc: 'This marking describes vehicles interoperable with the "Trans-European Transport Network" (TEN-T)' })
