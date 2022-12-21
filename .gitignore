@@ -1,7 +1,6 @@
 dist
 coverage
 node_modules
-package-lock.json
 
 # generated artifacts
 src/grammars/uic-grammar.ohm-bundle.d.ts
