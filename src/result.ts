@@ -19,7 +19,10 @@ import { Dictionary } from './util/common'
 export interface RailID {
   [META_PATH]: {
     type: string
-    raw: string
+    input: {
+      cleanInput: string
+      rawInput: string
+    }
     fields: FieldMap
     warnings: ParseWarning[]
   }
@@ -184,8 +187,15 @@ export const omitMarkdown = (result: RailID) => {
 }
 
 // Generate result object with attribute values and their metadata
-export const result = (attrs: Attr<any>[]): RailID => {
-  const o: RailID = { [META_PATH]: { type: '', raw: '', fields: {}, warnings: [] } }
+export const result = (attrs: Attr<any>[], cleanInput: string, rawInput: string): RailID => {
+  const o: RailID = {
+    [META_PATH]: {
+      type: '',
+      input: { cleanInput, rawInput },
+      fields: {},
+      warnings: []
+    }
+  }
 
   const deduped = dedupeAttrs(attrs)
 

@@ -4,6 +4,7 @@ import { grammar, semantics } from './parser'
 import { META_PATH } from './attrs'
 import { result, RailID, omitMarkdown } from './result'
 import { ParseError } from './errors'
+import { cleanRawInput } from './util/common'
 
 
 export type Options = {
@@ -36,11 +37,15 @@ const Defaults: Options = {
 const debugLog = (dataFn: () => any, options: Options) =>
   (options.logLevel! === 'debug') && console.debug(dataFn())
 
+
 // Main
-export default (input: string, options: Options = {}): RailID => {
+export default (rawInput: string, options: Options = {}): RailID => {
   defaults(options, Defaults)
 
-  let parseResult = grammar.match(input)
+  // Clean input
+  const cleanInput = cleanRawInput(rawInput)
+
+  let parseResult = grammar.match(cleanInput)
   
   if (parseResult.succeeded()) {
     // Generate attributes
@@ -50,7 +55,7 @@ export default (input: string, options: Options = {}): RailID => {
     debugLog(() => attrs, options)
 
     // Build result object
-    const r = result(attrs)
+    const r = result(attrs, cleanInput, rawInput)
 
     // Omit metadata according to options
     if (!options.metadata) unset(r, META_PATH)
@@ -64,10 +69,10 @@ export default (input: string, options: Options = {}): RailID => {
 
     return r
   } else {
-    const e = new ParseError(parseResult, input)
+    const e = new ParseError(parseResult, cleanInput, rawInput)
 
     // Log parse trace if debug flag set
-    debugLog(() => grammar.trace(input).toString(), options)
+    debugLog(() => grammar.trace(cleanInput).toString(), options)
 
     if (options.logLevel === 'error') console.error('[rail-id] parse error', e)
 

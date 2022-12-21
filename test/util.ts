@@ -25,4 +25,4 @@ export const throws = (code: string, expected?: object, message?: string) => (t:
 
 // Parses code and ensures the result expected attribute value(s)
 export const matches = (code: string, ...expected: ValueDef<any>[]) => (t: ExecutionContext) =>
-  t.like(stripSource(railID(code)), result(expected.map(v => v.absent())))
+  t.like(stripSource(railID(code)), result(expected.map(v => v.absent()), code, code))

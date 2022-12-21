@@ -30,6 +30,7 @@
   "author": "Weston Siegenthaler",
   "license": "AGPL-3.0",
   "dependencies": {
+    "diacritics": "^1.3.0",
     "lodash-es": "^4.17.21",
     "markdown-to-txt": "^2.0.1",
     "ohm-js": "^16.4.0"
