@@ -59,7 +59,6 @@ export const semantics = grammar.createSemantics()
       }
 
       return [
-        C.RawCode.value(this.sourceString).at(this.source),
         C.CodeType.value('UIC').absent(),
         checksumStatus,
         ...checksumWarning,

@@ -1,9 +1,6 @@
 import { Field, SetField, META_PATH } from '.'
 
 
-// Raw Code (the raw input passed to the parser)
-export const RawCode = new Field<string>('Raw Code', `${META_PATH}.raw`)
-
 // Code Type
 type CodeType = 'UIC'
 export const CodeType = new Field<CodeType>('Code Type', `${META_PATH}.type`)
