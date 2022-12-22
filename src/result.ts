@@ -1,10 +1,12 @@
 import {
+  defaults,
   find,
   groupBy,
   mapValues,
   partition,
   set,
   toPairs,
+  unset,
   values,
 } from 'lodash-es'
 
@@ -15,6 +17,7 @@ import { ParseWarning } from './attrs/common'
 import { Attr, Attrs, FieldType, META_PATH } from './attrs'
 import { ParseWarnings } from './attrs/common'
 import { Dictionary } from './util/common'
+import { Defaults, Options } from '.'
 
 export interface RailID {
   [META_PATH]: {
@@ -187,7 +190,9 @@ export const omitMarkdown = (result: RailID) => {
 }
 
 // Generate result object with attribute values and their metadata
-export const result = (attrs: Attr<any>[], cleanInput: string, rawInput: string): RailID => {
+export const result = (attrs: Attr<any>[], cleanInput: string, rawInput: string, options: Options = {}): RailID => {
+  defaults(options, Defaults)
+
   const o: RailID = {
     [META_PATH]: {
       type: '',
@@ -197,12 +202,21 @@ export const result = (attrs: Attr<any>[], cleanInput: string, rawInput: string)
     }
   }
 
+  // Check for duplicate attributes and generate warnings for conflicts
   const deduped = dedupeAttrs(attrs)
 
+  // Group attributes by scalar or set
   const [ scalars, sets ] = partition(deduped, a => a.def.field.type === 'scalar')
 
+  // Apply attribute values to result object
   applyScalars(o, scalars) 
   applySets(o, sets)
+ 
+  // Omit metadata according to options
+  if (!options.metadata) unset(o, META_PATH)
   
+  // Render out markdown syntax if disabled
+  if (options.metadata && !options.markdown) omitMarkdown(o)
+
   return o
 }

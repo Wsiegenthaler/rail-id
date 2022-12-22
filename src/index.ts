@@ -1,8 +1,7 @@
-import { defaults, unset } from 'lodash-es'
+import { defaults } from 'lodash-es'
 
 import { grammar, semantics } from './parser'
-import { META_PATH } from './attrs'
-import { result, RailID, omitMarkdown } from './result'
+import { result, RailID } from './result'
 import { ParseError } from './errors'
 import { cleanRawInput } from './util/common'
 
@@ -28,7 +27,7 @@ export type Options = {
   logLevel?: 'debug' | 'warn' | 'error' | 'none'
 }
 
-const Defaults: Options = {
+export const Defaults: Options = {
   metadata: true,
   markdown: true,
   logLevel: 'warn'
@@ -55,13 +54,7 @@ export default (rawInput: string, options: Options = {}): RailID => {
     debugLog(() => attrs, options)
 
     // Build result object
-    const r = result(attrs, cleanInput, rawInput)
-
-    // Omit metadata according to options
-    if (!options.metadata) unset(r, META_PATH)
-    
-    // Render out markdown syntax if disabled
-    if (options.metadata && !options.markdown) omitMarkdown(r)
+    const r = result(attrs, cleanInput, rawInput, options)
 
     // Log warnings
     if (options.logLevel === 'warn' || options.logLevel === 'error')
