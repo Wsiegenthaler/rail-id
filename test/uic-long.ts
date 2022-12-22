@@ -7,7 +7,7 @@ import { Traction, DieselLocomotive, ElectricLocomotive } from '../src/attrs/veh
 
 import { UICCountries } from '../src/defs/countries'
 
-import { eq, like, matches, throws } from './util'
+import { matches } from './util'
 
 
 test('whitespace 1', t => {
@@ -43,12 +43,12 @@ test('whitespace 2', t => {
 test('checksum digit - exhaustive test', t => 
   range(0, 10).forEach(d => matches(`9280 1 218 455-${d}`, d == 4 ? ChecksumStatus.value('Passed') : ChecksumStatus.value('Failed'))(t)))
 
-test('checksum digit - absent', t => matches(`9280 1 218 455`, ChecksumStatus.value('Absent'))(t))
+test('checksum digit - absent', matches(`9280 1 218 455`, ChecksumStatus.value('Absent')))
 
 // Test each known UIC country in our definitions
 UICCountries.forEach(c =>
   test(`country - ${c.code} - ${c.long.toLowerCase()}`,
-    t => matches(`91 ${c.code} 4605 205`, CountryByCode(c.code))(t)))
+    matches(`91 ${c.code} 4605 205`, CountryByCode(c.code))))
 
 // Ensure warnings are generated for unknown country codes
 range(0, 100)
@@ -59,7 +59,7 @@ range(0, 100)
       matches(`91 ${code} 4605 205`, ParseWarnings.value({
         type: 'unknown-value',
         subType: 'country',
-        msg: `Country code '${code}' doesn't appear to be a known value.`
+        msg: `Country code '${code}' doesn't appear to be a known value`
       }))))
 
 // Generate tests for each known UIC locomotive/vehicle type
