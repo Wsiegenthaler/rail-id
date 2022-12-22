@@ -1,1 +1,1 @@
-![Build](https://github.com/wsiegenthaler/rail-id-web/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/wsiegenthaler/rail-id/actions/workflows/build.yml/badge.svg)
