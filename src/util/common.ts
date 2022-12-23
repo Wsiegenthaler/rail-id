@@ -16,4 +16,4 @@ const removeCombiningDiacritics = (s: string) =>
 // 3) Removing diacritic unicode characters, include 'combining diacritics'
 //
 // All but (3) are unessential for parsing but provide cleaner display/sourcemaps
-export const cleanRawInput = (rawInput: string) => removeCombiningDiacritics(removeDiacritics(rawInput.replaceAll(/\s+/g, ' ').trim()))
+export const cleanRawInput = (rawInput: string) => removeCombiningDiacritics(removeDiacritics(rawInput.replaceAll(/\s+/g, ' ')))
