@@ -32,7 +32,7 @@
   "dependencies": {
     "diacritics": "^1.3.0",
     "lodash-es": "^4.17.21",
-    "markdown-to-txt": "https://github.com/Wsiegenthaler/markdown-to-txt.git#baffae3101952cdf282d9e00772ba43d37cbb0eb",
+    "markdown-to-txt": "https://github.com/Wsiegenthaler/markdown-to-txt.git#cce8f0179ff535bbe3695d99d6daba17b21b2a28",
     "ohm-js": "^16.4.0"
   },
   "devDependencies": {
